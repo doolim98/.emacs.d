@@ -8,14 +8,11 @@
 
 (require 'use-package)
 
-(setq inhibit-startup-screen t)
-(setq initial-scratch-message nil)
-(set-fringe-mode 3)
-(set-face-attribute 'default nil :font "DejaVuSansMono" :height 120)
 
 (use-package projectile
   :ensure t
   :init
+  (projectile-mode +1)
   )
 
 (use-package zenburn-theme
@@ -87,6 +84,8 @@
   (evil-define-key '(normal motion visual) 'global (kbd "<leader>ws") 'evil-window-split)
   ;; help
   (evil-define-key '(normal motion visual) 'global (kbd "<leader>hl") 'view-lossage)
+  ;; projectile
+  (evil-define-key '(normal motion visual) 'projectile-mode-map (kbd "<leader>p") 'projectile-command-map)
   )
 
 (use-package key-chord
@@ -105,6 +104,12 @@
 (define-key ivy-minibuffer-map (kbd "C-c") 'minibuffer-keyboard-quit)
 (define-key swiper-map (kbd "C-c") 'minibuffer-keyboard-quit)
 
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode)
+  )
+
 
 
 (menu-bar-mode -1)
@@ -115,9 +120,14 @@
 (show-paren-mode t)
 (toggle-scroll-bar -1)
 (tool-bar-mode -1)
+(tooltip-mode -1)
 (setq frame-resize-pixelwise t)
 (setq ring-bell-function 'ignore)
 (set-frame-size (selected-frame) 1600 900 t)
+(setq inhibit-startup-screen t)
+(setq initial-scratch-message nil)
+(set-fringe-mode 0) ; Space at edges
+(set-face-attribute 'default nil :font "DejaVuSansMono" :height 120)
 
 
 ;;(load-theme 'wheatgrass)
@@ -139,7 +149,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (projectile evil swiper ivy expand-region zenburn-theme use-package))))
+    (which-key projectile evil swiper ivy expand-region zenburn-theme use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.

@@ -12,6 +12,7 @@
 (use-package projectile
   :ensure t
   :init
+  (projectile-mode +1)
   )
 
 (use-package zenburn-theme
@@ -57,15 +58,19 @@
   (define-key evil-insert-state-map (kbd "C-g") 'evil-normal-state)
   (define-key evil-visual-state-map (kbd "C-g") 'evil-normal-state)
   ;; C-c as normal state
-  (define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
-  (define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
-  (define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
+  ;;(define-key evil-insert-state-map (kbd "C-c") 'evil-normal-state)
+  ;;(define-key evil-normal-state-map (kbd "C-c") 'evil-normal-state)
+  ;;(define-key evil-visual-state-map (kbd "C-c") 'evil-normal-state)
+  (evil-define-key '(insert normal motion visual) 'global (kbd "C-c") 'evil-normal-state)
   ;; scroll
-  (define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  ;;(define-key evil-visual-state-map (kbd "C-u") 'evil-scroll-up)
+  (evil-define-key '(normal motion visual) 'global (kbd "C-u") 'evil-scroll-up)
   ;; : as M-x -> dont use vim commands
-  (define-key evil-normal-state-map (kbd ":") 'execute-extended-command)
+  ;;(define-key evil-normal-state-map (kbd ":") 'execute-extended-command)
+  (evil-define-key '(normal motion visual) 'global (kbd ":") 'execute-extended-command)
   ;; use swiper for search
-  (define-key evil-normal-state-map (kbd "/") 'swiper-isearch)
+  (evil-define-key '(insert normal motion visual) 'global (kbd "/") 'swiper-isearch)
+  ;;(define-key evil-normal-state-map (kbd "/") 'swiper-isearch)
   ;; leader key
   (evil-set-leader '(normal motion visual) " ")
   ;;(define-key evil-motion-state-map " " nil)
@@ -83,6 +88,8 @@
   (evil-define-key '(normal motion visual) 'global (kbd "<leader>ws") 'evil-window-split)
   ;; help
   (evil-define-key '(normal motion visual) 'global (kbd "<leader>hl") 'view-lossage)
+  ;; projectile
+  (evil-define-key '(normal motion visual) 'projectile-mode-map (kbd "<leader>p") 'projectile-command-map)
   )
 
 (use-package key-chord
@@ -100,6 +107,19 @@
 (define-key minibuffer-local-map (kbd "C-c") 'minibuffer-keyboard-quit)
 (define-key ivy-minibuffer-map (kbd "C-c") 'minibuffer-keyboard-quit)
 (define-key swiper-map (kbd "C-c") 'minibuffer-keyboard-quit)
+
+(use-package which-key
+  :ensure t
+  :init
+  (which-key-mode)
+  ;; Allow C-h to trigger which-key before it is done automatically
+  (setq which-key-show-early-on-C-h t)
+  ;; make sure which-key doesn't show normally but refreshes quickly after it is
+  ;; triggered.
+  (setq which-key-idle-delay 10000)
+  (setq which-key-idle-secondary-delay 0.05)
+  (which-key-mode)
+  )
 
 
 
@@ -140,7 +160,7 @@
  ;; If there is more than one, they won't work right.
  '(package-selected-packages
    (quote
-    (projectile evil swiper ivy expand-region zenburn-theme use-package))))
+    (which-key projectile evil swiper ivy expand-region zenburn-theme use-package))))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
  ;; If you edit it by hand, you could mess it up, so be careful.
