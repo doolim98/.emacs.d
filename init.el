@@ -551,15 +551,33 @@ Depends on the `gh' commandline tool"
 ;        (dired-mode . dired-omit-mode)
 ;; 	 )
   :bind (:map dired-mode-map
-              ("-" . dired-up-directory))
+              ("-" . dired-up-directory)
+	      ("." . cycle-dired-switches))
   :init
   (setq dired-bind-jump nil)
   :config
-  (setq dired-listing-switches "-aghoA --group-directories-first")
+
   
   ;;;;; Hide . and .. in dired
   (setq dired-omit-files
         (setq dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\..*$"))
   ;; prevent opening extra dired buffers
   ;; emacs 28
-  (setq dired-kill-when-opening-new-dired-buffer t))
+  (setq dired-kill-when-opening-new-dired-buffer t)
+
+  (setq dired-listing-switches "-alh")
+  (defcustom list-of-dired-switches
+  '("-lh" "-lah")
+  "List of ls switches for dired to cycle among.")
+
+  (defun cycle-dired-switches ()
+    "Cycle through the list `list-of-dired-switches' of switches for ls"
+    (interactive)
+    (setq list-of-dired-switches
+          (append (cdr list-of-dired-switches)
+                  (list (car list-of-dired-switches))))
+    (setq dired-listing-switches (car list-of-dired-switches))
+    (dired-sort-other (car list-of-dired-switches)))
+  )
+
+(use-package sqlite3)
