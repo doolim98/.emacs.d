@@ -7,6 +7,8 @@
    (vertical-scroll-bars . nil)
    (horizontal-scroll-bars . nil)))
 
+(setq mac-command-modifier 'meta)
+
 ;; straight.el
 (defvar bootstrap-version)
 (let ((bootstrap-file
