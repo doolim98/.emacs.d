@@ -581,3 +581,35 @@ Depends on the `gh' commandline tool"
   )
 
 (use-package sqlite3)
+
+(use-package fontaine
+  :unless my/is-terminal
+  :config
+  (setq fontaine-presets
+        '((regular
+           :default-height 140)
+          (small
+           :default-height 110)
+          (large
+           :default-weight semilight
+           :default-height 180
+           :bold-weight extrabold)
+          (extra-large
+           :default-weight semilight
+           :default-height 210
+           :line-spacing 5
+           :bold-weight ultrabold)
+          (t                        ; our shared fallback properties
+           :default-family "Fira Code"
+	   :bold-weight bold
+           :italic-family nil
+           :italic-slant italic
+	   ;; :line-height 2.0
+           ;; :line-spacing 0.0
+	   )))
+  (fontaine-set-preset 'regular)
+  (defun set-bigger-spacing ()
+    (setq-local default-text-properties '(line-spacing 0.2 line-height 1.2)))
+  (add-hook 'text-mode-hook 'set-bigger-spacing)
+  (add-hook 'prog-mode-hook 'set-bigger-spacing)
+  )
