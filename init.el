@@ -613,3 +613,12 @@ Depends on the `gh' commandline tool"
   (add-hook 'text-mode-hook 'set-bigger-spacing)
   (add-hook 'prog-mode-hook 'set-bigger-spacing)
   )
+
+;; Appearacne
+(use-package modus-themes
+  :init
+  (load-theme 'modus-operandi)
+  :config
+  (setq modus-themes-bold-constructs t
+	modus-themes-italic-constructs t)
+  )
