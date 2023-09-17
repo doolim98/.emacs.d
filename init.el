@@ -369,19 +369,16 @@ Depends on the `gh' commandline tool"
   :ensure t
   :bind
   ;; pick some comfortable binding
-  (("M-."                     . embark-act)
+  (("C-q" . embark-act)
+   ("M-."                     . embark-act)
    ("C-<escape>"              . embark-act)
    ([remap describe-bindings] . embark-bindings)
    :map embark-file-map
    ("C-d"                     . dragon-drop)
-   :map embark-defun-map
-   ("M-t" . chatgpt-gen-tests-for-region)
-   :map embark-general-map
-   ("M-c" . chatgpt-prompt)
-   :map embark-region-map
-   ("?"   . chatgpt-explain-region)
-   ("M-f" . chatgpt-fix-region)
-   ("M-f" . chatgpt-fix-region))
+   ;; :map embark-defun-map
+   ;; :map embark-general-map
+   ;; :map embark-region-map
+   )
   :custom
   (embark-indicators
    '(embark-highlight-indicator
