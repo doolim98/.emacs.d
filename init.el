@@ -70,7 +70,6 @@ If no binding is captured section of regex is found for a BINDING an error is si
          ([remap scroll-down-command].  #'my/scroll-up)
          ("C-M-&"   . my/shell-command-on-file)
          ("C-x O"   . other-other-window)
-         ("M-f"     . sim-vi-w)
          ("C-x n a" . my/increment-number-at-point)
          ("C-x n x" . my/decrement-number-at-point)
          ("C-c d"   . my/next-fn)
@@ -390,8 +389,8 @@ Depends on the `gh' commandline tool"
      embark-minimal-indicator))
   :init
   ;; Optionally replace the key help with a completing-read interface
-  (setq prefix-help-command #'embark-prefix-help-command)
-  (setq embark-prompter 'embark-completing-read-prompter)
+  ;; (setq prefix-help-command #'embark-prefix-help-command)
+  ;; (setq embark-prompter 'embark-completing-read-prompter)
   :config
   (defun search-in-source-graph (text))
   (defun dragon-drop (file)
