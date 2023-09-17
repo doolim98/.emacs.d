@@ -58,3 +58,5 @@ site-lisp/package/
 /projects
 /places
 /straight/
+/org-persist/
+/request/
