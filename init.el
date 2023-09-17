@@ -611,13 +611,122 @@ Depends on the `gh' commandline tool"
     (setq-local default-text-properties '(line-spacing 0.2 line-height 1.2)))
   (add-hook 'text-mode-hook 'set-bigger-spacing)
   (add-hook 'prog-mode-hook 'set-bigger-spacing)
+  (add-hook 'org-mode-hook 'set-bigger-spacing)
+  (add-hook 'eshell-mode-hook 'set-bigger-spacing)
   )
 
-;; Appearacne
+;; Appearance
 (use-package modus-themes
   :init
-  (load-theme 'modus-operandi)
   :config
+  (load-theme 'modus-operandi t)
   (setq modus-themes-bold-constructs t
 	modus-themes-italic-constructs t)
   )
+
+;; Org Mode
+(use-package org-bullets
+  :config
+  (setq org-bullets-bullet-list
+	  '(;;; Large
+	    ;; "◉"
+	    "●"
+	    "○"
+	    "◆"
+	    "◇"
+	    ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
+    ;;; Small
+	    ;; ► • ★ ▸
+	    )
+	  )
+  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
+)
+
+
+(use-package org
+  :straight nil
+  :config
+  (message "hello orgmode")
+  (setq org-pretty-entities t
+	org-hide-emphasis-markers t
+	)
+  (custom-set-faces
+  '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
+  '(org-level-2 ((t (:inherit outline-1 :height 1.2))))
+  '(org-level-3 ((t (:inherit outline-1 :height 1.0))))
+  '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
+  '(org-level-5 ((t (:inherit outline-1 :height 1.0))))
+  (set-face-attribute 'org-document-title nil :height 2.0))
+  (custom-theme-set-faces
+   'user
+   '(variable-pitch ((t (:family "Helvetica" :height 180
+				 :weight light))))
+   '(fixed-pitch ((t ( :family "Fira Code" :height 140)))))
+  (custom-theme-set-faces                                                       
+   'user
+   '(org-block ((t (:inherit fixed-pitch))))                                   
+   '(org-code ((t (:family "Fira Code"))))
+   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))          
+   '(org-meta-line ((t (:inherit (
+				  fixed-pitch)
+				 :height 100
+				 ))))
+   '(org-block-begin-line ((t (:inherit (org-meta-line) ;; :foreground "#cccccc"
+					:weight light))))
+     
+   '(org-property-value ((t (:inherit fixed-pitch))) t)                        
+   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
+   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
+   '(org-table ((t (:family "Fira Code" :foreground "#83a598"))))
+   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
+  
+  ;; Use variable pitch mode
+  (add-hook 'org-mode-hook (lambda ()
+			     (variable-pitch-mode 1)
+			     (setq-local line-spacing 1.0)
+			     (set-fringe-mode 0)
+			     (visual-line-mode 1)
+			     (set-window-margins nil 3 3)
+			     ))
+  )
+
+;; (use-package flymake-grammarly
+;;   :config
+;;   (add-hook 'org-mode-hook 'flymake-grammarly-load)
+;;   (setq flymake-grammarly-check-time 0.8)
+;;   )
+
+(use-package eglot-grammarly
+  :straight (:host github :repo "emacs-grammarly/eglot-grammarly")
+  :defer t  ; defer package loading
+  :hook ((org-mode markdown-mode). (lambda ()
+                                      (require 'eglot-grammarly)
+                                      (eglot-ensure))))
+
+(use-package eglot
+  :straight nil
+  :bind (("M-c" . nil)
+	 ("M-c ." . eglot-code-action-quickfix))
+  :config
+  (setq-default eglot-workspace-configuration
+		'((:gopls . (:linksInHover :json-false
+					   :completeUnimported  t))
+		  (:grammarly . (:config . ((documentDialect . ("british")))))
+		  ;; (:documentDialect . "british" ;;grammarly-languageserver
+		  ;;  ;;:grammarly-languageserver ;; :@emacs-grammarly/grammarly-languageserver
+		  ;;  ;;. ( ;;:grammarly.config.suggestions.PassiveVoice t
+		  ;; 				     ;; (config.documentDialect . "british")
+		  ;; 				     )
+		  ))
+  )
+
+
+(use-package go-mode)
+
+(use-package which-key
+  :config
+  (setq which-key-show-early-on-C-h t)
+  (which-key-mode)
+  )
+
+(use-package yaml-mode)
