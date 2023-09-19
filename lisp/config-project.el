@@ -15,40 +15,7 @@
           (project-vc-dir "VC-Dir" v)
           (project-eshell "Eshell" e)
           (project-shell "Shell" s)))
-  :config
-  ;; Optionally configure a function which returns the project root directory.
-  ;; There are multiple reasonable alternatives to chose from.
-  ;; 1. project.el (project-roots)
-  (setq consult-project-function
-        (lambda (may-prompt)
-          (when-let* ((project (project-current))
-                      (project-root (car (project-roots (project-current))))
-                      (is-not-home
-                       (not (string= "/home/hjoll6/" (car (project-roots
-                                                            (project-current)))))))
-            project-root)))
-
-  (defvar project-root-markers
-    '(".git" "spago.dhall" "CMakeList.txt" "package.clj"
-      "package.json" "mix.exs" "Project.toml" ".project" "Cargo.toml"
-      "qlfile"))
-
-  (defun my/project-find-root (path)
-    (let* ((this-dir (file-name-as-directory (file-truename path)))
-           (parent-dir (expand-file-name (concat this-dir "../")))
-           (system-root-dir (expand-file-name "/")))
-      (cond
-       ((my/project-root-p this-dir) (cons 'transient this-dir))
-       ((equal system-root-dir this-dir) nil)
-       (t (my/project-find-root parent-dir)))))
-
-  (defun my/project-root-p (path)
-    (let ((results (mapcar (lambda (marker)
-                             (file-exists-p (concat path marker)))
-                           project-root-markers)))
-      (eval `(or ,@ results))))
-
-  (add-to-list 'project-find-functions #'my/project-find-root))
+)
 
 ;;; COMPILATION
 (use-package compile

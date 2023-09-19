@@ -4,16 +4,11 @@
 ;; Emacs look SIGNIFICANTLY less often which is a good thing.
 ;; asynchronous bytecode compilation and various other actions makes
 (use-package async
+  :disabled t
   :ensure t
   :defer t
   :init
   (dired-async-mode 1))
-
-(use-package dwim-shell-command
-  :ensure t :demand t
-  :bind (([remap dired-do-shell-command] . dwim-shell-command))
-  :config
-  (require 'dwim-shell-commands))
 
 (use-package savehist
   :defer 2
@@ -23,6 +18,10 @@
   :defer 10
   :init
   (repeat-mode +1))
+
+(use-package ace-window
+  :init
+  (global-set-key (kbd "M-o") 'ace-window))
 
 (use-package custom-variables
   :straight nil
@@ -238,6 +237,9 @@ Depends on the `gh' commandline tool"
                 inhibit-startup-screen t
                 ring-bell-function 'ignore)
 
+  (setq	split-width-threshold 160
+	split-height-threshold 120)
+
   ;;;; UTF-8
   (prefer-coding-system 'utf-8)
 
@@ -254,25 +256,6 @@ Depends on the `gh' commandline tool"
   (customize-set-value 'recentf-make-menu-items 150)
   (customize-set-value 'recentf-make-saved-items 150)
   )
-
-(use-package unified-marks
-  :straight nil
-  :ensure nil :no-require t
-  :custom
-  (global-mark-ring-max 256)
-  (set-mark-command-repeat-pop 256)
-  :init
-  ;; Unify Marks
-  (defun my/push-mark-global (&optional location nomsg activate)
-    "Always push to the global mark when push-mark is called"
-    (let ((old (nth global-mark-ring-max global-mark-ring))
-          (history-delete-duplicates nil))
-      (add-to-history
-       'global-mark-ring (copy-marker (mark-marker))
-       global-mark-ring-max t)
-      (when old
-        (set-marker old nil))))
-  (advice-add 'push-mark :after #'my/push-mark-global))
 
 (use-package crux
   :ensure t
@@ -354,6 +337,7 @@ Depends on the `gh' commandline tool"
          ;; :map minibuffer-local-completion-map
          :map vertico-map
          ("C-x C-j" . consult-dir)))
+
 (use-package consult-recoll
   :bind (("M-s r" . counsel-recoll)
          ("C-c I" . recoll-index))
@@ -405,7 +389,6 @@ Depends on the `gh' commandline tool"
   )
 
 
-
 ;;; Git
 (use-package magit
   :bind (("C-x g" . magit-status)
@@ -438,8 +421,7 @@ Depends on the `gh' commandline tool"
 
   :commands vterm
   :custom (vterm-max-scrollback 10000)
-  :init (when my/my-system
-          (setq term-prompt-regexp ".*ᛋ")))
+)
 
 ;; (use-package with-editor
 ;;   :hook ((shell-mode-hook eshell-mode-hook term-exec-hook vterm-exec-hook)
@@ -448,7 +430,11 @@ Depends on the `gh' commandline tool"
 ;;          ([remap shell-command] . with-editor-shell-command)))
 
 (use-package eshell
-  :bind ("C-x E" . eshell))
+  :straight nil
+  :bind ("C-x E" . eshell)
+  :init
+  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+  )
 
 (use-package em-alias
   :straight nil
@@ -487,34 +473,42 @@ Depends on the `gh' commandline tool"
   ;; Optional customizations
   :custom
   (corfu-cycle t)                 ; Allows cycling through candidates
-  (corfu-auto nil)                  ; Enable auto completion
+  (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.0)
-  (corfu-popupinfo-delay '(0.5 . 0.2))
+  (corfu-popupinfo-delay '(0.3 . 0.1))
   (corfu-preview-current 'insert) ; Do not preview current candidate
-  (corfu-preselect 'prompt)
+  (corfu-preselect 'directory)
   (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
               ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-next)
-              ([tab]        . corfu-next)
-              ("S-TAB"      . corfu-previous)
-              ([backtab]    . corfu-previous)
-              ("S-<return>" . corfu-insert)
-              ("RET"        . nil))
-
+              ("TAB"        . corfu-insert)
+              ([tab]        . corfu-insert)
+              ("<return>" . corfu-insert)
+              ("RET"        . corfu-insert))
   :init
+  (setq tab-always-indent 'complete)
   (global-corfu-mode)
   (corfu-history-mode)
+
   (corfu-popupinfo-mode) ; Popup completion info
-  :config
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
                               corfu-quit-no-match t
-                              corfu-auto nil)
-              (corfu-mode))))
+                              corfu-auto nil
+			      corfu-auto-delay 1000)
+              )))
+
+(use-package dabbrev
+  :straight nil
+  ;; Swap M-/ and C-M-/
+  :bind (("M-/" . dabbrev-completion)
+         ("C-M-/" . dabbrev-expand))
+  ;; Other useful Dabbrev configurations.
+  :custom
+  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
 
 (use-package corfu-terminal
   :config
@@ -588,9 +582,7 @@ Depends on the `gh' commandline tool"
           (small
            :default-height 110)
           (large
-           :default-weight semilight
-           :default-height 180
-           :bold-weight extrabold)
+           :default-height 200)
           (extra-large
            :default-weight semilight
            :default-height 210
@@ -605,12 +597,12 @@ Depends on the `gh' commandline tool"
            ;; :line-spacing 0.0
 	   )))
   (fontaine-set-preset 'regular)
-  (defun set-bigger-spacing ()
-    (setq-local default-text-properties '(line-spacing 0.2 line-height 1.2)))
-  (add-hook 'text-mode-hook 'set-bigger-spacing)
-  (add-hook 'prog-mode-hook 'set-bigger-spacing)
-  (add-hook 'org-mode-hook 'set-bigger-spacing)
-  (add-hook 'eshell-mode-hook 'set-bigger-spacing)
+  ;; (defun set-bigger-spacing ()
+  ;;   (setq-local default-text-properties '(line-spacing 0.2 line-height 1.2)))
+  ;; (add-hook 'text-mode-hook 'set-bigger-spacing)
+  ;; (add-hook 'prog-mode-hook 'set-bigger-spacing)
+  ;; (add-hook 'org-mode-hook 'set-bigger-spacing)
+  ;; (add-hook 'eshell-mode-hook 'set-bigger-spacing)
   )
 
 ;; Appearance
@@ -716,6 +708,12 @@ Depends on the `gh' commandline tool"
 		  ;; 				     ;; (config.documentDialect . "british")
 		  ;; 				     )
 		  ))
+  )
+
+(use-package tramp
+  :straight nil
+  :config
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
   )
 
 
