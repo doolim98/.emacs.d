@@ -434,6 +434,12 @@ Depends on the `gh' commandline tool"
   :bind ("C-x E" . eshell)
   :init
   (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+  (setopt eshell-prompt-function
+        (lambda ()
+          (concat (abbreviate-file-name (eshell/pwd))
+                  (if-let ((status eshell-last-command-status))
+                      (if (= status 0) "" (format " [%s]" status)))
+                  (if (= (user-uid) 0) " # " " $ "))))
   )
 
 (use-package em-alias
