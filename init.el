@@ -554,15 +554,11 @@ Depends on the `gh' commandline tool"
   (setq dired-bind-jump nil)
   :config
 
-  
-  ;;;;; Hide . and .. in dired
-  (setq dired-omit-files
-        (setq dired-omit-files "^\\.?#\\|^\\.$\\|^\\.\\.$\\|^\\..*$"))
   ;; prevent opening extra dired buffers
   ;; emacs 28
   (setq dired-kill-when-opening-new-dired-buffer t)
 
-  (setq dired-listing-switches "-alh")
+  (setq dired-listing-switches "-lh")
   (defcustom list-of-dired-switches
   '("-lh" "-lah")
   "List of ls switches for dired to cycle among.")
