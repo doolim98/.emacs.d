@@ -434,12 +434,13 @@ Depends on the `gh' commandline tool"
   :bind ("C-x E" . eshell)
   :init
   (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
-  (setopt eshell-prompt-function
+  :config
+  (setq eshell-prompt-function
         (lambda ()
           (concat (abbreviate-file-name (eshell/pwd))
                   (if-let ((status eshell-last-command-status))
                       (if (= status 0) "" (format " [%s]" status)))
-                  (if (= (user-uid) 0) " # " " $ "))))
+                  (if (= (user-uid) 0) " # " "$"))))
   )
 
 (use-package em-alias
@@ -599,12 +600,6 @@ Depends on the `gh' commandline tool"
            ;; :line-spacing 0.0
 	   )))
   (fontaine-set-preset 'regular)
-  ;; (defun set-bigger-spacing ()
-  ;;   (setq-local default-text-properties '(line-spacing 0.2 line-height 1.2)))
-  ;; (add-hook 'text-mode-hook 'set-bigger-spacing)
-  ;; (add-hook 'prog-mode-hook 'set-bigger-spacing)
-  ;; (add-hook 'org-mode-hook 'set-bigger-spacing)
-  ;; (add-hook 'eshell-mode-hook 'set-bigger-spacing)
   )
 
 ;; Appearance
