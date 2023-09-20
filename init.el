@@ -732,3 +732,19 @@ Depends on the `gh' commandline tool"
   )
 
 (use-package yaml-mode)
+
+
+(use-package electric-pair-mode
+  :straight nil
+  :hook ((prog-mode) . electric-pair-mode))
+
+(use-package git-gutter-fringe
+  :unless my/is-terminal
+  :hook ((prog-mode) . git-gutter)
+  )
+
+(use-package git-gutter
+  :if my/is-terminal
+  :hook ((prog-mode) . git-gutter-mode)
+  :config
+  )
