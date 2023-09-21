@@ -729,13 +729,15 @@ Depends on the `gh' commandline tool"
   :straight nil
   :hook ((prog-mode) . electric-pair-mode))
 
-(use-package git-gutter-fringe
-  :unless my/is-terminal
-  :hook ((prog-mode) . git-gutter)
-  )
 
 (use-package git-gutter
-  :if my/is-terminal
-  :hook ((prog-mode) . git-gutter-mode)
+  :hook (prog-mode . git-gutter-mode)
   :config
+  (setq git-gutter:update-interval 0.02)
+  
+  (use-package git-gutter-fringe
+    :unless my/is-terminal
+    )
   )
+
+;; C-1, C-2, C-3, C-
