@@ -1,0 +1,42 @@
+* Emacs Configuration Notes
+
+*** TODO 
+- Map =C-`= and =C-~= to shell related command.
+- Map Flymake next/prev error
+  - Map indent/unindent line key
+- Map kill buffer to some more convenient key(such as =M-k= or =S-k=)
+- Remap =query-replace=
+- Map go next/prev ring in buffer
+- Ispell
+- =crux-upcase/downcase= also works without selection for one character.
+- Fix wired indentations
+  - In org-mode, c mode, elisp mode
+  
+** Keymap
+*** Unused keys
+- =M-u,l,i,t,j,h,m,q,a,e=
+- =C-o,q,z,=
+- =C-d,u=
+- =S-=
+- =C,M-[,],\=  
+- =C-M-=
+  - =C-M-b= : switch buffer
+
+*** Frequently used commands, but have inconvenient keymap
+- =query-replace=: =M-%=
+- =scroll-up/down=: ={C,M}-v=
+  - to =C-d,u=
+- =revert buffer=
+
+*** Consistent key between OS and emacs
+- =M-c,v,z= 
+
+** Proposals
+*** Quarantine buffers
+Sometimes, I'm afraid of killing buffer because
+
+1. The operation may have been a mistake.
+2. Maybe I need the buffer later.
+
+So, quarantine buffers can be useful when I want to keep my buffer list clean but also want's to restore qurantined buffers.
+The size of the Quarantine buffer list is limited.
