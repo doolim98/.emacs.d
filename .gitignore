@@ -60,3 +60,5 @@ site-lisp/package/
 /straight/
 /org-persist/
 /request/
+/bookmarks
+/*.html

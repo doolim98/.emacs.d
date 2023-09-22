@@ -1,4 +1,5 @@
 ;; Based on https://github.com/Gavinok/emacs.d/blob/main/init.el
+(straight-use-package 'org)
 
 ;;; ASYNC
 ;; Emacs look SIGNIFICANTLY less often which is a good thing.
@@ -20,6 +21,7 @@
   (repeat-mode +1))
 
 (use-package ace-window
+  :disabled t
   :init
   (global-set-key (kbd "M-o") 'ace-window))
 
@@ -65,8 +67,10 @@ If no binding is captured section of regex is found for a BINDING an error is si
 (use-package custom-functions
   :straight nil
   :ensure nil :no-require t
-  :bind (([remap scroll-up-command] . my/scroll-down)
-         ([remap scroll-down-command].  #'my/scroll-up)
+  :bind (("M-[" . previous-buffer)
+	 ("M-]" . next-buffer)
+	 ("C-d" . my/scroll-down)
+         ("C-u" . my/scroll-up)
          ("C-M-&"   . my/shell-command-on-file)
          ("C-x O"   . other-other-window)
          ("C-x n a" . my/increment-number-at-point)
@@ -116,13 +120,15 @@ If no binding is captured section of regex is found for a BINDING an error is si
     "Move cursor down half a screen ARG times."
     (interactive "p")
     (let ((dist (/ (window-height) 2)))
-      (next-line dist)))
+      (next-line dist)
+      (recenter)))
 
   (defun my/scroll-up (arg)
     "Move cursor up half a screen ARG times."
     (interactive "p")
     (let ((dist (/ (window-height) 2)))
-      (previous-line dist)))
+      (previous-line dist)
+      (recenter)))
 
   (defun my/shell-command-on-file (command)
     "Execute COMMAND asynchronously on the current file."
@@ -256,20 +262,6 @@ Depends on the `gh' commandline tool"
   (customize-set-value 'recentf-make-menu-items 150)
   (customize-set-value 'recentf-make-saved-items 150)
   )
-
-(use-package crux
-  :ensure t
-  :bind (("C-x w v" . crux-swap-windows)
-         ("C-S-o"   . crux-smart-open-line-above)
-         ("C-o"     . crux-smart-open-line)
-         ("C-x B"   . my/org-scratch)
-         :map dired-mode-map
-         ("O" . crux-open-with))
-  :config
-  (defun my/org-scratch ()
-    (interactive)
-    (let ((initial-major-mode 'org-mode))
-      (crux-create-scratch-buffer))))
 
 ;;; COMPLETION
 (use-package vertico
@@ -429,6 +421,12 @@ Depends on the `gh' commandline tool"
 ;;   :bind (([remap async-shell-command] . with-editor-async-shell-command)
 ;;          ([remap shell-command] . with-editor-shell-command)))
 
+(use-package crux
+  :bind (("C-x C-u" . crux-upcase-region)
+	 ("C-x C-l" . crux-downcase-region)
+	 ("C-x M-c" . crux-capitalize-region)
+	 ("M-o" . crux-other-window-or-switch-buffer)))
+
 (use-package eshell
   :straight nil
   :bind ("C-x E" . eshell)
@@ -482,7 +480,7 @@ Depends on the `gh' commandline tool"
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
+  (corfu-auto-delay 0.2)
   (corfu-popupinfo-delay '(0.3 . 0.1))
   (corfu-preview-current 'insert) ; Do not preview current candidate
   (corfu-preselect 'directory)
@@ -494,7 +492,9 @@ Depends on the `gh' commandline tool"
               ("TAB"        . corfu-insert)
               ([tab]        . corfu-insert)
               ("<return>" . corfu-insert)
-              ("RET"        . corfu-insert))
+              ("RET"        . corfu-insert)
+	      ("ESC" . keyboard-quit)
+	      )
   :init
   (setq tab-always-indent 'complete)
   (global-corfu-mode)
@@ -612,33 +612,14 @@ Depends on the `gh' commandline tool"
   )
 
 ;; Org Mode
-(use-package org-bullets
-  :config
-  (setq org-bullets-bullet-list
-	  '(;;; Large
-	    ;; "◉"
-	    "●"
-	    "○"
-	    "◆"
-	    "◇"
-	    ;; ♥ ● ◇ ✚ ✜ ☯ ◆ ♠ ♣ ♦ ☢ ❀ ◆ ◖ ▶
-    ;;; Small
-	    ;; ► • ★ ▸
-	    )
-	  )
-  (add-hook 'org-mode-hook (lambda () (org-bullets-mode 1)))
-)
-
-
 (use-package org
   :straight nil
   :config
-  (message "hello orgmode")
   (setq org-pretty-entities t
-	org-hide-emphasis-markers t
+	org-hide-emphasis-markers nil
 	)
   (custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 1.4))))
+  '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
   '(org-level-2 ((t (:inherit outline-1 :height 1.2))))
   '(org-level-3 ((t (:inherit outline-1 :height 1.0))))
   '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
@@ -649,7 +630,7 @@ Depends on the `gh' commandline tool"
    '(variable-pitch ((t (:family "Helvetica" :height 180
 				 :weight light))))
    '(fixed-pitch ((t ( :family "Fira Code" :height 140)))))
-  (custom-theme-set-faces                                                       
+  (custom-theme-set-faces
    'user
    '(org-block ((t (:inherit fixed-pitch))))                                   
    '(org-code ((t (:family "Fira Code"))))
@@ -667,28 +648,22 @@ Depends on the `gh' commandline tool"
    '(org-table ((t (:family "Fira Code" :foreground "#83a598"))))
    '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
   
-  ;; Use variable pitch mode
-  (add-hook 'org-mode-hook (lambda ()
-			     (variable-pitch-mode 1)
-			     (setq-local line-spacing 1.0)
-			     (set-fringe-mode 0)
-			     (visual-line-mode 1)
-			     (set-window-margins nil 3 3)
-			     ))
   )
 
-;; (use-package flymake-grammarly
-;;   :config
-;;   (add-hook 'org-mode-hook 'flymake-grammarly-load)
-;;   (setq flymake-grammarly-check-time 0.8)
-;;   )
+(use-package ox-reveal
+  :config
+  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
+  (setq org-reveal-title-slide t)
+  )
 
 (use-package eglot-grammarly
   :straight (:host github :repo "emacs-grammarly/eglot-grammarly")
   :defer t  ; defer package loading
   :hook ((org-mode markdown-mode). (lambda ()
                                       (require 'eglot-grammarly)
-                                      (eglot-ensure))))
+                                      ;; (eglot-ensure)
+				      ))
+  )
 
 (use-package eglot
   :straight nil
@@ -699,11 +674,6 @@ Depends on the `gh' commandline tool"
 		'((:gopls . (:linksInHover :json-false
 					   :completeUnimported  t))
 		  (:grammarly . (:config . ((documentDialect . ("british")))))
-		  ;; (:documentDialect . "british" ;;grammarly-languageserver
-		  ;;  ;;:grammarly-languageserver ;; :@emacs-grammarly/grammarly-languageserver
-		  ;;  ;;. ( ;;:grammarly.config.suggestions.PassiveVoice t
-		  ;; 				     ;; (config.documentDialect . "british")
-		  ;; 				     )
 		  ))
   )
 
@@ -733,11 +703,25 @@ Depends on the `gh' commandline tool"
 (use-package git-gutter
   :hook (prog-mode . git-gutter-mode)
   :config
-  (setq git-gutter:update-interval 0.02)
+  (setq git-gutter:update-interval 1)
   
   (use-package git-gutter-fringe
     :unless my/is-terminal
     )
   )
 
-;; C-1, C-2, C-3, C-
+;; Fringe
+(use-package emacs
+  :ensure nil
+  :config
+  (when (display-graphic-p)
+      (setq fringes-outside-margins t
+	    left-fringe-width 5
+	    right-fringe-width 5
+      )
+  )
+  )
+
+
+(use-package cua-mode
+  )
