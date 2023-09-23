@@ -1,233 +1,46 @@
 ;; Based on https://github.com/Gavinok/emacs.d/blob/main/init.el
 (straight-use-package 'org)
 
-;;; ASYNC
-;; Emacs look SIGNIFICANTLY less often which is a good thing.
-;; asynchronous bytecode compilation and various other actions makes
-(use-package async
-  :disabled t
-  :ensure t
-  :defer t
-  :init
-  (dired-async-mode 1))
+;; Load project related configurations
+(load (concat user-emacs-directory "lisp/config-project.el"))
 
-(use-package savehist
-  :defer 2
-  :init (savehist-mode t))
-
-(use-package repeat
-  :defer 10
-  :init
-  (repeat-mode +1))
-
-(use-package ace-window
-  :disabled t
-  :init
-  (global-set-key (kbd "M-o") 'ace-window))
-
-(use-package custom-variables
-  :straight nil
-  :ensure nil :no-require t   :demand t
-  :init
-  (cl-defmacro let-regex ((bindings (string regex)) &body body)
-  "Macro for creating BINDINGS to captured blocks of REGEX found in a STRING.
-BINDINGS: A list of different symbols to be bound to a captured section of the regex
-STRING: The string the regex is searching through
-REGEX: Regex used to match against the string
-
-If no binding is captured section of regex is found for a BINDING an error is signaled
-   ;; Example usage
-   (let-regex ((h w) (\"hello world\" \"\\(hello\\) \\(world\\)\"))
-                (message \"result was %s then %s\" h w))"
-  (let ((holder (gensym)))
-    `(let ((,holder (with-temp-buffer
-                      (insert ,string)
-                      (beginning-of-buffer)
-                      (search-forward-regexp ,regex nil nil)
-                      (let ((i 0))
-                        (mapcar (lambda (_a)
-                                  (setq i (+ i 1))
-                                  (match-string i))
-                                '( ,@bindings))))))
-       (let ,(mapcar (lambda (binding)
-                       `(,binding (or (pop ,holder)
-				      (error "Failed to find binding for %s"
-                                             ',binding))))
-                     bindings)
-         ,@body))))
-  (defvar my/is-terminal
-    (not window-system)
-    "Truthy value indicating if Emacs is currently running in a terminal.")
-  (defvar my/my-system
-    (if (string-equal user-login-name "gavinok")
-        t
-      nil)
-    "Non-nil value if this is my system."))
-
-(use-package custom-functions
-  :straight nil
-  :ensure nil :no-require t
+(use-package custom-functions :straight nil  :ensure nil :no-require t
+  :after (emacs dired)
   :bind (("M-[" . previous-buffer)
 	 ("M-]" . next-buffer)
 	 ("C-d" . my/scroll-down)
          ("C-u" . my/scroll-up)
-         ("C-M-&"   . my/shell-command-on-file)
-         ("C-x O"   . other-other-window)
-         ("C-x n a" . my/increment-number-at-point)
-         ("C-x n x" . my/decrement-number-at-point)
-         ("C-c d"   . my/next-fn)
-         :repeat-map my/next-fn-map
-         ("d" . my/next-fn)
-         :map image-mode-map
-         ("&"       . my/shell-command-on-file)
-         :repeat-map change-number-repeat-map
-         ("a" . my/increment-number-at-point)
-         ("x" . my/decrement-number-at-point))
+	 :map dired-mode-map
+	 ("-" . dired-up-directory)
+	 ("." . cycle-dired-switches))
   :init
-  (defun my/next-fn (&optional arg)
-    (interactive "P")
-    (apply (if arg
-               #'text-property-search-backward
-             #'text-property-search-forward)
-           'face
-           (cond
-            ((eql major-mode 'haskell-mode) 'haskell-definition-face)
-            (T                              'font-lock-function-name-face))
-           nil))
-
-  (defun my/change-number-at-point (change increment)
-    (search-forward-regexp (rx digit)) ; Go to the closest number
-    (let ((number (number-at-point))
-          (point (point)))
-      (when number
-        (progn
-          (forward-word)
-          (search-backward (number-to-string number))
-          (replace-match (number-to-string (funcall change number increment)))
-          (goto-char (- point 1))))))
-
-  (defun my/increment-number-at-point (&optional increment)
-    "Increment number at point like vim's C-a"
-    (interactive "p")
-    (my/change-number-at-point '+ (or increment 2)))
-
-  (defun my/decrement-number-at-point (&optional increment)
-    "Decrement number at point like vim's C-x"
-    (interactive "p")
-    (my/change-number-at-point '- (or increment 1)))
-
   (defun my/scroll-down (arg)
     "Move cursor down half a screen ARG times."
     (interactive "p")
     (let ((dist (/ (window-height) 2)))
-      (next-line dist)
-      (recenter)))
+      (next-line dist)))
 
   (defun my/scroll-up (arg)
     "Move cursor up half a screen ARG times."
     (interactive "p")
     (let ((dist (/ (window-height) 2)))
-      (previous-line dist)
-      (recenter)))
+      (previous-line dist)))
 
-  (defun my/shell-command-on-file (command)
-    "Execute COMMAND asynchronously on the current file."
-    (interactive (list (read-shell-command
-                        (concat "Async shell command on " (buffer-name) ": "))))
-    (let ((filename (if (equal major-mode 'dired-mode)
-                        default-directory
-                      (buffer-file-name))))
-      (async-shell-command (concat command " " filename))))
+  (defcustom list-of-dired-switches
+    '("-lh" "-lah")
+    "List of ls switches for dired to cycle among.")
 
-  (defun eqn-to-tex (eqn-expression)
-    "Takes a eqn expression as a string string EQN-EXPRESSION and
-returns the equivalent latex version."
-    (calc-eval `(,eqn-expression
-	         calc-simplify-mode none
-	         calc-language eqn)
-	       'push)
-    (calc-eval '(1
-	         calc-simplify-mode none
-	         calc-language latex)
-	       'top))
-
-  (defun echo-eqn-to-tex (eqn-expr &optional arg)
-    "Takes an eqn expression eqn-expr and prints a message with the
-latex version of it."
-    (interactive "sEnter eqn here: ")
-    (message (eqn-to-tex eqn-expr)))
-
-  (defun eqn-to-tex-region (start end)
-    "Replaces the active region containing a eqn expression and
-replaces it with the Latex equivalent."
-    (interactive "r")
-    (let ((converted-expr (eqn-to-tex (filter-buffer-substring start end))))
-      (kill-region start end)
-      (insert converted-expr)))
-
-  (defun all-history ()
-    "Command for getting command history from basically every source out
-     there.
-
-     No more \"Where did I call that again?\" going off in your head"
+  (defun cycle-dired-switches ()
+    "Cycle through the list `list-of-dired-switches' of switches for ls"
     (interactive)
-    (flet ((file->lines (file-name)
-                        (split-string
-                         (with-temp-buffer
-                           (insert-file-contents-literally file-name)
-                           (buffer-substring-no-properties (point-min) (point-max))
-                           "\n"))))
-      (completing-read
-       "All History: "
-       (append shell-command-history
-               compile-history
-               (when (boundp 'eshell-history-file-name)
-                 (file->lines eshell-history-file-name))
-               (file->lines "~/.bash_history")))))
+    (setq list-of-dired-switches
+          (append (cdr list-of-dired-switches)
+                  (list (car list-of-dired-switches))))
+    (setq dired-listing-switches (car list-of-dired-switches))
+    (dired-sort-other (car list-of-dired-switches))))
 
-  (defun gist-from-region (BEG END fname desc &optional private)
-    "Collect the current region creating a github gist with the
-filename FNAME and description DESC.
-If the optional argument PRIVATE is non-nil then the gist will be
-made private. Otherwise the gist will be default to public.
-
-Depends on the `gh' commandline tool"
-    (interactive (list (mark) (point)
-                       (read-string "File Name: ")
-                       (read-string "Description: ")
-                       current-prefix-arg))
-    (let ((proc (make-process :name "Gist Creation"
-                              :buffer "*Gist URL*"
-                              :command (cl-remove :skip
-                                                  (list "gh" "gist" "create"
-                                                        "--filename" fname
-                                                        "--desc" desc
-                                                        (if private
-                                                            :skip
-                                                          "--public")
-                                                        "-"))
-                              :sentinel (lambda (process event)
-                                          "Listens for process finish and prints the gist's URL"
-                                          (when (string-match "finis.*" event)
-                                            (message "Gist for file %s created at %s"
-                                                     fname
-                                                     (with-current-buffer (process-buffer process)
-                                                       (goto-char (point-max))
-                                                       (thing-at-point 'line))))))))
-
-      (process-send-string proc (buffer-substring BEG END))
-      (process-send-eof proc)
-      (process-send-eof proc)))
-  )
-
-
-(use-package emacs
-  :ensure nil
-  :defer nil
-  :bind (("C-c w"   . fixup-whitespace)
-         ("M-z"     . zap-up-to-char)
-         ("C-x S"   . shell)
-         ("C-x M-t" . transpose-regions)
+(use-package emacs :straight nil :ensure nil :defer nil
+  :bind (("C-c C-w"   . fixup-whitespace)
          ("M-1" . delete-other-windows)
          ("M-2" . split-window-below)
          ("M-3" . split-window-right)
@@ -253,15 +66,51 @@ Depends on the `gh' commandline tool"
   (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
   (show-paren-mode 1)              ; Highlight parenthesis
 
-  ;;TRAMP
+  ;; TRAMP
+  (require 'tramp)
   (setq tramp-default-method "ssh"
         shell-file-name "bash")
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+  ;; DIRED
+  (require 'dired)
+  (setq dired-kill-when-opening-new-dired-buffer t)
+  (setq dired-listing-switches "-lh")
 
   ;; recentf
   (recentf-mode t)
   (customize-set-value 'recentf-make-menu-items 150)
   (customize-set-value 'recentf-make-saved-items 150)
-  )
+
+  ;; Window apperance
+  
+  ;; Appearance
+  (use-package modus-themes
+    :config
+    (load-theme 'modus-operandi t)
+    (setq modus-themes-bold-constructs t
+	  modus-themes-italic-constructs t)
+    (set-face-attribute 'fringe nil :background nil))
+
+  (when (display-graphic-p)
+    ;; make the left fringe 4 pixels wide and the right disappear
+    (fringe-mode 4))
+
+  ;; Basic Util Packages
+  (use-package ace-window
+    :init
+    (global-set-key (kbd "M-o") 'ace-window))
+
+  (use-package crux
+    :bind (("C-o" . crux-smart-open-line)
+	   ("C-x C-u" . crux-upcase-region)
+	   ("C-x C-l" . crux-downcase-region)
+	   ("C-x M-c" . crux-capitalize-region)))
+
+  (use-package which-key
+  :config
+  (setq which-key-show-early-on-C-h t)
+  (which-key-mode)))
 
 ;;; COMPLETION
 (use-package vertico
@@ -323,24 +172,6 @@ Depends on the `gh' commandline tool"
     (consult-ripgrep org-directory))
   (recentf-mode t))
 
-(use-package consult-dir
-  :ensure t
-  :bind (("C-x C-j" . consult-dir)
-         ;; :map minibuffer-local-completion-map
-         :map vertico-map
-         ("C-x C-j" . consult-dir)))
-
-(use-package consult-recoll
-  :bind (("M-s r" . counsel-recoll)
-         ("C-c I" . recoll-index))
-  :init
-  (setq consult-recoll-inline-snippets t)
-  :config
-  (defun recoll-index (&optional arg) (interactive)
-    (start-process-shell-command "recollindex"
-                                 "*recoll-index-process*"
-                                 "recollindex")))
-
 (use-package embark
   :ensure t
   :bind
@@ -373,13 +204,7 @@ Depends on the `gh' commandline tool"
 (use-package embark-consult
   :ensure t
   :after (:all embark consult)
-  :demand t
-  ;; if you want to have consult previews as you move around an
-  ;; auto-updating embark collect buffer
-  ;; :hook
-  ;; (embark-collect-mode . consult-preview-at-point-mode)
-  )
-
+  :demand t)
 
 ;;; Git
 (use-package magit
@@ -389,89 +214,44 @@ Depends on the `gh' commandline tool"
   :commands (magit project-magit)
   :config
   (add-to-list 'project-switch-commands
-               '(project-magit "Magit" m))
+	       '(project-magit "Magit" m))
   (defun project-magit  ()
     (interactive)
     (let ((dir (project-root (project-current t))))
       (magit-status dir))))
-(use-package forge :ensure t :after magit)
-(use-package ediff
-  :after (magit vc)
-  :commands (ediff)
-  :init
-  ;; multiframe just doesn't make sense to me
-  (with-eval-after-load 'winner
-    (add-hook 'ediff-quit-hook 'winner-undo))
-  (setq ediff-window-setup-function 'ediff-setup-windows-plain))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
-  :bind (("C-x t" . vterm)
-         :map vterm-mode-map
-         ("M-p" . vterm-send-up)
-         ("M-n" . vterm-send-down))
-
+  :bind (("C-x t" . vterm))
   :commands vterm
   :custom (vterm-max-scrollback 10000)
-)
+  )
 
-;; (use-package with-editor
-;;   :hook ((shell-mode-hook eshell-mode-hook term-exec-hook vterm-exec-hook)
-;;          . with-editor-export-editor)
-;;   :bind (([remap async-shell-command] . with-editor-async-shell-command)
-;;          ([remap shell-command] . with-editor-shell-command)))
-
-(use-package crux
-  :bind (("C-x C-u" . crux-upcase-region)
-	 ("C-x C-l" . crux-downcase-region)
-	 ("C-x M-c" . crux-capitalize-region)
-	 ("M-o" . crux-other-window-or-switch-buffer)))
-
-(use-package eshell
-  :straight nil
+(use-package eshell :straight nil
   :bind ("C-x E" . eshell)
   :init
   (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
   :config
-  (setq eshell-prompt-function
-        (lambda ()
-          (concat (abbreviate-file-name (eshell/pwd))
-                  (if-let ((status eshell-last-command-status))
-                      (if (= status 0) "" (format " [%s]" status)))
-                  (if (= (user-uid) 0) " # " "$"))))
-  )
+  (setopt eshell-prompt-function
+          (lambda ()
+            (concat (abbreviate-file-name (eshell/pwd))
+                    (if-let ((status eshell-last-command-status))
+			(if (= status 0) "" (format " [%s]" status)))
+                    (if (= (user-uid) 0) " # " "$"))))
 
-(use-package em-alias
-  :straight nil
-  :ensure nil
-  :after eshell
-  :config
+  (require em-alias)
   (add-hook 'eshell-mode-hook
             (lambda ()
-              (eshell/alias "e" "find-file $1")
-              (eshell/alias "ee" "find-file-other-window $1")
-              (eshell/alias "v" "view-file $1")
-              (eshell/alias "o" "crux-open-with $1"))))
+	      (eshell/alias "e" "find-file $1")
+	      (eshell/alias "ee" "find-file-other-window $1")
+	      (eshell/alias "v" "view-file $1")
+	      (eshell/alias "o" "crux-open-with $1")))
 
-(use-package em-term
-  :straight nil
-  :ensure nil
-  :after eshell
-  :config
+  (require em-term)
   (add-to-list 'eshell-visual-options '("git" "--help" "--paginate"))
   (add-to-list 'eshell-visual-options '("ghcup" "tui"))
   (add-to-list 'eshell-visual-commands '("htop" "top" "git" "log" "diff"
                                          "show" "less" "nix")))
-
-(use-package eshell
-  :commands eshell
-  :config
-  (setq eshell-destroy-buffer-when-process-dies t))
-
-(use-package fish-completion
-  :demand t
-  :config
-  (global-fish-completion-mode))
 
 ;;;; Code Completion
 (use-package corfu
@@ -480,19 +260,19 @@ Depends on the `gh' commandline tool"
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.2)
+  (corfu-auto-delay 0.0)
   (corfu-popupinfo-delay '(0.3 . 0.1))
-  (corfu-preview-current 'insert) ; Do not preview current candidate
+  (corfu-preview-current 'insert) 
   (corfu-preselect 'directory)
   (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
 
   ;; Optionally use TAB for cycling, default is `corfu-complete'.
   :bind (:map corfu-map
-              ("M-SPC"      . corfu-insert-separator)
-              ("TAB"        . corfu-insert)
-              ([tab]        . corfu-insert)
-              ("<return>" . corfu-insert)
-              ("RET"        . corfu-insert)
+	      ("M-SPC"      . corfu-insert-separator)
+	      ("TAB"        . corfu-insert)
+	      ([tab]        . corfu-insert)
+	      ("<return>" . corfu-insert)
+	      ("RET"        . corfu-insert)
 	      ("ESC" . keyboard-quit)
 	      )
   :init
@@ -503,13 +283,16 @@ Depends on the `gh' commandline tool"
   (corfu-popupinfo-mode) ; Popup completion info
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
-                              corfu-quit-no-match t
-                              corfu-auto nil
-			      corfu-auto-delay 1000)
-              )))
+				   corfu-quit-no-match t
+				   corfu-auto nil
+				   corfu-auto-delay 1000)
+	      ))
+  (use-package corfu-terminal
+    :when (not window-system)
+    :config
+    (corfu-terminal-mode +1)))
 
-(use-package dabbrev
-  :straight nil
+(use-package dabbrev  :straight nil
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)
          ("C-M-/" . dabbrev-expand))
@@ -517,67 +300,10 @@ Depends on the `gh' commandline tool"
   :custom
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
 
-(use-package corfu-terminal
-  :config
-  (unless (display-graphic-p)
-    (corfu-terminal-mode +1)))
-
-;; More accurate color representation than ansi-color.el
-(use-package xterm-color
-  :ensure t
-  :after esh-mode
-  :config
-  (add-hook 'eshell-before-prompt-hook
-            (lambda ()
-              (setq xterm-color-preserve-properties t)))
-
-  (add-to-list 'eshell-preoutput-filter-functions 'xterm-color-filter)
-  (setq eshell-output-filter-functions
-        (remove 'eshell-handle-ansi-color eshell-output-filter-functions))
-  (setenv "TERM" "xterm-256color"))
-
-;; Load project related configurations
-(load (concat user-emacs-directory "lisp/config-project.el"))
-
-;;; DIRED
-(use-package dired
-  :straight nil
-  :ensure nil
-  :commands (dired)
-;;   :hook (
-;;	 (dired-mode . hl-line-mode)
-;        (dired-mode . dired-omit-mode)
-;; 	 )
-  :bind (:map dired-mode-map
-              ("-" . dired-up-directory)
-	      ("." . cycle-dired-switches))
-  :init
-  (setq dired-bind-jump nil)
-  :config
-
-  ;; prevent opening extra dired buffers
-  ;; emacs 28
-  (setq dired-kill-when-opening-new-dired-buffer t)
-
-  (setq dired-listing-switches "-lh")
-  (defcustom list-of-dired-switches
-  '("-lh" "-lah")
-  "List of ls switches for dired to cycle among.")
-
-  (defun cycle-dired-switches ()
-    "Cycle through the list `list-of-dired-switches' of switches for ls"
-    (interactive)
-    (setq list-of-dired-switches
-          (append (cdr list-of-dired-switches)
-                  (list (car list-of-dired-switches))))
-    (setq dired-listing-switches (car list-of-dired-switches))
-    (dired-sort-other (car list-of-dired-switches)))
-  )
-
 (use-package sqlite3)
 
 (use-package fontaine
-  :unless my/is-terminal
+  :unless (not window-system)
   :config
   (setq fontaine-presets
         '((regular
@@ -599,106 +325,50 @@ Depends on the `gh' commandline tool"
 	   ;; :line-height 2.0
            ;; :line-spacing 0.0
 	   )))
-  (fontaine-set-preset 'regular)
-  )
-
-;; Appearance
-(use-package modus-themes
-  :init
-  :config
-  (load-theme 'modus-operandi t)
-  (setq modus-themes-bold-constructs t
-	modus-themes-italic-constructs t)
-  )
+  (fontaine-set-preset 'regular))
 
 ;; Org Mode
 (use-package org
-  :straight nil
   :config
   (setq org-pretty-entities t
-	org-hide-emphasis-markers nil
-	)
+	org-hide-emphasis-markers nil)
+
   (custom-set-faces
-  '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
-  '(org-level-2 ((t (:inherit outline-1 :height 1.2))))
-  '(org-level-3 ((t (:inherit outline-1 :height 1.0))))
-  '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
-  '(org-level-5 ((t (:inherit outline-1 :height 1.0))))
-  (set-face-attribute 'org-document-title nil :height 2.0))
+   '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
+   '(org-level-2 ((t (:inherit outline-1 :height 1.2))))
+   '(org-level-3 ((t (:inherit outline-1 :height 1.0))))
+   '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-1 :height 1.0)))))
+
   (custom-theme-set-faces
    'user
    '(variable-pitch ((t (:family "Helvetica" :height 180
 				 :weight light))))
-   '(fixed-pitch ((t ( :family "Fira Code" :height 140)))))
-  (custom-theme-set-faces
-   'user
-   '(org-block ((t (:inherit fixed-pitch))))                                   
-   '(org-code ((t (:family "Fira Code"))))
-   '(org-document-info-keyword ((t (:inherit (shadow fixed-pitch)))))          
-   '(org-meta-line ((t (:inherit (
-				  fixed-pitch)
-				 :height 100
-				 ))))
-   '(org-block-begin-line ((t (:inherit (org-meta-line) ;; :foreground "#cccccc"
-					:weight light))))
-     
-   '(org-property-value ((t (:inherit fixed-pitch))) t)                        
-   '(org-special-keyword ((t (:inherit (font-lock-comment-face fixed-pitch)))))
-   '(org-tag ((t (:inherit (shadow fixed-pitch) :weight bold :height 0.8))))
-   '(org-table ((t (:family "Fira Code" :foreground "#83a598"))))
-   '(org-verbatim ((t (:inherit (shadow fixed-pitch))))))
-  
-  )
+   '(fixed-pitch ((t ( :family "Fira Code" :height 140))))))
 
-(use-package ox-reveal
+
+(use-package eglot  :straight nil
+  :bind (:map eglot-mode-map
+	      ("C-c C-q" . eglot-code-action-quickfix))
+  :custom
+  (eglot-workspace-configuration
+   '((:gopls . (:linksInHover :json-false
+			      :completeUnimported  t))
+     (:grammarly . (:config . ((documentDialect . ("british")))))
+     ))
   :config
-  (setq org-reveal-root "https://cdn.jsdelivr.net/npm/reveal.js")
-  (setq org-reveal-title-slide t)
-  )
-
-(use-package eglot-grammarly
+  (use-package eglot-grammarly
   :straight (:host github :repo "emacs-grammarly/eglot-grammarly")
   :defer t  ; defer package loading
   :hook ((org-mode markdown-mode). (lambda ()
-                                      (require 'eglot-grammarly)
-                                      ;; (eglot-ensure)
-				      ))
+                                     (require 'eglot-grammarly))))
   )
-
-(use-package eglot
-  :straight nil
-  :bind (("M-c" . nil)
-	 ("M-c ." . eglot-code-action-quickfix))
-  :config
-  (setq-default eglot-workspace-configuration
-		'((:gopls . (:linksInHover :json-false
-					   :completeUnimported  t))
-		  (:grammarly . (:config . ((documentDialect . ("british")))))
-		  ))
-  )
-
-(use-package tramp
-  :straight nil
-  :config
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-  )
-
 
 (use-package go-mode)
-
-(use-package which-key
-  :config
-  (setq which-key-show-early-on-C-h t)
-  (which-key-mode)
-  )
-
 (use-package yaml-mode)
-
-
 (use-package electric-pair-mode
   :straight nil
   :hook ((prog-mode) . electric-pair-mode))
-
 
 (use-package git-gutter
   :hook (prog-mode . git-gutter-mode)
@@ -706,22 +376,9 @@ Depends on the `gh' commandline tool"
   (setq git-gutter:update-interval 1)
   
   (use-package git-gutter-fringe
-    :unless my/is-terminal
-    )
-  )
-
-;; Fringe
-(use-package emacs
-  :ensure nil
-  :config
-  (when (display-graphic-p)
-      (setq fringes-outside-margins t
-	    left-fringe-width 5
-	    right-fringe-width 5
-      )
-  )
-  )
+    :when (window-system)))
 
 
-(use-package cua-mode
-  )
+
+;; https://stackoverflow.com/a/77033292
+(use-package tblui)

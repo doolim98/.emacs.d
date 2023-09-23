@@ -1,0 +1,24 @@
+* TODO EMACS
+** Buffer types
+*** Programming
+*** Text editing
+*** Shell
+*** Output
+*** App
+- Derivied from /Special Mode/
+
+** Useful features for each workflow
+*** Programming
+- Auto Completion
+- Format/Indent
+- Compile
+
+*** Text(Org/Latex/Markdown ...) editing
+- Search synonym
+- Correct spells
+- Grammar check
+- Export
+
+*** Shell
+*** Output
+*** App
