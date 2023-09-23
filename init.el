@@ -1,4 +1,8 @@
-;; Based on https://github.com/Gavinok/emacs.d/blob/main/init.el
+;; Config my load path
+(let ((default-directory (concat user-emacs-directory "/lisp/")))
+  (add-to-list 'load-path default-directory)
+  (normal-top-level-add-subdirs-to-load-path))
+
 (straight-use-package 'org)
 
 ;; Load project related configurations
@@ -44,7 +48,7 @@
          ("M-1" . delete-other-windows)
          ("M-2" . split-window-below)
          ("M-3" . split-window-right)
-	 )
+	 ("C-x C-k" . kill-this-buffer))
   :config
   (setq-default delete-pair-blink-delay 0)
 
@@ -55,6 +59,7 @@
                 auto-save-default nil
                 inhibit-startup-screen t
                 ring-bell-function 'ignore)
+  
 
   (setq	split-width-threshold 160
 	split-height-threshold 120)
@@ -75,26 +80,25 @@
   ;; DIRED
   (require 'dired)
   (setq dired-kill-when-opening-new-dired-buffer t)
-  (setq dired-listing-switches "-lh")
+  (setq dired-listing-switches "-lh") ;; Hide hidden files by default
 
   ;; recentf
-  (recentf-mode t)
+  (require 'recentf)
   (customize-set-value 'recentf-make-menu-items 150)
   (customize-set-value 'recentf-make-saved-items 150)
+  (recentf-mode t)
 
-  ;; Window apperance
-  
   ;; Appearance
   (use-package modus-themes
     :config
-    (load-theme 'modus-operandi t)
     (setq modus-themes-bold-constructs t
 	  modus-themes-italic-constructs t)
+    (load-theme 'modus-operandi t)
     (set-face-attribute 'fringe nil :background nil))
 
   (when (display-graphic-p)
     ;; make the left fringe 4 pixels wide and the right disappear
-    (fringe-mode 4))
+    (fringe-mode '(8 . 0)))
 
   ;; Basic Util Packages
   (use-package ace-window
@@ -162,30 +166,22 @@
          :map help-map
          ("a" . consult-apropos)
          :map minibuffer-local-map
-         ("M-r" . consult-history))
+         ("C-r" . consult-history))
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   :config
   (defun my/notegrep ()
     "Use interactive grepping to search my notes"
     (interactive)
-    (consult-ripgrep org-directory))
-  (recentf-mode t))
-
+    (consult-ripgrep org-directory)))
+   
 (use-package embark
   :ensure t
   :bind
   ;; pick some comfortable binding
   (("C-q" . embark-act)
    ("M-."                     . embark-act)
-   ("C-<escape>"              . embark-act)
-   ([remap describe-bindings] . embark-bindings)
-   :map embark-file-map
-   ("C-d"                     . dragon-drop)
-   ;; :map embark-defun-map
-   ;; :map embark-general-map
-   ;; :map embark-region-map
-   )
+   ("C-<escape>"              . embark-act))
   :custom
   (embark-indicators
    '(embark-highlight-indicator
@@ -208,6 +204,7 @@
 
 ;;; Git
 (use-package magit
+  :after (project)
   :bind (("C-x g" . magit-status)
          :map project-prefix-map
          ("m" . project-magit))
@@ -228,7 +225,7 @@
   )
 
 (use-package eshell :straight nil
-  :bind ("C-x E" . eshell)
+  :bind ("C-x C-e" . eshell)
   :init
   (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
   :config
@@ -239,7 +236,6 @@
 			(if (= status 0) "" (format " [%s]" status)))
                     (if (= (user-uid) 0) " # " "$"))))
 
-  (require em-alias)
   (add-hook 'eshell-mode-hook
             (lambda ()
 	      (eshell/alias "e" "find-file $1")
@@ -247,7 +243,6 @@
 	      (eshell/alias "v" "view-file $1")
 	      (eshell/alias "o" "crux-open-with $1")))
 
-  (require em-term)
   (add-to-list 'eshell-visual-options '("git" "--help" "--paginate"))
   (add-to-list 'eshell-visual-options '("ghcup" "tui"))
   (add-to-list 'eshell-visual-commands '("htop" "top" "git" "log" "diff"
@@ -255,20 +250,19 @@
 
 ;;;; Code Completion
 (use-package corfu
+  :hook ((prog-mode) . corfu-mode)
   ;; Optional customizations
   :custom
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
   (corfu-auto-delay 0.0)
-  (corfu-popupinfo-delay '(0.3 . 0.1))
-  (corfu-preview-current 'insert) 
+  (corfu-popupinfo-delay '(1111.3 . 0.3))
+  (corfu-preview-current 'nil)
   (corfu-preselect 'directory)
-  (corfu-on-exact-match nil)      ; Don't auto expand tempel snippets
-
-  ;; Optionally use TAB for cycling, default is `corfu-complete'.
+  (corfu-on-exact-match 'insert)
   :bind (:map corfu-map
-	      ("M-SPC"      . corfu-insert-separator)
+	      ("C-h" . corfu-popupinfo-toggle)
 	      ("TAB"        . corfu-insert)
 	      ([tab]        . corfu-insert)
 	      ("<return>" . corfu-insert)
@@ -277,16 +271,13 @@
 	      )
   :init
   (setq tab-always-indent 'complete)
-  (global-corfu-mode)
-  (corfu-history-mode)
 
   (corfu-popupinfo-mode) ; Popup completion info
   (add-hook 'eshell-mode-hook
             (lambda () (setq-local corfu-quit-at-boundary t
 				   corfu-quit-no-match t
 				   corfu-auto nil
-				   corfu-auto-delay 1000)
-	      ))
+				   corfu-auto-delay 1000)))
   (use-package corfu-terminal
     :when (not window-system)
     :config
@@ -316,36 +307,28 @@
            :default-weight semilight
            :default-height 210
            :line-spacing 5
-           :bold-weight ultrabold)
-          (t                        ; our shared fallback properties
+           :bold-weight bold)
+          (t ; our shared fallback properties
            :default-family "Fira Code"
-	   :bold-weight bold
-           :italic-family nil
+	   :bold-weight semibold
            :italic-slant italic
-	   ;; :line-height 2.0
-           ;; :line-spacing 0.0
 	   )))
   (fontaine-set-preset 'regular))
 
 ;; Org Mode
 (use-package org
+  :bind (:map org-mode-map
+	      ("C-c C-w" . nil))
   :config
   (setq org-pretty-entities t
 	org-hide-emphasis-markers nil)
 
   (custom-set-faces
    '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
-   '(org-level-2 ((t (:inherit outline-1 :height 1.2))))
-   '(org-level-3 ((t (:inherit outline-1 :height 1.0))))
+   '(org-level-2 ((t (:inherit outline-1 :height 1.4))))
+   '(org-level-3 ((t (:inherit outline-1 :height 1.2))))
    '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-1 :height 1.0)))))
-
-  (custom-theme-set-faces
-   'user
-   '(variable-pitch ((t (:family "Helvetica" :height 180
-				 :weight light))))
-   '(fixed-pitch ((t ( :family "Fira Code" :height 140))))))
-
+   '(org-level-5 ((t (:inherit outline-1 :height 1.0))))))
 
 (use-package eglot  :straight nil
   :bind (:map eglot-mode-map
