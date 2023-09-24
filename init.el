@@ -11,8 +11,8 @@
 
 (my/load "lisp/config-project.el")
 
-(use-package my-keybindings :straight nil :ensure nil :defer nil
-  :after (emacs dired consult eglot)
+(use-package my-keybindings :straight nil :ensure nil
+  :defer 10 ;; IMPORTANT!!!
   :bind-keymap ((("C-4" . ctl-x-4-map)))
   :bind (("C-c C-w"   . fixup-whitespace)
 	 ("C-c g s" . git-gutter:stage-hunk)
