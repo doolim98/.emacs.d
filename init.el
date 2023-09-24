@@ -27,20 +27,25 @@
 	 ("M-[" . previous-buffer)
 	 ("M-]" . next-buffer)
 	 ("C-x t" . vterm)
+
 	 ;; Org
 	 ("C-M-y" . org-download-screenshot)
+
 	 ;; My scroll up/down
 	 ("C-d" . my/scroll-down)
 	 ("C-u" . my/scroll-up)
+
 	 ;; Avy
 	 ("M-j" . avy-goto-word-0)
 	 ("C-j" . avy-goto-word-1)
+
 	 ;; Crux
 	 ("C-o" . crux-smart-open-line)
 	 ("M-o" . crux-other-window-or-switch-buffer)
 	 ("C-x C-u" . crux-upcase-region)
 	 ("C-x C-l" . crux-downcase-region)
 	 ("C-x M-c" . crux-capitalize-region)
+
 	 ;; Consult
 	 ("C-x b"       . consult-buffer)
 	 ("M-y"         . consult-yank-pop)
@@ -56,13 +61,17 @@
 	 ("C-x M-:"     . consult-complex-command)
 	 ("C-c n"       . consult-org-agenda)
 	 ("C-c m"       . my/notegrep)
+
 	 :map eglot-mode-map
 	 ("C-c C-q" . eglot-code-action-quickfix)
 	 ("C-c C-f" . eglot-format-buffer)
+
 	 :map help-map
 	 ("a" . consult-apropos)
+
 	 :map minibuffer-local-map
 	 ("C-r" . consult-history)
+
 	 :map dired-mode-map
 	 ("-" . dired-up-directory)
 	 ("." . cycle-dired-switches))
