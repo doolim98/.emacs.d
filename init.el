@@ -5,18 +5,168 @@
 
 (straight-use-package 'org)
 
-;; Load project related configurations
-(load (concat user-emacs-directory "lisp/config-project.el"))
+;; load project related configurations
+(defun my/load (path)
+  (load (concat user-emacs-directory path)))
 
-(use-package custom-functions :straight nil  :ensure nil :no-require t
-  :after (emacs dired)
-  :bind (("M-[" . previous-buffer)
+(my/load "lisp/config-project.el")
+
+(use-package my-keybindings :straight nil :ensure nil :defer nil
+  :after (emacs dired consult eglot)
+  :bind-keymap ((("C-4" . ctl-x-4-map)))
+  :bind (("C-c C-w"   . fixup-whitespace)
+	 ("C-c g s" . git-gutter:stage-hunk)
+	 ("C-c g c" . magit-commit)
+	 ("C-M-s" . save-buffer)
+         ("M-1" . delete-other-windows)
+         ("M-2" . split-window-below)
+         ("M-3" . split-window-right)
+	 ("C-x C-k" . kill-this-buffer)
+	 ("C-M-e" . eshell)
+	 ("C-." . er/expand-region)
+	 ("M-[" . previous-buffer)
 	 ("M-]" . next-buffer)
+	 ("C-x t" . vterm)
+	 ;; Org
+	 ("C-M-y" . org-download-screenshot)
+	 ;; My scroll up/down
 	 ("C-d" . my/scroll-down)
          ("C-u" . my/scroll-up)
+	 ;; Avy
+	 ("M-j" . avy-goto-word-0)
+	 ("C-j" . avy-goto-word-1)
+	 ;; Crux
+	 ("C-o" . crux-smart-open-line)
+	 ("M-o" . crux-other-window-or-switch-buffer)
+	 ("C-x C-u" . crux-upcase-region)
+	 ("C-x C-l" . crux-downcase-region)
+	 ("C-x M-c" . crux-capitalize-region)
+	 ;; Consult
+	 ("C-x b"       . consult-buffer)
+         ("M-y"         . consult-yank-pop)
+         ("M-g g"       . consult-goto-line)
+         ("M-g M-g"     . consult-goto-line)
+         ("M-g f"       . consult-flymake)
+         ("M-g i"       . consult-imenu)
+         ("M-s l"       . consult-line)
+         ("M-s L"       . consult-line-multi)
+         ("M-s u"       . consult-focus-lines)
+         ("M-s g"       . consult-ripgrep)
+         ("M-s M-g"     . consult-ripgrep)
+         ("C-x M-:"     . consult-complex-command)
+         ("C-c n"       . consult-org-agenda)
+         ("C-c m"       . my/notegrep)
+	 :map eglot-mode-map
+	 ("C-c C-q" . eglot-code-action-quickfix)
+	 ("C-c C-f" . eglot-format-buffer)
+         :map help-map
+         ("a" . consult-apropos)
+         :map minibuffer-local-map
+         ("C-r" . consult-history)
 	 :map dired-mode-map
 	 ("-" . dired-up-directory)
 	 ("." . cycle-dired-switches))
+  :config
+  (global-set-key (kbd "<escape>")      'keyboard-quit))
+
+(use-package emacs :straight nil :ensure nil :defer nil
+  :config
+  ;; (setq-default header-line-format mode-line-format)
+
+  (savehist-mode 1)
+  (setq-default delete-pair-blink-delay 0)
+  
+  
+  (setq blink-cursor-delay 0.0
+	blink-cursor-interval 0.2
+	blink-cursor-blinks 9999)
+  (setq-default	cursor-type 'box)
+
+  (setq-default history-length 1000
+                use-dialog-box nil
+                delete-by-moving-to-trash t
+                create-lockfiles nil
+                auto-save-default nil
+                inhibit-startup-screen t
+                ring-bell-function 'ignore)
+
+  (setq	split-width-threshold 160
+	split-height-threshold 120)
+
+  ;;;; UTF-8
+  (prefer-coding-system 'utf-8)
+
+  ;;;; Remove Extra Ui
+  (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
+  (show-paren-mode 1)              ; Highlight parenthesis
+
+  ;; TRAMP
+  (require 'tramp)
+  (setq tramp-default-method "ssh"
+        shell-file-name "bash")
+  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+
+  ;; ESHELL
+  (require 'eshell)
+  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
+
+  ;; DIRED
+  (require 'dired)
+  (setq dired-kill-when-opening-new-dired-buffer t)
+  (setq dired-listing-switches "-lh") ;; Hide hidden files by default
+
+  ;; recentf
+  (require 'recentf)
+  (customize-set-value 'recentf-make-menu-items 150)
+  (customize-set-value 'recentf-make-saved-items 150)
+  (recentf-mode t)
+
+  (desktop-save-mode 1)
+
+  ;; Appearance
+  (use-package modus-themes
+    :config
+    (setq modus-themes-bold-constructs t
+	  modus-themes-italic-constructs t)
+    (load-theme 'modus-operandi-tinted t)
+    ;; (set-face-attribute 'fringe nil :background nil)
+    )
+
+  (when (display-graphic-p)
+    (fringe-mode '(8 . 0)))
+
+  ;; Basic Util Packages
+  (use-package avy)
+  (use-package ace-window
+    :commands (aw-flip-window))
+    :init
+    (setq aw-background nil)
+    (setq aw-dispatch-always t)
+    (setq aw-frame-offset '(50 . 50))
+    (custom-set-faces
+     '(aw-leading-char-face
+       ((t (:foreground "#d00000" :height 1.0)))))
+
+  (use-package crux)
+
+  (use-package expand-region
+    :bind (("C-=" . er/expand-region)))
+
+  (use-package which-key
+  :config
+  (setq which-key-show-early-on-C-h t)
+  (which-key-mode))
+
+  (use-package delight
+    :config
+    (delight '((abbrev-mode " Abv" abbrev)
+               (smart-tab-mode " \\t" smart-tab)
+               (eldoc-mode nil "eldoc")
+               (rainbow-mode)
+               (overwrite-mode " Ov" t)
+               (emacs-lisp-mode "Elisp" :major)))))
+
+(use-package custom-functions :straight nil  :ensure nil :no-require t
   :init
   (defun my/scroll-down (arg)
     "Move cursor down half a screen ARG times."
@@ -42,79 +192,6 @@
                   (list (car list-of-dired-switches))))
     (setq dired-listing-switches (car list-of-dired-switches))
     (dired-sort-other (car list-of-dired-switches))))
-
-(use-package emacs :straight nil :ensure nil :defer nil
-  :bind (("C-c C-w"   . fixup-whitespace)
-         ("M-1" . delete-other-windows)
-         ("M-2" . split-window-below)
-         ("M-3" . split-window-right)
-	 ("C-x C-k" . kill-this-buffer))
-  :config
-  (setq-default delete-pair-blink-delay 0)
-
-  (setq-default history-length 1000
-                use-dialog-box nil
-                delete-by-moving-to-trash t
-                create-lockfiles nil
-                auto-save-default nil
-                inhibit-startup-screen t
-                ring-bell-function 'ignore)
-  
-
-  (setq	split-width-threshold 160
-	split-height-threshold 120)
-
-  ;;;; UTF-8
-  (prefer-coding-system 'utf-8)
-
-  ;;;; Remove Extra Ui
-  (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
-  (show-paren-mode 1)              ; Highlight parenthesis
-
-  ;; TRAMP
-  (require 'tramp)
-  (setq tramp-default-method "ssh"
-        shell-file-name "bash")
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-
-  ;; DIRED
-  (require 'dired)
-  (setq dired-kill-when-opening-new-dired-buffer t)
-  (setq dired-listing-switches "-lh") ;; Hide hidden files by default
-
-  ;; recentf
-  (require 'recentf)
-  (customize-set-value 'recentf-make-menu-items 150)
-  (customize-set-value 'recentf-make-saved-items 150)
-  (recentf-mode t)
-
-  ;; Appearance
-  (use-package modus-themes
-    :config
-    (setq modus-themes-bold-constructs t
-	  modus-themes-italic-constructs t)
-    (load-theme 'modus-operandi t)
-    (set-face-attribute 'fringe nil :background nil))
-
-  (when (display-graphic-p)
-    ;; make the left fringe 4 pixels wide and the right disappear
-    (fringe-mode '(8 . 0)))
-
-  ;; Basic Util Packages
-  (use-package ace-window
-    :init
-    (global-set-key (kbd "M-o") 'ace-window))
-
-  (use-package crux
-    :bind (("C-o" . crux-smart-open-line)
-	   ("C-x C-u" . crux-upcase-region)
-	   ("C-x C-l" . crux-downcase-region)
-	   ("C-x M-c" . crux-capitalize-region)))
-
-  (use-package which-key
-  :config
-  (setq which-key-show-early-on-C-h t)
-  (which-key-mode)))
 
 ;;; COMPLETION
 (use-package vertico
@@ -147,26 +224,6 @@
 ;;;; Extra Completion Functions
 (use-package consult
   :after vertico
-  :bind (("C-x b"       . consult-buffer)
-         ("C-x C-k C-k" . consult-kmacro)
-         ("M-y"         . consult-yank-pop)
-         ("M-g g"       . consult-goto-line)
-         ("M-g M-g"     . consult-goto-line)
-         ("M-g f"       . consult-flymake)
-         ("M-g i"       . consult-imenu)
-         ("M-s l"       . consult-line)
-         ("M-s L"       . consult-line-multi)
-         ("M-s u"       . consult-focus-lines)
-         ("M-s g"       . consult-ripgrep)
-         ("M-s M-g"     . consult-ripgrep)
-         ("C-x C-SPC"   . consult-global-mark)
-         ("C-x M-:"     . consult-complex-command)
-         ("C-c n"       . consult-org-agenda)
-         ("C-c m"       . my/notegrep)
-         :map help-map
-         ("a" . consult-apropos)
-         :map minibuffer-local-map
-         ("C-r" . consult-history))
   :custom
   (completion-in-region-function #'consult-completion-in-region)
   :config
@@ -174,33 +231,6 @@
     "Use interactive grepping to search my notes"
     (interactive)
     (consult-ripgrep org-directory)))
-   
-(use-package embark
-  :ensure t
-  :bind
-  ;; pick some comfortable binding
-  (("C-q" . embark-act)
-   ("M-."                     . embark-act)
-   ("C-<escape>"              . embark-act))
-  :custom
-  (embark-indicators
-   '(embark-highlight-indicator
-     embark-isearch-highlight-indicator
-     embark-minimal-indicator))
-  :init
-  ;; Optionally replace the key help with a completing-read interface
-  ;; (setq prefix-help-command #'embark-prefix-help-command)
-  ;; (setq embark-prompter 'embark-completing-read-prompter)
-  :config
-  (defun search-in-source-graph (text))
-  (defun dragon-drop (file)
-    (start-process-shell-command "dragon-drop" nil
-                                 (concat "dragon-drop " file))))
-;; Consult users will also want the embark-consult package.
-(use-package embark-consult
-  :ensure t
-  :after (:all embark consult)
-  :demand t)
 
 ;;; Git
 (use-package magit
@@ -219,34 +249,9 @@
 
 ;;; VTERM AND ESHELL
 (use-package vterm
-  :bind (("C-x t" . vterm))
   :commands vterm
   :custom (vterm-max-scrollback 10000)
   )
-
-(use-package eshell :straight nil
-  :bind ("C-x C-e" . eshell)
-  :init
-  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
-  :config
-  (setopt eshell-prompt-function
-          (lambda ()
-            (concat (abbreviate-file-name (eshell/pwd))
-                    (if-let ((status eshell-last-command-status))
-			(if (= status 0) "" (format " [%s]" status)))
-                    (if (= (user-uid) 0) " # " "$"))))
-
-  (add-hook 'eshell-mode-hook
-            (lambda ()
-	      (eshell/alias "e" "find-file $1")
-	      (eshell/alias "ee" "find-file-other-window $1")
-	      (eshell/alias "v" "view-file $1")
-	      (eshell/alias "o" "crux-open-with $1")))
-
-  (add-to-list 'eshell-visual-options '("git" "--help" "--paginate"))
-  (add-to-list 'eshell-visual-options '("ghcup" "tui"))
-  (add-to-list 'eshell-visual-commands '("htop" "top" "git" "log" "diff"
-                                         "show" "less" "nix")))
 
 ;;;; Code Completion
 (use-package corfu
@@ -256,19 +261,17 @@
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.0)
-  (corfu-popupinfo-delay '(1111.3 . 0.3))
+  (corfu-auto-delay 0.2)
+  (corfu-popupinfo-delay '(9999.9 . 0.3))
   (corfu-preview-current 'nil)
   (corfu-preselect 'directory)
-  (corfu-on-exact-match 'insert)
+  (corfu-on-exact-match 'quit)
   :bind (:map corfu-map
 	      ("C-h" . corfu-popupinfo-toggle)
 	      ("TAB"        . corfu-insert)
 	      ([tab]        . corfu-insert)
-	      ("<return>" . corfu-insert)
-	      ("RET"        . corfu-insert)
-	      ("ESC" . keyboard-quit)
-	      )
+	      ("<return>" . newline)
+	      ("ESC" . keyboard-quit))
   :init
   (setq tab-always-indent 'complete)
 
@@ -300,7 +303,7 @@
         '((regular
            :default-height 140)
           (small
-           :default-height 110)
+           :default-height 130)
           (large
            :default-height 200)
           (extra-large
@@ -311,8 +314,7 @@
           (t ; our shared fallback properties
            :default-family "Fira Code"
 	   :bold-weight semibold
-           :italic-slant italic
-	   )))
+           :italic-slant italic)))
   (fontaine-set-preset 'regular))
 
 ;; Org Mode
@@ -321,18 +323,29 @@
 	      ("C-c C-w" . nil))
   :config
   (setq org-pretty-entities t
-	org-hide-emphasis-markers nil)
+	org-hide-emphasis-markers nil
+	org-image-max-width 500)
+  
+  (use-package org-download
+    :hook ((dired-mode) . org-download-enable)
+    :custom
+    (org-download-method 'directory)
+    (org-download-image-dir "images")
+    (org-download-heading-lvl nil)
+    (org-download-timestamp "%Y%m%d-%H%M%S_")
+    (org-download-screenshot-method "pngpaste %s")
+    (org-download-annotate-function ((lambda (link))))
+    :init
+    (setq-default org-download-image-dir (concat org-directory "/img/")))
 
   (custom-set-faces
    '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
-   '(org-level-2 ((t (:inherit outline-1 :height 1.4))))
-   '(org-level-3 ((t (:inherit outline-1 :height 1.2))))
-   '(org-level-4 ((t (:inherit outline-1 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-1 :height 1.0))))))
+   '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
+   '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
+   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
+   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))))
 
 (use-package eglot  :straight nil
-  :bind (:map eglot-mode-map
-	      ("C-c C-q" . eglot-code-action-quickfix))
   :custom
   (eglot-workspace-configuration
    '((:gopls . (:linksInHover :json-false
@@ -347,21 +360,37 @@
                                      (require 'eglot-grammarly))))
   )
 
-(use-package go-mode)
-(use-package yaml-mode)
-(use-package electric-pair-mode
-  :straight nil
-  :hook ((prog-mode) . electric-pair-mode))
-
 (use-package git-gutter
   :hook (prog-mode . git-gutter-mode)
   :config
   (setq git-gutter:update-interval 1)
+  (custom-set-variables '(git-gutter:lighter " GG"))
   
   (use-package git-gutter-fringe
-    :when (window-system)))
+    :when (window-system)
+    :config
+    (require 'diff-mode)
+    ;; (set-face-attribute 'git-gutter-fr:modified nil
+    ;; 			:background (face-attribute 'diff-changed :background)
+    ;; 			:foreground (face-attribute 'diff-changed :foreground))
+    ;; (set-face-attribute 'git-gutter-fr:added nil
+    ;; 			:background (face-attribute 'diff-added :background)
+    ;; 			:foreground (face-attribute 'diff-added :foreground))
+    ;; (set-face-attribute 'git-gutter-fr:deleted nil
+    ;; 			:background (face-attribute 'diff-removed :background)
+    ;; 			:foreground (face-attribute 'diff-removed :foreground))
+    ))
 
+(use-package prog-mode :straight nil
+  :hook ((prog-mode) . electric-pair-mode)
+  :config
+  (require 'cc-styles)
+  (c-set-offset 'innamespace 0))
 
+(use-package cmake-mode)
+(use-package go-mode)
+(use-package yaml-mode)
+(use-package markdown-mode)
 
 ;; https://stackoverflow.com/a/77033292
 (use-package tblui)

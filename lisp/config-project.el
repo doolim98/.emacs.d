@@ -9,10 +9,12 @@
          ("m" . project-magit)
          ("d" . project-dired))
   :init
+  (setq project-switch-use-entire-map t)
   (setq project-switch-commands
         '((project-find-file "Find file" f)
           (project-dired "Dired" d)
           (project-vc-dir "VC-Dir" v)
+	  (project-magit "Magit" m)
           (project-eshell "Eshell" e)
           (project-shell "Shell" s)))
 )

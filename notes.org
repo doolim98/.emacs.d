@@ -1,6 +1,8 @@
 * Emacs Configuration Notes
 
-*** TODO 
+*** TODO
+- Use headline instead of modeline.
+- Check ~set-frame-position~ function
 - Map =C-`= and =C-~= to shell related command.
 - Map Flymake next/prev error
   - Map indent/unindent line key
