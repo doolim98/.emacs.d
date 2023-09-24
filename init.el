@@ -18,9 +18,9 @@
 	 ("C-c g s" . git-gutter:stage-hunk)
 	 ("C-c g c" . magit-commit)
 	 ("C-M-s" . save-buffer)
-         ("M-1" . delete-other-windows)
-         ("M-2" . split-window-below)
-         ("M-3" . split-window-right)
+	 ("M-1" . delete-other-windows)
+	 ("M-2" . split-window-below)
+	 ("M-3" . split-window-right)
 	 ("C-x C-k" . kill-this-buffer)
 	 ("C-M-e" . eshell)
 	 ("C-." . er/expand-region)
@@ -31,7 +31,7 @@
 	 ("C-M-y" . org-download-screenshot)
 	 ;; My scroll up/down
 	 ("C-d" . my/scroll-down)
-         ("C-u" . my/scroll-up)
+	 ("C-u" . my/scroll-up)
 	 ;; Avy
 	 ("M-j" . avy-goto-word-0)
 	 ("C-j" . avy-goto-word-1)
@@ -43,26 +43,26 @@
 	 ("C-x M-c" . crux-capitalize-region)
 	 ;; Consult
 	 ("C-x b"       . consult-buffer)
-         ("M-y"         . consult-yank-pop)
-         ("M-g g"       . consult-goto-line)
-         ("M-g M-g"     . consult-goto-line)
-         ("M-g f"       . consult-flymake)
-         ("M-g i"       . consult-imenu)
-         ("M-s l"       . consult-line)
-         ("M-s L"       . consult-line-multi)
-         ("M-s u"       . consult-focus-lines)
-         ("M-s g"       . consult-ripgrep)
-         ("M-s M-g"     . consult-ripgrep)
-         ("C-x M-:"     . consult-complex-command)
-         ("C-c n"       . consult-org-agenda)
-         ("C-c m"       . my/notegrep)
+	 ("M-y"         . consult-yank-pop)
+	 ("M-g g"       . consult-goto-line)
+	 ("M-g M-g"     . consult-goto-line)
+	 ("M-g f"       . consult-flymake)
+	 ("M-g i"       . consult-imenu)
+	 ("M-s l"       . consult-line)
+	 ("M-s L"       . consult-line-multi)
+	 ("M-s u"       . consult-focus-lines)
+	 ("M-s g"       . consult-ripgrep)
+	 ("M-s M-g"     . consult-ripgrep)
+	 ("C-x M-:"     . consult-complex-command)
+	 ("C-c n"       . consult-org-agenda)
+	 ("C-c m"       . my/notegrep)
 	 :map eglot-mode-map
 	 ("C-c C-q" . eglot-code-action-quickfix)
 	 ("C-c C-f" . eglot-format-buffer)
-         :map help-map
-         ("a" . consult-apropos)
-         :map minibuffer-local-map
-         ("C-r" . consult-history)
+	 :map help-map
+	 ("a" . consult-apropos)
+	 :map minibuffer-local-map
+	 ("C-r" . consult-history)
 	 :map dired-mode-map
 	 ("-" . dired-up-directory)
 	 ("." . cycle-dired-switches))
@@ -75,20 +75,20 @@
 
   (savehist-mode 1)
   (setq-default delete-pair-blink-delay 0)
-  
-  
+
+
   (setq blink-cursor-delay 0.0
 	blink-cursor-interval 0.2
 	blink-cursor-blinks 9999)
   (setq-default	cursor-type 'box)
 
   (setq-default history-length 1000
-                use-dialog-box nil
-                delete-by-moving-to-trash t
-                create-lockfiles nil
-                auto-save-default nil
-                inhibit-startup-screen t
-                ring-bell-function 'ignore)
+		use-dialog-box nil
+		delete-by-moving-to-trash t
+		create-lockfiles nil
+		auto-save-default nil
+		inhibit-startup-screen t
+		ring-bell-function 'ignore)
 
   (setq	split-width-threshold 160
 	split-height-threshold 120)
@@ -103,7 +103,7 @@
   ;; TRAMP
   (require 'tramp)
   (setq tramp-default-method "ssh"
-        shell-file-name "bash")
+	shell-file-name "bash")
   (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
   ;; ESHELL
@@ -160,11 +160,11 @@
   (use-package delight
     :config
     (delight '((abbrev-mode " Abv" abbrev)
-               (smart-tab-mode " \\t" smart-tab)
-               (eldoc-mode nil "eldoc")
-               (rainbow-mode)
-               (overwrite-mode " Ov" t)
-               (emacs-lisp-mode "Elisp" :major)))))
+	       (smart-tab-mode " \\t" smart-tab)
+	       (eldoc-mode nil "eldoc")
+	       (rainbow-mode)
+	       (overwrite-mode " Ov" t)
+	       (emacs-lisp-mode "Elisp" :major)))))
 
 (use-package custom-functions :straight nil  :ensure nil :no-require t
   :init
@@ -188,8 +188,8 @@
     "Cycle through the list `list-of-dired-switches' of switches for ls"
     (interactive)
     (setq list-of-dired-switches
-          (append (cdr list-of-dired-switches)
-                  (list (car list-of-dired-switches))))
+	  (append (cdr list-of-dired-switches)
+		  (list (car list-of-dired-switches))))
     (setq dired-listing-switches (car list-of-dired-switches))
     (dired-sort-other (car list-of-dired-switches))))
 
@@ -216,7 +216,7 @@
   :config
   ;; Do not allow the cursor in the minibuffer prompt
   (setq minibuffer-prompt-properties
-        '(read-only t cursor-intangible t face minibuffer-prompt))
+	'(read-only t cursor-intangible t face minibuffer-prompt))
   (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
@@ -236,8 +236,8 @@
 (use-package magit
   :after (project)
   :bind (("C-x g" . magit-status)
-         :map project-prefix-map
-         ("m" . project-magit))
+	 :map project-prefix-map
+	 ("m" . project-magit))
   :commands (magit project-magit)
   :config
   (add-to-list 'project-switch-commands
@@ -277,7 +277,7 @@
 
   (corfu-popupinfo-mode) ; Popup completion info
   (add-hook 'eshell-mode-hook
-            (lambda () (setq-local corfu-quit-at-boundary t
+	    (lambda () (setq-local corfu-quit-at-boundary t
 				   corfu-quit-no-match t
 				   corfu-auto nil
 				   corfu-auto-delay 1000)))
@@ -289,7 +289,7 @@
 (use-package dabbrev  :straight nil
   ;; Swap M-/ and C-M-/
   :bind (("M-/" . dabbrev-completion)
-         ("C-M-/" . dabbrev-expand))
+	 ("C-M-/" . dabbrev-expand))
   ;; Other useful Dabbrev configurations.
   :custom
   (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
@@ -300,21 +300,21 @@
   :unless (not window-system)
   :config
   (setq fontaine-presets
-        '((regular
-           :default-height 140)
-          (small
-           :default-height 130)
-          (large
-           :default-height 200)
-          (extra-large
-           :default-weight semilight
-           :default-height 210
-           :line-spacing 5
-           :bold-weight bold)
-          (t ; our shared fallback properties
-           :default-family "Fira Code"
+	'((regular
+	   :default-height 140)
+	  (small
+	   :default-height 130)
+	  (large
+	   :default-height 200)
+	  (extra-large
+	   :default-weight semilight
+	   :default-height 210
+	   :line-spacing 5
+	   :bold-weight bold)
+	  (t ; our shared fallback properties
+	   :default-family "Fira Code"
 	   :bold-weight semibold
-           :italic-slant italic)))
+	   :italic-slant italic)))
   (fontaine-set-preset 'regular))
 
 ;; Org Mode
@@ -325,7 +325,7 @@
   (setq org-pretty-entities t
 	org-hide-emphasis-markers nil
 	org-image-max-width 500)
-  
+
   (use-package org-download
     :hook ((dired-mode) . org-download-enable)
     :custom
@@ -357,7 +357,7 @@
   :straight (:host github :repo "emacs-grammarly/eglot-grammarly")
   :defer t  ; defer package loading
   :hook ((org-mode markdown-mode). (lambda ()
-                                     (require 'eglot-grammarly))))
+				     (require 'eglot-grammarly))))
   )
 
 (use-package git-gutter
@@ -365,20 +365,20 @@
   :config
   (setq git-gutter:update-interval 1)
   (custom-set-variables '(git-gutter:lighter " GG"))
-  
+
   (use-package git-gutter-fringe
     :when (window-system)
     :config
     (require 'diff-mode)
     ;; (set-face-attribute 'git-gutter-fr:modified nil
-    ;; 			:background (face-attribute 'diff-changed :background)
-    ;; 			:foreground (face-attribute 'diff-changed :foreground))
+    ;;			:background (face-attribute 'diff-changed :background)
+    ;;			:foreground (face-attribute 'diff-changed :foreground))
     ;; (set-face-attribute 'git-gutter-fr:added nil
-    ;; 			:background (face-attribute 'diff-added :background)
-    ;; 			:foreground (face-attribute 'diff-added :foreground))
+    ;;			:background (face-attribute 'diff-added :background)
+    ;;			:foreground (face-attribute 'diff-added :foreground))
     ;; (set-face-attribute 'git-gutter-fr:deleted nil
-    ;; 			:background (face-attribute 'diff-removed :background)
-    ;; 			:foreground (face-attribute 'diff-removed :foreground))
+    ;;			:background (face-attribute 'diff-removed :background)
+    ;;			:foreground (face-attribute 'diff-removed :foreground))
     ))
 
 (use-package prog-mode :straight nil
