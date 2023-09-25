@@ -11,12 +11,13 @@
 
 (my/load "lisp/config-project.el")
 
+(use-package repeat :defer 11
+  :init (repeat-mode +1))
+
 (use-package my-keybindings :straight nil :ensure nil
   :defer 10 ;; IMPORTANT!!!
   :bind-keymap ((("C-4" . ctl-x-4-map)))
   :bind (("C-c C-w"   . fixup-whitespace)
-	 ("C-c g s" . git-gutter:stage-hunk)
-	 ("C-c g c" . magit-commit)
 	 ("C-M-s" . save-buffer)
 	 ("M-1" . delete-other-windows)
 	 ("M-2" . split-window-below)
@@ -28,7 +29,19 @@
 	 ("M-]" . next-buffer)
 	 ("C-x t" . vterm)
 
+	 ;; Git
+	 :map global-map
+	 ("C-c g c" . magit-commit)
+	 ("C-c g s" . git-gutter:stage-hunk)
+	 ("C-c g n" . git-gutter:next-hunk)
+	 ("C-c g p" . git-gutter:previous-hunk)
+	 :repeat-map git-gutter:next-hunk-map
+	 ("n" . git-gutter:next-hunk)
+	 ("p" . git-gutter:previous-hunk)
+	 ("s" . git-gutter:stage-hunk)
+
 	 ;; Org
+	 :map global-map
 	 ("C-M-y" . org-download-screenshot)
 
 	 ;; My scroll up/down
@@ -62,6 +75,13 @@
 	 ("C-c n"       . consult-org-agenda)
 	 ("C-c m"       . my/notegrep)
 
+	 :map corfu-map
+	 ("C-h" . corfu-popupinfo-toggle)
+	 ("TAB"        . corfu-insert)
+	 ([tab]        . corfu-insert)
+	 ("<return>" . newline)
+	 ("<escape>" . keyboard-quit)
+
 	 :map eglot-mode-map
 	 ("C-c C-q" . eglot-code-action-quickfix)
 	 ("C-c C-f" . eglot-format-buffer)
@@ -75,7 +95,7 @@
 	 :map dired-mode-map
 	 ("-" . dired-up-directory)
 	 ("." . cycle-dired-switches))
-  :config
+  :init
   (global-set-key (kbd "<escape>")      'keyboard-quit))
 
 (use-package emacs :straight nil :ensure nil :defer nil
@@ -209,6 +229,18 @@
   (require 'vertico-directory)
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 
+  (use-package vertico-posframe
+    :when (window-system)
+    :config
+    (setq vertico-posframe-poshandler 'posframe-poshandler-frame-top-center
+	  vertico-count 20
+	  vertico-posframe-min-height 1
+	  vertico-posframe-min-width 90)
+    (setq vertico-multiform-commands
+      '((consult-line (:not posframe))
+        (t posframe)))
+    (vertico-posframe-mode 1))
+
   (use-package orderless
     :commands (orderless)
     :custom (completion-styles '(orderless flex))
@@ -223,10 +255,6 @@
     (marginalia-mode))
   (vertico-mode t)
   :config
-  ;; Do not allow the cursor in the minibuffer prompt
-  (setq minibuffer-prompt-properties
-	'(read-only t cursor-intangible t face minibuffer-prompt))
-  (add-hook 'minibuffer-setup-hook #'cursor-intangible-mode)
   ;; Enable recursive minibuffers
   (setq enable-recursive-minibuffers t))
 
@@ -248,13 +276,34 @@
 	 :map project-prefix-map
 	 ("m" . project-magit))
   :commands (magit project-magit)
+  :init
+  (use-package git-gutter
+  :hook (prog-mode . git-gutter-mode)
+  :config
+  (setq-default git-gutter:update-interval 0)
+  (custom-set-variables '(git-gutter:lighter " GG"))
+
+  (use-package git-gutter-fringe
+    :when (window-system)
+    :config
+    (require 'diff-mode)
+    ;; (set-face-attribute 'git-gutter-fr:modified nil
+    ;;			:background (face-attribute 'diff-changed :background)
+    ;;			:foreground (face-attribute 'diff-changed :foreground))
+    ;; (set-face-attribute 'git-gutter-fr:added nil
+    ;;			:background (face-attribute 'diff-added :background)
+    ;;			:foreground (face-attribute 'diff-added :foreground))
+    ;; (set-face-attribute 'git-gutter-fr:deleted nil
+    ;;			:background (face-attribute 'diff-removed :background)
+    ;;			:foreground (face-attribute 'diff-removed :foreground))
+    )
   :config
   (add-to-list 'project-switch-commands
 	       '(project-magit "Magit" m))
   (defun project-magit  ()
     (interactive)
     (let ((dir (project-root (project-current t))))
-      (magit-status dir))))
+      (magit-status dir)))))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -275,12 +324,6 @@
   (corfu-preview-current 'nil)
   (corfu-preselect 'directory)
   (corfu-on-exact-match 'quit)
-  :bind (:map corfu-map
-	      ("C-h" . corfu-popupinfo-toggle)
-	      ("TAB"        . corfu-insert)
-	      ([tab]        . corfu-insert)
-	      ("<return>" . newline)
-	      ("ESC" . keyboard-quit))
   :init
   (setq tab-always-indent 'complete)
 
@@ -369,26 +412,7 @@
 				     (require 'eglot-grammarly))))
   )
 
-(use-package git-gutter
-  :hook (prog-mode . git-gutter-mode)
-  :config
-  (setq git-gutter:update-interval 1)
-  (custom-set-variables '(git-gutter:lighter " GG"))
 
-  (use-package git-gutter-fringe
-    :when (window-system)
-    :config
-    (require 'diff-mode)
-    ;; (set-face-attribute 'git-gutter-fr:modified nil
-    ;;			:background (face-attribute 'diff-changed :background)
-    ;;			:foreground (face-attribute 'diff-changed :foreground))
-    ;; (set-face-attribute 'git-gutter-fr:added nil
-    ;;			:background (face-attribute 'diff-added :background)
-    ;;			:foreground (face-attribute 'diff-added :foreground))
-    ;; (set-face-attribute 'git-gutter-fr:deleted nil
-    ;;			:background (face-attribute 'diff-removed :background)
-    ;;			:foreground (face-attribute 'diff-removed :foreground))
-    ))
 
 (use-package prog-mode :straight nil
   :hook ((prog-mode) . electric-pair-mode)
