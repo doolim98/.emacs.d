@@ -43,6 +43,8 @@
 	 ;; Org
 	 :map global-map
 	 ("C-M-y" . org-download-screenshot)
+	 ("C-c n"       . consult-org-agenda)
+	 ("C-c m"       . my/notegrep)
 
 	 ;; My scroll up/down
 	 ("C-d" . my/scroll-down)
@@ -62,6 +64,7 @@
 	 ;; Consult
 	 ("C-x b"       . consult-buffer)
 	 ("M-y"         . consult-yank-pop)
+	 ("M-g o"	. consult-outline)
 	 ("M-g g"       . consult-goto-line)
 	 ("M-g M-g"     . consult-goto-line)
 	 ("M-g f"       . consult-flymake)
@@ -72,8 +75,6 @@
 	 ("M-s g"       . consult-ripgrep)
 	 ("M-s M-g"     . consult-ripgrep)
 	 ("C-x M-:"     . consult-complex-command)
-	 ("C-c n"       . consult-org-agenda)
-	 ("C-c m"       . my/notegrep)
 
 	 :map corfu-map
 	 ("C-h" . corfu-popupinfo-toggle)
@@ -234,6 +235,8 @@
     :config
     (setq vertico-posframe-poshandler 'posframe-poshandler-frame-top-center
 	  vertico-count 20
+	  vertico-posframe-border-width 1
+
 	  vertico-posframe-min-height 1
 	  vertico-posframe-min-width 90)
     (setq vertico-multiform-commands

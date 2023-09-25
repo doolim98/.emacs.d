@@ -42,3 +42,23 @@ Sometimes, I'm afraid of killing buffer because
 
 So, quarantine buffers can be useful when I want to keep my buffer list clean but also want's to restore qurantined buffers.
 The size of the Quarantine buffer list is limited.
+
+*** DefAlias: ~default-yes-sometimes~
+
+#+begin_src emacs-lisp
+  (setq original-y-or-n-p 'y-or-n-p)
+  (defalias 'original-y-or-n-p (symbol-function 'y-or-n-p))
+  (defun default-yes-sometimes (prompt)
+    (if (or
+         (string-match "has a running process" prompt)
+         (string-match "does not exist; create" prompt)
+         (string-match "modified; kill anyway" prompt)
+         (string-match "Delete buffer using" prompt)
+         (string-match "Kill buffer of" prompt)
+         (string-match "Kill Dired buffer of" prompt)
+         (string-match "delete buffer using" prompt))
+        t
+      (original-y-or-n-p prompt)))
+  (defalias 'yes-or-no-p 'default-yes-sometimes)
+  (defalias 'y-or-n-p 'default-yes-sometimes)
+#+end_src
