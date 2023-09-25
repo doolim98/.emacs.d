@@ -4,6 +4,8 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 (straight-use-package 'org)
+(when (eq system-type 'darwin)
+  (setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org"))
 
 ;; load project related configurations
 (defun my/load (path)
@@ -15,6 +17,7 @@
   :init (repeat-mode +1))
 
 (use-package my-keybindings :straight nil :ensure nil
+  :after (dired corfu)
   :defer 10 ;; IMPORTANT!!!
   :bind-keymap ((("C-4" . ctl-x-4-map)))
   :bind (("C-c C-w"   . fixup-whitespace)
