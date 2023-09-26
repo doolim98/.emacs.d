@@ -31,6 +31,11 @@
 	 ("M-]" . next-buffer)
 	 ("C-x t" . vterm)
 
+	 ;; Unuse keybindings
+	 ("M-l" . nil)
+	 ("M-u" . nil)
+	 ("M-m" . nil)
+
 	 ;; Git
 	 :map global-map
 	 ("C-c g c" . magit-commit)
@@ -58,6 +63,7 @@
 
 	 ;; Crux
 	 ("C-o" . crux-smart-open-line)
+	 ("C-a" . crux-move-beginning-of-line)
 	 ("M-o" . crux-other-window-or-switch-buffer)
 	 ("C-x C-u" . crux-upcase-region)
 	 ("C-x C-l" . crux-downcase-region)
