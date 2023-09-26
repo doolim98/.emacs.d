@@ -18,9 +18,8 @@
 
 (use-package my-keybindings :straight nil :ensure nil
   :after (dired corfu)
-  :defer 10 ;; IMPORTANT!!!
-  :bind-keymap ((("C-4" . ctl-x-4-map)))
-  :bind (("C-c C-w"   . fixup-whitespace)
+  :bind (("C-4" . ctl-x-4-prefix)
+	 ("C-c C-w". fixup-whitespace)
 	 ("C-M-s" . save-buffer)
 	 ("M-1" . delete-other-windows)
 	 ("M-2" . split-window-below)
