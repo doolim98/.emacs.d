@@ -35,6 +35,7 @@
 	 ("M-l" . nil)
 	 ("M-u" . nil)
 	 ("M-m" . nil)
+	 ("M-r" . nil)
 
 	 ;; Git
 	 :map global-map
