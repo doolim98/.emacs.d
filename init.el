@@ -25,7 +25,7 @@
 	 ("M-2" . split-window-below)
 	 ("M-3" . split-window-right)
 	 ("C-x C-k" . kill-this-buffer)
-	 ("C-M-e" . eshell)
+	 ("C-x C-e" . eshell)
 	 ("C-." . er/expand-region)
 	 ("M-[" . previous-buffer)
 	 ("M-]" . next-buffer)
