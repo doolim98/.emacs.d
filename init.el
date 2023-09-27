@@ -18,19 +18,24 @@
 
 (use-package my-keybindings :straight nil :ensure nil
   :after (dired corfu)
-  :defer 10 ;; IMPORTANT!!!
-  :bind-keymap ((("C-4" . ctl-x-4-map)))
-  :bind (("C-c C-w"   . fixup-whitespace)
+  :bind (("C-4" . ctl-x-4-prefix)
+	 ("C-c C-w". fixup-whitespace)
 	 ("C-M-s" . save-buffer)
 	 ("M-1" . delete-other-windows)
 	 ("M-2" . split-window-below)
 	 ("M-3" . split-window-right)
 	 ("C-x C-k" . kill-this-buffer)
-	 ("C-M-e" . eshell)
+	 ("C-x C-e" . eshell)
 	 ("C-." . er/expand-region)
 	 ("M-[" . previous-buffer)
 	 ("M-]" . next-buffer)
 	 ("C-x t" . vterm)
+
+	 ;; Unuse keybindings
+	 ("M-l" . nil)
+	 ("M-u" . nil)
+	 ("M-m" . nil)
+	 ("M-r" . nil)
 
 	 ;; Git
 	 :map global-map
@@ -59,6 +64,7 @@
 
 	 ;; Crux
 	 ("C-o" . crux-smart-open-line)
+	 ("C-a" . crux-move-beginning-of-line)
 	 ("M-o" . crux-other-window-or-switch-buffer)
 	 ("C-x C-u" . crux-upcase-region)
 	 ("C-x C-l" . crux-downcase-region)
@@ -182,10 +188,7 @@
        ((t (:background nil :foreground "#d00000" :weight bold :height 1.0)))))
 
   (use-package crux)
-
-  (use-package expand-region
-    :bind (("C-=" . er/expand-region)))
-
+  (use-package expand-region)
   (use-package which-key
   :config
   (setq which-key-show-early-on-C-h t)
@@ -205,13 +208,13 @@
   (defun my/scroll-down (arg)
     "Move cursor down half a screen ARG times."
     (interactive "p")
-    (let ((dist (/ (window-height) 2)))
+    (let ((dist (/ (window-height) 3)))
       (next-line dist)))
 
   (defun my/scroll-up (arg)
     "Move cursor up half a screen ARG times."
     (interactive "p")
-    (let ((dist (/ (window-height) 2)))
+    (let ((dist (/ (window-height) 3)))
       (previous-line dist)))
 
   (defcustom list-of-dired-switches
@@ -237,12 +240,13 @@
   (use-package vertico-posframe
     :when (window-system)
     :config
-    (setq vertico-posframe-poshandler 'posframe-poshandler-frame-top-center
+    (setq vertico-posframe-poshandler 'posframe-poshandler-window-top-center
 	  vertico-count 20
 	  vertico-posframe-border-width 1
 
 	  vertico-posframe-min-height 1
-	  vertico-posframe-min-width 90)
+	  vertico-posframe-min-width 80
+	  vertico-posframe-width 80)
     (setq vertico-multiform-commands
       '((consult-line (:not posframe))
         (t posframe)))
@@ -435,3 +439,20 @@
 
 ;; https://stackoverflow.com/a/77033292
 (use-package tblui)
+
+(use-package x86-lookup :ensure t
+  :bind (("C-h x" . x86-lookup))
+  :init
+  (defun x86-lookup-browse-pdf-preview (pdf page)
+  "View PDF at PAGE file using Okular."
+  (start-process "preview" nil "open" "-a" "Preview" "-p" (format "%d" page) "--" pdf))
+  (setq-default x86-lookup-pdf (concat org-directory "/intel-manual.pdf"))
+  (setq x86-lookup-browse-pdf-function #'x86-lookup-browse-pdf-evince))
+
+
+(use-package pdf-tools
+  :init
+  (defun my/install-pdf-tools()
+    (interactive)
+    (let ((default-directory (format "%s/straight/repos/pdf-tools" straight-base-dir)))
+      (async-shell-command "make -s"))))

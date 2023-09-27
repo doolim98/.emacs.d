@@ -6,4 +6,9 @@
     (setq tabulated-list-format)
     (tabulated-list-init-header))
 
-(provide my-list-mode)
+;;;###autoload
+(defun my/hello()
+  (interactive)
+  (message "hello! autoload!"))
+
+(provide 'my-list-mode)
