@@ -340,7 +340,7 @@
 	'((regular
 	   :default-height 140)
 	  (small
-	   :default-height 130)
+	   :default-height 120)
 	  (large
 	   :default-height 200)
 	  (extra-large
