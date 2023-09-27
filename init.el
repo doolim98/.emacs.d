@@ -436,3 +436,20 @@
 
 ;; https://stackoverflow.com/a/77033292
 (use-package tblui)
+
+(use-package x86-lookup :ensure t
+  :bind (("C-h x" . x86-lookup))
+  :init
+  (defun x86-lookup-browse-pdf-preview (pdf page)
+  "View PDF at PAGE file using Okular."
+  (start-process "preview" nil "open" "-a" "Preview" "-p" (format "%d" page) "--" pdf))
+  (setq-default x86-lookup-pdf (concat org-directory "/intel-manual.pdf"))
+  (setq x86-lookup-browse-pdf-function #'x86-lookup-browse-pdf-evince))
+
+
+(use-package pdf-tools
+  :init
+  (defun my/install-pdf-tools()
+    (interactive)
+    (let ((default-directory (format "%s/straight/repos/pdf-tools" straight-base-dir)))
+      (async-shell-command "make -s"))))
