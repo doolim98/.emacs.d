@@ -16,69 +16,13 @@
 (use-package repeat :defer 11
   :init (repeat-mode +1))
 
+(use-package general)
+
+(require 'config-keybindings)
+
 (use-package my-keybindings :straight nil :ensure nil :defer nil
   :after (dired corfu)
-  :bind (("C-4" . #'ctl-x-4-prefix)
-		 ("C-c C-w". #'fixup-whitespace)
-		 ("C-M-s" . #'save-buffer)
-		 ("M-1" . #'delete-other-windows)
-		 ("M-2" . #'split-window-below)
-		 ("M-3" . #'split-window-right)
-		 ("C-x C-k" . #'kill-this-buffer)
-		 ("C-x C-e" . #'eshell)
-		 ("M-o" . #'ace-window)
-		 ("C-." . #'er/expand-region)
-		 ("M-[" . #'previous-buffer)
-		 ("M-]" . #'next-buffer)
-		 ("C-x t" . #'vterm)
-		 ("M-j" . #'avy-goto-word-0)
-		 ("C-j" . #'avy-goto-word-1)
-		 ("C-o" . #'crux-smart-open-line)
-		 ("C-a" . #'crux-move-beginning-of-line)
-		 ("C-x C-u" . #'crux-upcase-region)
-		 ("C-x C-l" . #'crux-downcase-region)
-		 ("C-x M-c" . #'crux-capitalize-region)
-		 ;; Unuse keybindings
-		 ("M-l" . nil)
-		 ("M-u" . nil)
-		 ("M-m" . nil)
-		 ("M-r" . nil)
-
-		 ;; Git
-		 :map global-map
-		 ("C-c g c" . #'magit-commit)
-		 ("C-c g s" . #'git-gutter:stage-hunk)
-		 ("C-c g n" . #'git-gutter:next-hunk)
-		 ("C-c g p" . #'git-gutter:previous-hunk)
-		 :repeat-map git-gutter:next-hunk-map
-		 ("n" . #'git-gutter:next-hunk)
-		 ("p" . #'git-gutter:previous-hunk)
-		 ("s" . #'git-gutter:stage-hunk)
-
-		 ;; Org
-		 :map global-map
-		 ("C-M-y" . #'org-download-screenshot)
-		 ("C-c n"       . #'consult-org-agenda)
-		 ("C-c m"       . #'my/notegrep)
-
-		 ;; My scroll up/down
-		 ("C-d" . #'my/scroll-down)
-		 ("C-u" . #'my/scroll-up)
-
-		 ;; Consult
-		 ("C-x b"       . #'consult-buffer)
-		 ("M-y"         . #'consult-yank-pop)
-		 ("M-g o"	. #'consult-outline)
-		 ("M-g g"       . #'consult-goto-line)
-		 ("M-g M-g"     . #'consult-goto-line)
-		 ("M-g f"       . #'consult-flymake)
-		 ("M-g i"       . #'consult-imenu)
-		 ("M-s l"       . #'consult-line)
-		 ("M-s L"       . #'consult-line-multi)
-		 ("M-s u"       . #'consult-focus-lines)
-		 ("M-s g"       . #'consult-ripgrep)
-		 ("M-s M-g"     . #'consult-ripgrep)
-		 ("C-x M-:"     . #'consult-complex-command)
+  :bind (
 
 		 :map corfu-map
 		 ("C-h" . #'corfu-popupinfo-toggle)
@@ -173,14 +117,14 @@
   ;; Basic Util Packages
   (use-package avy)
   (use-package ace-window
-    :commands (aw-flip-window))
+    :commands (aw-flip-window)
     :init
     (setq aw-background nil)
-    (setq aw-dispatch-always t)
+    (setq aw-dispatch-always nil)
     (setq aw-frame-offset '(50 . 50))
     (custom-set-faces
      '(aw-leading-char-face
-       ((t (:background nil :foreground "#d00000" :weight bold :height 1.0)))))
+       ((t (:background nil :foreground "#d00000" :weight bold :height 1.0))))))
 
   (use-package crux)
   (use-package expand-region)
@@ -233,6 +177,7 @@
   (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
 
   (use-package vertico-posframe
+	:disabled t
     :when (window-system)
     :config
     (setq vertico-posframe-poshandler 'posframe-poshandler-window-top-center
