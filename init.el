@@ -287,27 +287,6 @@
 	 :map project-prefix-map
 	 ("m" . project-magit))
   :commands (magit project-magit)
-  :init
-  (use-package git-gutter
-  :hook (prog-mode . git-gutter-mode)
-  :config
-  (setq-default git-gutter:update-interval 0)
-  (custom-set-variables '(git-gutter:lighter " GG"))
-
-  (use-package git-gutter-fringe
-    :when (window-system)
-    :config
-    (require 'diff-mode)
-    ;; (set-face-attribute 'git-gutter-fr:modified nil
-    ;;			:background (face-attribute 'diff-changed :background)
-    ;;			:foreground (face-attribute 'diff-changed :foreground))
-    ;; (set-face-attribute 'git-gutter-fr:added nil
-    ;;			:background (face-attribute 'diff-added :background)
-    ;;			:foreground (face-attribute 'diff-added :foreground))
-    ;; (set-face-attribute 'git-gutter-fr:deleted nil
-    ;;			:background (face-attribute 'diff-removed :background)
-    ;;			:foreground (face-attribute 'diff-removed :foreground))
-    )
   :config
   (add-to-list 'project-switch-commands
 	       '(project-magit "Magit" m))
