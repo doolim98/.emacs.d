@@ -19,92 +19,92 @@
 (use-package my-keybindings :straight nil :ensure nil
   :after (dired corfu)
   :bind (("C-4" . ctl-x-4-prefix)
-	 ("C-c C-w". fixup-whitespace)
-	 ("C-M-s" . save-buffer)
-	 ("M-1" . delete-other-windows)
-	 ("M-2" . split-window-below)
-	 ("M-3" . split-window-right)
-	 ("C-x C-k" . kill-this-buffer)
-	 ("C-x C-e" . eshell)
-	 ("C-." . er/expand-region)
-	 ("M-[" . previous-buffer)
-	 ("M-]" . next-buffer)
-	 ("C-x t" . vterm)
+		 ("C-c C-w". fixup-whitespace)
+		 ("C-M-s" . save-buffer)
+		 ("M-1" . delete-other-windows)
+		 ("M-2" . split-window-below)
+		 ("M-3" . split-window-right)
+		 ("C-x C-k" . kill-this-buffer)
+		 ("C-x C-e" . eshell)
+		 ("C-." . er/expand-region)
+		 ("M-[" . previous-buffer)
+		 ("M-]" . next-buffer)
+		 ("C-x t" . vterm)
 
-	 ;; Unuse keybindings
-	 ("M-l" . nil)
-	 ("M-u" . nil)
-	 ("M-m" . nil)
-	 ("M-r" . nil)
+		 ;; Unuse keybindings
+		 ("M-l" . nil)
+		 ("M-u" . nil)
+		 ("M-m" . nil)
+		 ("M-r" . nil)
 
-	 ;; Git
-	 :map global-map
-	 ("C-c g c" . magit-commit)
-	 ("C-c g s" . git-gutter:stage-hunk)
-	 ("C-c g n" . git-gutter:next-hunk)
-	 ("C-c g p" . git-gutter:previous-hunk)
-	 :repeat-map git-gutter:next-hunk-map
-	 ("n" . git-gutter:next-hunk)
-	 ("p" . git-gutter:previous-hunk)
-	 ("s" . git-gutter:stage-hunk)
+		 ;; Git
+		 :map global-map
+		 ("C-c g c" . magit-commit)
+		 ("C-c g s" . git-gutter:stage-hunk)
+		 ("C-c g n" . git-gutter:next-hunk)
+		 ("C-c g p" . git-gutter:previous-hunk)
+		 :repeat-map git-gutter:next-hunk-map
+		 ("n" . git-gutter:next-hunk)
+		 ("p" . git-gutter:previous-hunk)
+		 ("s" . git-gutter:stage-hunk)
 
-	 ;; Org
-	 :map global-map
-	 ("C-M-y" . org-download-screenshot)
-	 ("C-c n"       . consult-org-agenda)
-	 ("C-c m"       . my/notegrep)
+		 ;; Org
+		 :map global-map
+		 ("C-M-y" . org-download-screenshot)
+		 ("C-c n"       . consult-org-agenda)
+		 ("C-c m"       . my/notegrep)
 
-	 ;; My scroll up/down
-	 ("C-d" . my/scroll-down)
-	 ("C-u" . my/scroll-up)
+		 ;; My scroll up/down
+		 ("C-d" . my/scroll-down)
+		 ("C-u" . my/scroll-up)
 
-	 ;; Avy
-	 ("M-j" . avy-goto-word-0)
-	 ("C-j" . avy-goto-word-1)
+		 ;; Avy
+		 ("M-j" . avy-goto-word-0)
+		 ("C-j" . avy-goto-word-1)
 
-	 ;; Crux
-	 ("C-o" . crux-smart-open-line)
-	 ("C-a" . crux-move-beginning-of-line)
-	 ("M-o" . crux-other-window-or-switch-buffer)
-	 ("C-x C-u" . crux-upcase-region)
-	 ("C-x C-l" . crux-downcase-region)
-	 ("C-x M-c" . crux-capitalize-region)
+		 ;; Crux
+		 ("C-o" . crux-smart-open-line)
+		 ("C-a" . crux-move-beginning-of-line)
+		 ("M-o" . crux-other-window-or-switch-buffer)
+		 ("C-x C-u" . crux-upcase-region)
+		 ("C-x C-l" . crux-downcase-region)
+		 ("C-x M-c" . crux-capitalize-region)
 
-	 ;; Consult
-	 ("C-x b"       . consult-buffer)
-	 ("M-y"         . consult-yank-pop)
-	 ("M-g o"	. consult-outline)
-	 ("M-g g"       . consult-goto-line)
-	 ("M-g M-g"     . consult-goto-line)
-	 ("M-g f"       . consult-flymake)
-	 ("M-g i"       . consult-imenu)
-	 ("M-s l"       . consult-line)
-	 ("M-s L"       . consult-line-multi)
-	 ("M-s u"       . consult-focus-lines)
-	 ("M-s g"       . consult-ripgrep)
-	 ("M-s M-g"     . consult-ripgrep)
-	 ("C-x M-:"     . consult-complex-command)
+		 ;; Consult
+		 ("C-x b"       . consult-buffer)
+		 ("M-y"         . consult-yank-pop)
+		 ("M-g o"	. consult-outline)
+		 ("M-g g"       . consult-goto-line)
+		 ("M-g M-g"     . consult-goto-line)
+		 ("M-g f"       . consult-flymake)
+		 ("M-g i"       . consult-imenu)
+		 ("M-s l"       . consult-line)
+		 ("M-s L"       . consult-line-multi)
+		 ("M-s u"       . consult-focus-lines)
+		 ("M-s g"       . consult-ripgrep)
+		 ("M-s M-g"     . consult-ripgrep)
+		 ("C-x M-:"     . consult-complex-command)
 
-	 :map corfu-map
-	 ("C-h" . corfu-popupinfo-toggle)
-	 ("TAB"        . corfu-insert)
-	 ([tab]        . corfu-insert)
-	 ("<return>" . newline)
-	 ("<escape>" . keyboard-quit)
+		 :map corfu-map
+		 ("C-h" . corfu-popupinfo-toggle)
+		 ("TAB"        . corfu-insert)
+		 ([tab]        . corfu-insert)
+		 ("<return>" . newline)
+		 ("<escape>" . keyboard-quit)
 
-	 :map eglot-mode-map
-	 ("C-c C-q" . eglot-code-action-quickfix)
-	 ("C-c C-f" . eglot-format-buffer)
+		 :map eglot-mode-map
+		 ("C-c C-q" . eglot-code-action-quickfix)
+		 ("C-c C-f" . eglot-format-buffer)
 
-	 :map help-map
-	 ("a" . consult-apropos)
+		 :map help-map
+		 ("a" . consult-apropos)
 
-	 :map minibuffer-local-map
-	 ("C-r" . consult-history)
+		 :map minibuffer-local-map
+		 ("C-r" . consult-history)
 
-	 :map dired-mode-map
-	 ("-" . dired-up-directory)
-	 ("." . cycle-dired-switches))
+		 :map dired-mode-map
+		 ("-" . dired-up-directory)
+		 ("." . cycle-dired-switches))
   :init
   (global-set-key (kbd "<escape>")      'keyboard-quit))
 
