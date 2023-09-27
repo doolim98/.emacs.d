@@ -187,10 +187,7 @@
        ((t (:foreground "#d00000" :height 1.0)))))
 
   (use-package crux)
-
-  (use-package expand-region
-    :bind (("C-=" . er/expand-region)))
-
+  (use-package expand-region)
   (use-package which-key
   :config
   (setq which-key-show-early-on-C-h t)
