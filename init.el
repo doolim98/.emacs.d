@@ -371,7 +371,8 @@
 	   :line-spacing 5
 	   :bold-weight bold)
 	  (t ; our shared fallback properties
-	   :default-family "Fira Code"
+	   ;; :default-family "Fira Code"
+	   :default-family "Iosevka"
 	   :bold-weight semibold
 	   :italic-slant italic)))
   (fontaine-set-preset 'regular))
