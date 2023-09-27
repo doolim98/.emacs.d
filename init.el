@@ -210,14 +210,14 @@
   (defun my/scroll-down (arg)
     "Move cursor down half a screen ARG times."
     (interactive "p")
-    (let ((dist (/ (window-height) 2)))
-      (next-line dist)))
+    (let ((dist (/ (window-height) 3)))
+      (next-line dist))
 
   (defun my/scroll-up (arg)
     "Move cursor up half a screen ARG times."
     (interactive "p")
-    (let ((dist (/ (window-height) 2)))
-      (previous-line dist)))
+    (let ((dist (/ (window-height) 3)))
+      (previous-line dist))
 
   (defcustom list-of-dired-switches
     '("-lh" "-lah")
