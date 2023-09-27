@@ -239,12 +239,13 @@
   (use-package vertico-posframe
     :when (window-system)
     :config
-    (setq vertico-posframe-poshandler 'posframe-poshandler-frame-top-center
+    (setq vertico-posframe-poshandler 'posframe-poshandler-window-top-center
 	  vertico-count 20
 	  vertico-posframe-border-width 1
 
 	  vertico-posframe-min-height 1
-	  vertico-posframe-min-width 90)
+	  vertico-posframe-min-width 80
+	  vertico-posframe-width 80)
     (setq vertico-multiform-commands
       '((consult-line (:not posframe))
         (t posframe)))
