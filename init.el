@@ -288,7 +288,7 @@
   (defun project-magit  ()
     (interactive)
     (let ((dir (project-root (project-current t))))
-      (magit-status dir)))))
+      (magit-status dir))))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
