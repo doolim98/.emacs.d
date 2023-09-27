@@ -109,6 +109,7 @@
   (savehist-mode 1)
   (setq-default delete-pair-blink-delay 0)
 
+  (setq-default tab-width 4)
 
   (setq blink-cursor-delay 0.0
 	blink-cursor-interval 0.2
@@ -178,7 +179,7 @@
     (setq aw-frame-offset '(50 . 50))
     (custom-set-faces
      '(aw-leading-char-face
-       ((t (:foreground "#d00000" :height 1.0)))))
+       ((t (:background nil :foreground "#d00000" :weight bold :height 1.0)))))
 
   (use-package crux)
 
