@@ -54,5 +54,20 @@
 			  (if buffer-file-name
 			      (shell-quote-argument
 			       (file-name-sans-extension buffer-file-name)))))))
-  (add-hook 'c++-mode-hook #'generic-compiler)
-  )
+  (add-hook 'c++-mode-hook #'generic-compiler))
+
+(use-package magit
+  :after (project)
+  :bind (("C-x g" . magit-status)
+	 :map project-prefix-map
+	 ("m" . project-magit))
+  :commands (magit project-magit)
+  :config
+  (add-to-list 'project-switch-commands
+	       '(project-magit "Magit" m))
+  (defun project-magit  ()
+    (interactive)
+    (let ((dir (project-root (project-current t))))
+      (magit-status dir))))
+
+(provide 'config-project)

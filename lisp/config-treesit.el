@@ -30,3 +30,5 @@
 	(json-mode . json-ts-mode)
 	(css-mode . css-ts-mode)
 	(python-mode . python-ts-mode)))
+
+(provide 'config-treesit)

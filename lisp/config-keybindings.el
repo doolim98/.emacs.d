@@ -32,6 +32,7 @@
 
 (general-define-key
  :keymaps 'global
+ "<escape>" 'keyboard-quit
  "C-v" 'my/scroll-down
  "M-v" 'my/scroll-up)
 
@@ -44,8 +45,12 @@
 (general-define-key
  :keymaps 'eglot-mode-map
  "C-c C-q" 'eglot-code-action-quickfix
+ "C-c C-f" 'eglot-format-buffer)
+
+(general-define-key
  :keymaps 'dired-mode-map
- "-")
+ "-" 'dired-up-directory
+ "." 'my/cycle-dired-switches)
 
 (general-define-key
  :prefix "M-g"

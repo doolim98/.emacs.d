@@ -3,6 +3,10 @@
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
 
+(let ((default-directory (concat user-emacs-directory "/lisp/third-party/")))
+  (add-to-list 'load-path default-directory)
+  (normal-top-level-add-subdirs-to-load-path))
+
 (straight-use-package 'org)
 (when (eq system-type 'darwin)
   (setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org"))
@@ -16,224 +20,36 @@
 (use-package repeat :defer 11
   :init (repeat-mode +1))
 
+;; Basic packages
 (use-package general)
+(use-package avy)
+(use-package crux)
+(use-package expand-region)
+(use-package avy)
 
+(require 'config-emacs)
 (require 'config-keybindings)
+(require 'my)
+(require 'config-appearance)
+(require 'config-project)
+(require 'config-org)
+(require 'config-prog-mode)
+(require 'config-completion)
 
-(use-package my-keybindings :straight nil :ensure nil :defer nil
-  :after (dired corfu)
-  :bind (
-
-		 :map corfu-map
-		 ("C-h" . #'corfu-popupinfo-toggle)
-		 ("TAB"        . #'corfu-insert)
-		 ([tab]        . #'corfu-insert)
-		 ("<return>" . #'newline)
-		 ("<escape>" . #'keyboard-quit)
-
-		 :map eglot-mode-map
-		 ("C-c C-q" . #'eglot-code-action-quickfix)
-		 ("C-c C-f" . #'eglot-format-buffer)
-
-		 :map help-map
-		 ("a" . #'consult-apropos)
-
-		 :map minibuffer-local-map
-		 ("C-r" . #'consult-history)
-
-		 :map dired-mode-map
-		 ("-" . #'dired-up-directory)
-		 ("." . #'cycle-dired-switches))
+(use-package ace-window
+  :commands (aw-flip-window)
   :init
-  (global-set-key (kbd "<escape>")      'keyboard-quit))
+  (setq aw-background nil)
+  (setq aw-dispatch-always nil)
+  (setq aw-frame-offset '(50 . 50))
+  (custom-set-faces
+   '(aw-leading-char-face
+     ((t (:background nil :foreground "#d00000" :weight bold :height 1.0))))))
 
-(use-package emacs :straight nil :ensure nil :defer nil
-  :config
-  ;; (setq-default header-line-format mode-line-format)
-
-  (savehist-mode 1)
-  (setq-default delete-pair-blink-delay 0)
-
-  (setq-default tab-width 4)
-
-  (setq blink-cursor-delay 0.0
-	blink-cursor-interval 0.2
-	blink-cursor-blinks 9999)
-  (setq-default	cursor-type 'box)
-
-  (setq-default history-length 1000
-		use-dialog-box nil
-		delete-by-moving-to-trash t
-		create-lockfiles nil
-		auto-save-default nil
-		inhibit-startup-screen t
-		ring-bell-function 'ignore)
-
-  (setq	split-width-threshold 160
-	split-height-threshold 120)
-
-  ;;;; UTF-8
-  (prefer-coding-system 'utf-8)
-
-  ;;;; Remove Extra Ui
-  (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
-  (show-paren-mode 1)              ; Highlight parenthesis
-
-  ;; TRAMP
-  (require 'tramp)
-  (setq tramp-default-method "ssh"
-	shell-file-name "bash")
-  (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
-
-  ;; ESHELL
-  (require 'eshell)
-  (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
-
-  ;; DIRED
-  (require 'dired)
-  (setq dired-kill-when-opening-new-dired-buffer t)
-  (setq dired-listing-switches "-lh") ;; Hide hidden files by default
-
-  ;; recentf
-  (require 'recentf)
-  (customize-set-value 'recentf-make-menu-items 150)
-  (customize-set-value 'recentf-make-saved-items 150)
-  (recentf-mode t)
-
-  (desktop-save-mode 1)
-
-  ;; Appearance
-  (use-package modus-themes
-    :config
-    (setq modus-themes-bold-constructs t
-	  modus-themes-italic-constructs t)
-    (load-theme 'modus-operandi-tinted t)
-    ;; (set-face-attribute 'fringe nil :background nil)
-    )
-
-  (when (display-graphic-p)
-    (fringe-mode '(8 . 0)))
-
-  ;; Basic Util Packages
-  (use-package avy)
-  (use-package ace-window
-    :commands (aw-flip-window)
-    :init
-    (setq aw-background nil)
-    (setq aw-dispatch-always nil)
-    (setq aw-frame-offset '(50 . 50))
-    (custom-set-faces
-     '(aw-leading-char-face
-       ((t (:background nil :foreground "#d00000" :weight bold :height 1.0))))))
-
-  (use-package crux)
-  (use-package expand-region)
-  (use-package which-key
+(use-package which-key
   :config
   (setq which-key-show-early-on-C-h t)
   (which-key-mode))
-
-  (use-package delight
-    :config
-    (delight '((abbrev-mode " Abv" abbrev)
-	       (smart-tab-mode " \\t" smart-tab)
-	       (eldoc-mode nil "eldoc")
-	       (rainbow-mode)
-	       (overwrite-mode " Ov" t)
-	       (emacs-lisp-mode "Elisp" :major)))))
-
-(use-package custom-functions :straight nil  :ensure nil :no-require t
-  :init
-  (defun my/scroll-down (arg)
-    "Move cursor down half a screen ARG times."
-    (interactive "p")
-    (let ((dist (/ (window-height) 3)))
-      (next-line dist)))
-
-  (defun my/scroll-up (arg)
-    "Move cursor up half a screen ARG times."
-    (interactive "p")
-    (let ((dist (/ (window-height) 3)))
-      (previous-line dist)))
-
-  (defcustom list-of-dired-switches
-    '("-lh" "-lah")
-    "List of ls switches for dired to cycle among.")
-
-  (defun cycle-dired-switches ()
-    "Cycle through the list `list-of-dired-switches' of switches for ls"
-    (interactive)
-    (setq list-of-dired-switches
-	  (append (cdr list-of-dired-switches)
-		  (list (car list-of-dired-switches))))
-    (setq dired-listing-switches (car list-of-dired-switches))
-    (dired-sort-other (car list-of-dired-switches))))
-
-;;; COMPLETION
-(use-package vertico
-  :init
-  ;; Enable vertico using the vertico-flat-mode
-  (require 'vertico-directory)
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
-
-  (use-package vertico-posframe
-	:disabled t
-    :when (window-system)
-    :config
-    (setq vertico-posframe-poshandler 'posframe-poshandler-window-top-center
-	  vertico-count 20
-	  vertico-posframe-border-width 1
-
-	  vertico-posframe-min-height 1
-	  vertico-posframe-min-width 80
-	  vertico-posframe-width 80)
-    (setq vertico-multiform-commands
-      '((consult-line (:not posframe))
-        (t posframe)))
-    (vertico-posframe-mode 1))
-
-  (use-package orderless
-    :commands (orderless)
-    :custom (completion-styles '(orderless flex))
-    ;; Allow tramp completion
-    (completion-category-overrides '((file (styles basic partial-completion)))))
-
-  (use-package marginalia
-    :custom
-    (marginalia-annotators
-     '(marginalia-annotators-heavy marginalia-annotators-light nil))
-    :init
-    (marginalia-mode))
-  (vertico-mode t)
-  :config
-  ;; Enable recursive minibuffers
-  (setq enable-recursive-minibuffers t))
-
-;;;; Extra Completion Functions
-(use-package consult
-  :after vertico
-  :custom
-  (completion-in-region-function #'consult-completion-in-region)
-  :config
-  (defun my/notegrep ()
-    "Use interactive grepping to search my notes"
-    (interactive)
-    (consult-ripgrep org-directory)))
-
-;;; Git
-(use-package magit
-  :after (project)
-  :bind (("C-x g" . magit-status)
-	 :map project-prefix-map
-	 ("m" . project-magit))
-  :commands (magit project-magit)
-  :config
-  (add-to-list 'project-switch-commands
-	       '(project-magit "Magit" m))
-  (defun project-magit  ()
-    (interactive)
-    (let ((dir (project-root (project-current t))))
-      (magit-status dir))))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -241,120 +57,7 @@
   :custom (vterm-max-scrollback 10000)
   )
 
-;;;; Code Completion
-(use-package corfu
-  :hook ((prog-mode) . corfu-mode)
-  ;; Optional customizations
-  :custom
-  (corfu-cycle t)                 ; Allows cycling through candidates
-  (corfu-auto t)                  ; Enable auto completion
-  (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.2)
-  (corfu-popupinfo-delay '(9999.9 . 0.3))
-  (corfu-preview-current 'nil)
-  (corfu-preselect 'directory)
-  (corfu-on-exact-match 'quit)
-  :init
-  (setq tab-always-indent 'complete)
-
-  (corfu-popupinfo-mode) ; Popup completion info
-  (add-hook 'eshell-mode-hook
-	    (lambda () (setq-local corfu-quit-at-boundary t
-				   corfu-quit-no-match t
-				   corfu-auto nil
-				   corfu-auto-delay 1000)))
-  (use-package corfu-terminal
-    :when (not window-system)
-    :config
-    (corfu-terminal-mode +1)))
-
-(use-package dabbrev  :straight nil
-  ;; Swap M-/ and C-M-/
-  :bind (("M-/" . dabbrev-completion)
-	 ("C-M-/" . dabbrev-expand))
-  ;; Other useful Dabbrev configurations.
-  :custom
-  (dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")))
-
 (use-package sqlite3)
-
-(use-package fontaine
-  :unless (not window-system)
-  :config
-  (setq fontaine-presets
-	'((regular
-	   :default-height 140)
-	  (small
-	   :default-height 120)
-	  (large
-	   :default-height 200)
-	  (extra-large
-	   :default-weight semilight
-	   :default-height 210
-	   :line-spacing 5
-	   :bold-weight bold)
-	  (t ; our shared fallback properties
-	   ;; :default-family "Fira Code"
-	   :default-family "Iosevka"
-	   :bold-weight semibold
-	   :italic-slant italic)))
-  (fontaine-set-preset 'regular))
-
-;; Org Mode
-(use-package org
-  :bind (:map org-mode-map
-	      ("C-c C-w" . nil))
-  :config
-  (setq org-pretty-entities t
-	org-hide-emphasis-markers nil
-	org-image-max-width 500)
-
-  (use-package org-download
-    :hook ((dired-mode) . org-download-enable)
-    :custom
-    (org-download-method 'directory)
-    (org-download-image-dir "images")
-    (org-download-heading-lvl nil)
-    (org-download-timestamp "%Y%m%d-%H%M%S_")
-    (org-download-screenshot-method "pngpaste %s")
-    (org-download-annotate-function ((lambda (link))))
-    :init
-    (setq-default org-download-image-dir (concat org-directory "/img/")))
-
-  (custom-set-faces
-   '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
-   '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
-   '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-   '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-   '(org-level-5 ((t (:inherit outline-5 :height 1.0))))))
-
-(use-package eglot  :straight nil
-  :custom
-  (eglot-workspace-configuration
-   '((:gopls . (:linksInHover :json-false
-			      :completeUnimported  t))
-     (:grammarly . (:config . ((documentDialect . ("british")))))
-     ))
-  :config
-  (use-package eglot-grammarly
-  :straight (:host github :repo "emacs-grammarly/eglot-grammarly")
-  :defer t  ; defer package loading
-  :hook ((org-mode markdown-mode). (lambda ()
-				     (require 'eglot-grammarly))))
-  )
-
-
-
-(use-package prog-mode :straight nil
-  :hook ((prog-mode) . electric-pair-mode)
-  :config
-  (require 'cc-styles)
-  (c-set-offset 'innamespace 0))
-
-(use-package cmake-mode)
-(use-package go-mode)
-(use-package yaml-mode)
-(use-package markdown-mode)
 
 ;; https://stackoverflow.com/a/77033292
 (use-package tblui)
