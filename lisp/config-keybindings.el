@@ -42,9 +42,11 @@
  "c" 'my/find-file-emacs-configs
  "o" 'my/find-file-org-directory)
 
+(general-unbind "s-,")
 (general-define-key
- :prefix "C-x C-,"
- "c" 'my/find-file-emacs-configs
+ :prefix "s-,"
+ "s-," 'my/find-file-emacs-configs
+ "," 'my/find-file-emacs-configs
  "f" 'fontaine-set-preset)
 
 (general-define-key

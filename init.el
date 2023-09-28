@@ -8,8 +8,12 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 (straight-use-package 'org)
+
+;; Mac OS
 (when (eq system-type 'darwin)
-  (setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org"))
+  (setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org")
+  (setq mac-command-modifier 'meta
+		mac-option-modifier 'super))
 
 (require 'config-emacs)
 (require 'config-minimal-packages)
