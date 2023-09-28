@@ -13,23 +13,29 @@
   :unless (not window-system)
   :config
   (setq fontaine-presets
-	'((regular
-	   :default-height 140)
-	  (small
-	   :default-height 120)
-	  (large
-	   :default-height 200)
-	  (extra-large
-	   :default-weight semilight
-	   :default-height 210
-	   :line-spacing 5
-	   :bold-weight bold)
-	  (t ; our shared fallback properties
-	   ;; :default-family "Fira Code"
-	   :default-family "Iosevka"
-	   :bold-weight semibold
-	   :italic-slant italic)))
-  (fontaine-set-preset 'regular))
+		'((regular
+		   :default-height 140)
+		  (small
+		   :default-height 120)
+		  (semi-large
+		   :default-height 160)
+		  (large
+		   :default-height 180)
+		  (extra-large
+		   :default-weight semilight
+		   :default-height 210
+		   :line-spacing 5
+		   :bold-weight bold)
+		  (t ; our shared fallback properties
+		   ;; :default-family "Fira Code"
+		   :default-family "Iosevka"
+		   :bold-weight semibold
+		   :italic-slant italic)))
+  (fontaine-set-preset
+   (if (fontaine-restore-latest-preset)
+	   fontaine-recovered-preset
+	 'regular))
+  (add-hook 'kill-emacs-hook 'fontaine-store-latest-preset))
 
 (require 'org)
 (custom-set-faces

@@ -39,7 +39,7 @@
   (corfu-cycle t)                 ; Allows cycling through candidates
   (corfu-auto t)                  ; Enable auto completion
   (corfu-auto-prefix 2)
-  (corfu-auto-delay 0.2)
+  (corfu-auto-delay 0.1)
   (corfu-popupinfo-delay '(9999.9 . 0.3))
   (corfu-preview-current 'nil)
   (corfu-preselect 'directory)

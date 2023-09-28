@@ -4,7 +4,9 @@
 (use-package markdown-mode)
 
 (require 'prog-mode)
-(add-hook 'prog-mode 'electric-pair-mode)
+
+(require 'electric)
+(electric-pair-mode 1)
 
 (require 'cc-styles)
 (c-set-offset 'innamespace 0)

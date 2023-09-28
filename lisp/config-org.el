@@ -1,4 +1,5 @@
 (use-package org-download)
+(use-package org-roam)
 
 (require 'org)
 (setq org-pretty-entities t

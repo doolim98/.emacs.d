@@ -24,6 +24,13 @@
   (dired-sort-other (car my/dired-switches-list)))
 
 (defun my/find-file-org-directory ()
-  ())
+  (interactive)
+  (let ((default-directory (file-name-concat org-directory "./")))
+	(call-interactively 'find-file)))
+
+(defun my/find-file-emacs-configs ()
+  (interactive)
+  (let ((default-directory (file-name-concat user-emacs-directory "lisp/config-")))
+	(call-interactively 'find-file)))
 
 (provide 'my)

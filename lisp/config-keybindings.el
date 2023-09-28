@@ -36,6 +36,16 @@
  "C-v" 'my/scroll-down
  "M-v" 'my/scroll-up)
 
+(general-unbind "C-x C-o")
+(general-define-key
+ :prefix "C-x C-o"
+ "c" 'my/find-file-emacs-configs
+ "o" 'my/find-file-org-directory)
+
+(general-define-key
+ :prefix "C-x C-,"
+ "c" 'my/find-file-emacs-configs
+ "f" 'fontaine-set-preset)
 
 (general-define-key
  :keymaps 'isearch-mode-map
@@ -51,6 +61,7 @@
  :keymaps 'dired-mode-map
  "-" 'dired-up-directory
  "." 'my/cycle-dired-switches)
+
 
 (general-define-key
  :prefix "M-g"
