@@ -3,7 +3,7 @@
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
 
-(let ((default-directory (concat user-emacs-directory "/lisp/third-party/")))
+(let ((default-directory (concat user-emacs-directory "/third-party/")))
   (add-to-list 'load-path default-directory)
   (normal-top-level-add-subdirs-to-load-path))
 
