@@ -31,13 +31,13 @@
 
 ;; Vertico
 ;; =======
-(setq vertico-count 3
+(setq vertico-count 5
 	  vertico-grid-min-columns 1
 	  vertico-resize t)
 
 ;; Completion style
 ;; ================
-(setq completion-styles '(orderless-fast basic partial-completion)
+(setq completion-styles '(basic partial-completion flex)
 	  completion-category-overrides '((file (styles basic partial-completion flex))))
 
 ;; Faster orderless
@@ -65,7 +65,7 @@
 
 ;; Enable Modes
 ;; ============
-(vertico-grid-mode 1)
+;; (vertico-grid-mode 1)
 (marginalia-mode 1)
 (vertico-mode 1)
-(vertico-reverse-mode 0)
+(vertico-reverse-mode 1)

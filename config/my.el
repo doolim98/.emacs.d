@@ -42,6 +42,11 @@
 		(enlarge-window (- (* 3 quart) wh))
 	  (enlarge-window (- half wh)))))
 
+(defun my/magit-pull-user-emacs-directory()
+  (interactive)
+  (let ((default-directory user-emacs-directory))
+	(magit-pull-from-pushremote)))
+
 (defun my/is-tramp ()
   (file-remote-p default-directory))
 
