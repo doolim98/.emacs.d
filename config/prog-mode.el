@@ -9,8 +9,10 @@
 (require 'eglot)
 
 (setq eldoc-echo-area-use-multiline-p nil
-	  flymake-no-changes-timeout 3)
+	  flymake-no-changes-timeout 1)
 (c-set-offset 'innamespace 0)
-(setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+;; (setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+(setq eglot-autoreconnect 0.5)
+
 
 (electric-pair-mode 1)

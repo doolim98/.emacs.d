@@ -22,6 +22,7 @@
 (require 'tramp)
 (setq tramp-default-method "ssh"
 	  shell-file-name "bash")
+(setq tramp-verbose 2)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; ESHELL
