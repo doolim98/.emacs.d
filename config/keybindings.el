@@ -24,6 +24,7 @@
 ;; =============
 (general-define-key
  :keymaps 'override
+ "C-t" 'tab-next
  ;; Cursor Move
  "C-j" 'avy-goto-word-1
  "C-=" 'er/expand-region
