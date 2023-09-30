@@ -16,6 +16,7 @@
   (setq aw-dispatch-always t))
 
 (use-package which-key
+  :disabled t
   :config
   (setq which-key-show-early-on-C-h t)
   (which-key-mode))
@@ -24,7 +25,3 @@
 (use-package vterm
   :commands vterm
   :custom (vterm-max-scrollback 10000))
-
-
-
-(provide 'config-minimal-packages)

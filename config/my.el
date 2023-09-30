@@ -24,13 +24,29 @@
   (dired-sort-other (car my/dired-switches-list)))
 
 (defun my/find-file-org-directory ()
-  (interactive)
+  (interactive)v
   (let ((default-directory (file-name-concat org-directory "./")))
 	(call-interactively 'find-file)))
 
 (defun my/find-file-emacs-configs ()
   (interactive)
-  (let ((default-directory (file-name-concat user-emacs-directory "lisp/config-")))
+  (let ((default-directory (file-name-concat user-emacs-directory "config/")))
 	(call-interactively 'find-file)))
+
+(defun my/toggle-window-size ()
+  (interactive)
+  (let ((wh (window-height))
+		(half (/ (frame-height) 2))
+		(quart (/ (frame-height) 4)))
+	(if (>= half wh)
+		(enlarge-window (- (* 3 quart) wh))
+	  (enlarge-window (- half wh)))))
+
+(defun my/is-tramp ()
+  (file-remote-p default-directory))
+
+(defun my/reload-user-init-file ()
+  (interactive)
+  (load user-init-file))
 
 (provide 'my)

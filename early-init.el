@@ -29,10 +29,9 @@
 
 ;;; Backups
 (setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
-      vc-make-backup-files t
-      version-control t
+      vc-make-backup-files nil
+      version-control 'never
       kept-old-versions 0
-      kept-new-versions 10
       delete-old-versions t
       backup-by-copying t)
 

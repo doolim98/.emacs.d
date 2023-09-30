@@ -1,6 +1,7 @@
 * Emacs Configuration Notes
 
 *** TODO
+- Look /mct/ completion package
 - Use headline instead of modeline.
 - Check ~set-frame-position~ function
 - Map =C-`= and =C-~= to shell related command.
