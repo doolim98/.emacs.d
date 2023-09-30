@@ -28,11 +28,6 @@
 (setq native-comp-async-report-warnings-errors nil)
 
 ;;; Backups
-(setq backup-directory-alist `(("." . ,(concat user-emacs-directory "backups")))
-      vc-make-backup-files nil
-      version-control 'never
-      kept-old-versions 0
-      delete-old-versions t
-      backup-by-copying t)
+(setq make-backup-files nil)
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
