@@ -56,6 +56,6 @@
 
 (defun my/vertico-toggle-height ()
   (interactive)
-  (setq-local vertico-count 10))
+  (setq-local vertico-count (% (+ vertico-count 10) 20)))
 
 (provide 'my)
