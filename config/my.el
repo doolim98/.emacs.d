@@ -45,7 +45,7 @@
 (defun my/magit-pull-user-emacs-directory()
   (interactive)
   (let ((default-directory user-emacs-directory))
-	(magit-pull-from-pushremote)))
+	(call-interactively 'magit-pull-from-pushremote)))
 
 (defun my/is-tramp ()
   (file-remote-p default-directory))
