@@ -27,8 +27,8 @@
  "C-t" 'tab-next
  ;; Cursor Move
  "C-j" 'avy-goto-word-1
- "C-=" 'er/expand-region
- "C--" 'er/contract-region
+ "M-=" 'er/expand-region
+ "M--" 'er/contract-region
   ;; Window Manipulation
  "M-z" 'my/toggle-window-size
  "M-o" 'ace-window
