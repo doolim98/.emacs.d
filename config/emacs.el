@@ -9,7 +9,11 @@
  history-length 1000
  delete-by-moving-to-trash t
  create-lockfiles nil
- auto-save-default nil)
+ auto-save-default nil
+ scroll-step 1
+ scroll-conservatively 10000
+ auto-window-vscroll nil
+ recenter-redisplay nil)
 
 (prefer-coding-system 'utf-8)
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"

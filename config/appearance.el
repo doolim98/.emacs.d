@@ -14,11 +14,19 @@
  frame-inhibit-implied-resize t
  even-window-heights nil)
 
+;; Tab Bar
+(setq tab-bar-show 1)
+(setq tab-bar-close-button-show nil)
+(setq tab-bar-new-button nil)
+(setq tab-bar-new-tab-choice "*scratch*")
+
+;; Theme
+;; =====
 (use-package modus-themes)
 (setq modus-themes-bold-constructs t
 	  modus-themes-italic-constructs t)
-(load-theme 'modus-operandi-tinted t)
-(setq modus-themes-to-toggle '(modus-operandi-tinted modus-vivendi-tinted))
+(setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+(load-theme 'modus-operandi t)
 
 (when (display-graphic-p)
   (fringe-mode '(8 . 0)))
@@ -54,3 +62,5 @@
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
+
+

@@ -29,6 +29,8 @@
  "C-j" 'avy-goto-word-1
  "M-=" 'er/expand-region
  "M--" 'er/contract-region
+ "C-=" 'er/expand-region
+ "C--" 'er/contract-region
   ;; Window Manipulation
  "M-z" 'my/toggle-window-size
  "M-o" 'ace-window
@@ -43,7 +45,7 @@
 		   (execute-kbd-macro "\3572"))
  "M-3" #'(lambda()(interactive)
 		   (when (> 3 (length (window-list)))
-			 (split-window-right)
+			 (split-window-below)
 			 (balance-windows))
 		   (execute-kbd-macro "\3573"))
  "M-4" #'(lambda()(interactive)(execute-kbd-macro "\3574"))
