@@ -23,6 +23,8 @@
 ;; Move & Window
 ;; =============
 (general-define-key
+  "M-z" 'my/toggle-window-size)
+(general-define-key
  :keymaps 'override
  "C-t" 'tab-next
  ;; Cursor Move
@@ -32,7 +34,6 @@
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
   ;; Window Manipulation
- "M-z" 'my/toggle-window-size
  "M-o" 'ace-window
  "M-O" 'aw-flip-window
  "M-0" 'delete-window
@@ -105,6 +106,10 @@
 (general-define-key
  :keymaps 'corfu-map
  "C-h" 'corfu-popupinfo-toggle)
+
+(general-define-key
+ :keymaps 'vertico-map
+ "M-z" 'my/vertico-toggle-height)
 
 ;; Dired
 ;; =====

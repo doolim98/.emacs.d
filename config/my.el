@@ -54,4 +54,8 @@
   (interactive)
   (load user-init-file))
 
+(defun my/vertico-toggle-height ()
+  (interactive)
+  (setq-local vertico-count 10))
+
 (provide 'my)

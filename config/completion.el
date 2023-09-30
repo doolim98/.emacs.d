@@ -37,7 +37,7 @@
 
 ;; Completion style
 ;; ================
-(setq completion-styles '(basic partial-completion flex)
+(setq completion-styles '(orderless basic partial-completion)
 	  completion-category-overrides '((file (styles basic partial-completion flex))))
 
 ;; Faster orderless
