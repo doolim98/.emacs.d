@@ -24,7 +24,7 @@
   (dired-sort-other (car my/dired-switches-list)))
 
 (defun my/find-file-org-directory ()
-  (interactive)v
+  (interactive)
   (let ((default-directory (file-name-concat org-directory "./")))
 	(call-interactively 'find-file)))
 
@@ -57,5 +57,12 @@
 (defun my/vertico-toggle-height ()
   (interactive)
   (setq-local vertico-count (% (+ vertico-count 10) 20)))
+
+(defun my/c-indent-complete()
+  (interactive)
+  (let (( p (point)))
+    (c-indent-line-or-region)
+    (when (= p (point))
+      (call-interactively 'complete-symbol))))
 
 (provide 'my)

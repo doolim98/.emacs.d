@@ -1,19 +1,11 @@
-(use-package vertico)
-(use-package orderless :commands (orderless))
-(use-package marginalia)
-(use-package consult)
-(use-package corfu)
 (require 'dabbrev)
 (require 'orderless)
-
-(when (not window-system)
-  (use-package corfu-terminal)
-  (corfu-terminal-mode +1))
 
 ;; Common
 ;; ======
 (setq tab-always-indent 'complete
 	  c-tab-always-indent t)
+
 ;; The default completion-in-region-function
 (setq completion-in-region-function #'consult-completion-in-region)
 (setq-default dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))
@@ -24,7 +16,7 @@
 	  corfu-auto t
 	  corfu-auto-prefix 3
 	  corfu-auto-delay 0.1
-	  corfu-popupinfo-delay '(9999.9 . 0.3)
+	  corfu-popupinfo-delay '(2.0 . 1.0)
 	  corfu-preview-current 'nil
 	  corfu-preselect 'directory
 	  corfu-on-exact-match 'insert)
@@ -38,17 +30,30 @@
 ;; Completion style
 ;; ================
 (setq completion-ignore-case  t)
-(setq completion-styles '(orderless basic partial-completion)
-	  completion-category-overrides '((file (styles basic partial-completion flex))))
+(setq completion-styles '(orderless basic))
+(setq completion-category-overrides
+	  '((file (styles basic partial-completion flex))
+		;; (command (styles orderless))
+		;; (symbol (styles orderless))
+		;; (variable (styles orderless))
+		))
+
+(setq orderless-component-separator "[. ]")
 
 ;; Faster orderless
 (defun orderless-fast-dispatch (word index total)
   (and (= index 0) (= total 1) (length< word 4)
-       `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+	   `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
+
+(orderless-define-completion-style orderless+initialism
+  (orderless-matching-styles '(orderless-initialism
+							   orderless-literal
+							   orderless-regexp)))
 
 (orderless-define-completion-style orderless-fast
   (orderless-style-dispatchers '(orderless-fast-dispatch))
   (orderless-matching-styles '(orderless-literal orderless-regexp)))
+
 
 ;; Hooks
 ;; =====
@@ -58,7 +63,8 @@
 
 (defun corfu-mode-fast()
   (when (my/is-tramp)
-	(setq-local corfu-auto-delay 0.5))
+	)
+  (corfu-popupinfo-mode 1)
   (corfu-mode 1))
 
 (add-hook 'prog-mode-hook 'corfu-mode-fast)
@@ -70,3 +76,6 @@
 (marginalia-mode 1)
 (vertico-mode 1)
 (vertico-reverse-mode 0)
+
+(when (not window-system)
+  (corfu-terminal-mode +1))

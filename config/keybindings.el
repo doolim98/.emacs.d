@@ -118,9 +118,14 @@
  "-" 'dired-up-directory
  "." 'my/cycle-dired-switches)
 
-
 ;; Project
 ;; =======
 (general-define-key
  :keymaps 'project-prefix-map
  "m" 'project-magit)
+
+;; C Mode
+;; ======
+(general-define-key
+ :keymaps 'c-mode-base-map
+ "TAB" 'my/c-indent-complete)

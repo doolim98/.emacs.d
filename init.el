@@ -1,11 +1,11 @@
 (defvar my/config-files
-  '("config/my.el"
-    "config/emacs.el"
-    "config/minimal-packages.el"
-    "config/keybindings.el"
+  '("config/emacs.el"
+	"config/packages.el"
+	"config/my.el"
+	"config/keybindings.el"
     "config/completion.el"
     "config/project.el"
-    "config/prog-mode.el"
+    "config/editor.el"
     "config/org.el"
     "config/appearance")
   "My configuration files")

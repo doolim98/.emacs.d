@@ -16,9 +16,11 @@
 
 ;; Tab Bar
 (setq tab-bar-show 1)
+(setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
 (setq tab-bar-close-button-show nil)
 (setq tab-bar-new-button nil)
 (setq tab-bar-new-tab-choice "*scratch*")
+
 
 ;; Theme
 ;; =====

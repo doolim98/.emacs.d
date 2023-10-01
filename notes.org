@@ -41,10 +41,10 @@ Sometimes, I'm afraid of killing buffer because
 1. The operation may have been a mistake.
 2. Maybe I need the buffer later.
 
-So, quarantine buffers can be useful when I want to keep my buffer list clean but also want's to restore qurantined buffers.
+So, quarantine buffers can be useful when I want to keep my buffer list clean but also want's to restore quarantined buffers.
 The size of the Quarantine buffer list is limited.
 
-*** DefAlias: ~default-yes-sometimes~
+*** Def-Alias: ~default-yes-sometimes~
 
 #+begin_src emacs-lisp
   (setq original-y-or-n-p 'y-or-n-p)
