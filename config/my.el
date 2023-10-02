@@ -65,4 +65,9 @@
     (when (= p (point))
       (call-interactively 'complete-symbol))))
 
+(defun my/osx-dict ()
+  "Look up a word in macOS Dictionary.app"
+  (interactive)
+  (browse-url (concat "dict:///" (url-hexify-string (current-word nil t)))))
+
 (provide 'my)

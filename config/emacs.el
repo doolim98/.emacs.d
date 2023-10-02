@@ -19,12 +19,20 @@
  scroll-step 1
  scroll-conservatively 10000
  auto-window-vscroll nil
- recenter-redisplay nil)
+ recenter-redisplay nil
+ help-window-select t)
 
 (prefer-coding-system 'utf-8)
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
+
+;; Garbage Collection
+;; ==================
+(setq garbage-collection-messages t)
+(setq gc-cons-threshold (* 10000000 300)) ; 300MB
+
 ;; TRAMP
+;; =====
 (setq tramp-default-method "ssh"
 	  shell-file-name "bash")
 (setq tramp-ssh-controlmaster-options
@@ -34,10 +42,10 @@
 (setq tramp-verbose 2)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
-;; ESHELL
+;; eshell
 (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))
 
-;; DIRED
+;; dired
 (setq dired-kill-when-opening-new-dired-buffer t)
 (setq dired-dwim-target t)
 (setq dired-listing-switches "-lh") ;; Hide hidden files by default

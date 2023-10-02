@@ -11,12 +11,19 @@
 
 ;; (add-hook 'c-mode-hook 'eglot-ensure)
 
-;; Ispell
-;; ======
+;; Flymake
+;; =======
+(setq flymake-start-on-save-buffer t
+	  flymake-no-changes-timeout nil)
+
+;; Ispell & Dictionary
+;; ===================
 ;; TOOD concern 'spell-fu' package
 (setq ispell-program-name "aspell"
 	  ispell-silently-savep t
       ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
       ispell-personal-dictionary (file-name-concat org-directory "./aspell.pws"))
+
+(setq dictionary-server "localhost")
 
 (electric-pair-mode 1)

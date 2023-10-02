@@ -12,13 +12,21 @@
  :keymaps 'override
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
- "C-c C-w"'fixup-whitespace
  "C-x C-k" 'kill-this-buffer
  "C-x b" 'consult-buffer
- "C-x C-r" 'crux-rename-buffer-and-file
+ "C-x x r" 'crux-rename-buffer-and-file
+ "C-x C-r" 'consult-recent-file
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
  "C-a" 'crux-move-beginning-of-line)
+
+;; Edit opposite
+;; ====
+(general-define-key
+ :keymaps 'override
+ "C-c C-w" 'fixup-whitespace
+ "C-c C-r" 'query-replace
+ "s-s" 'le-thesaurus-get-synonyms)
 
 ;; Move & Window
 ;; =============
@@ -65,14 +73,16 @@
  ;; Up/Down case
  "C-x C-u" 'crux-upcase-region
  "C-x C-l" 'crux-downcase-region
- "C-x M-c" 'crux-capitalize-region)
+ "C-x M-c" 'crux-capitalize-region
+ "C-D" 'my/osx-dict)
 (general-define-key
  "C-x l" 'eglot)
 
 ;; Settings
 ;; ========
+(general-unbind "s-,")
 (general-define-key
- :prefix "C-x ,"
+ :prefix "s-,"
  "," 'my/find-file-emacs-configs
  "r" 'my/reload-user-init-file
  "f" 'fontaine-set-preset
@@ -129,3 +139,24 @@
 (general-define-key
  :keymaps 'c-mode-base-map
  "TAB" 'my/c-indent-complete)
+
+;; Minibuffer
+;; ==========
+(general-define-key
+ :keymaps 'minibuffer-mode-map
+ "M-r" 'consult-history)
+
+;; Org Capture & Roam
+;; ==================
+(general-define-key
+ :keymaps 'org-mode-map
+ "C-M-y" 'org-download-clipboard
+ "M-n" 'org-next-visible-heading
+ "M-p" 'org-previous-visible-heading)
+(general-define-key
+ :keymaps 'override
+ :prefix "M-c"
+ "M-c" 'org-capture
+ "o" 'my/find-file-org-directory
+ "n" 'org-roam-capture
+ "i" 'org-roam-node-insert)

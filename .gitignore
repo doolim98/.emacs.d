@@ -63,3 +63,4 @@ site-lisp/package/
 /bookmarks
 /*.html
 /fontaine-latest-state.eld
+/org-roam.db

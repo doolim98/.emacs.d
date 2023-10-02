@@ -11,20 +11,20 @@
   :commands (aw-flip-window)
   :init
   (setq aw-dispatch-always t))
-
 (use-package which-key
-  :disabled t
   :config
-  (setq which-key-show-early-on-C-h t)
-  (which-key-mode))
+  (setq which-key-popup-type 'minibuffer)
+  (setq which-key-idle-delay 0.5)
+  (which-key-mode 1))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
   :commands vterm
   :custom (vterm-max-scrollback 10000))
 
-;; Prog-mode
-;; =========
+;; Edit
+;; ====
+(use-package le-thesaurus)
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package yaml-mode)

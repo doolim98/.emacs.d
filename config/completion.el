@@ -15,7 +15,7 @@
 (setq corfu-cycle t
 	  corfu-auto t
 	  corfu-auto-prefix 3
-	  corfu-auto-delay 0.1
+	  corfu-auto-delay 0.05
 	  corfu-popupinfo-delay '(2.0 . 1.0)
 	  corfu-preview-current 'nil
 	  corfu-preselect 'directory
@@ -62,8 +62,6 @@
   (corfu-mode 1))
 
 (defun corfu-mode-fast()
-  (when (my/is-tramp)
-	)
   (corfu-popupinfo-mode 1)
   (corfu-mode 1))
 
@@ -76,6 +74,8 @@
 (marginalia-mode 1)
 (vertico-mode 1)
 (vertico-reverse-mode 0)
+(corfu-history-mode 1)
+(global-corfu-mode 1)
 
 (when (not window-system)
   (corfu-terminal-mode +1))
