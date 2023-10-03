@@ -10,7 +10,7 @@
     "config/appearance")
   "My configuration files")
 
-(dolist (d '("./third-party/"))
+(dolist (d '("./lisp/"))
   (let ((default-directory (concat user-emacs-directory d)))
 	(add-to-list 'load-path default-directory)
 	(normal-top-level-add-subdirs-to-load-path)))

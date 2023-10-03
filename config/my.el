@@ -70,4 +70,11 @@
   (interactive)
   (browse-url (concat "dict:///" (url-hexify-string (current-word nil t)))))
 
+(defun my/fill-to-end (char)
+  (interactive "cFill Character:")
+  (save-excursion
+    (end-of-line)
+    (while (< (current-column) 80)
+      (insert-char char))))
+
 (provide 'my)
