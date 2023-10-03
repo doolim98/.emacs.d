@@ -26,7 +26,7 @@
 ;; =======
 (setq vertico-count 7
 	  vertico-grid-min-columns 1
-	  vertico-resize t)
+	  vertico-resize 'grow-only)
 
 ;; Completion style
 ;; ================
