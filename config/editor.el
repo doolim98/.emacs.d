@@ -27,3 +27,13 @@
 (setq dictionary-server "localhost")
 
 (electric-pair-mode 1)
+
+;; Auto Revert
+;; ===========
+(defun my/immediate-auto-revert-mode()
+  (setq-local auto-revert-interval 1
+			  auto-revert-remote-files t)
+  (auto-revert-mode 1))
+  
+(add-hook 'image-mode-hook 'my/immediate-auto-revert-mode)
+
