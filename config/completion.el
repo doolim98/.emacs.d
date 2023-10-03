@@ -16,10 +16,11 @@
 	  corfu-auto t
 	  corfu-auto-prefix 3
 	  corfu-auto-delay 0.05
-	  corfu-popupinfo-delay '(2.0 . 1.0)
+	  corfu-popupinfo-delay '(1.0 . 0.5)
 	  corfu-preview-current 'nil
 	  corfu-preselect 'directory
-	  corfu-on-exact-match 'insert)
+	  corfu-on-exact-match 'insert
+	  corfu-count 5)
 
 ;; Vertico
 ;; =======
@@ -37,23 +38,8 @@
 		;; (symbol (styles orderless))
 		;; (variable (styles orderless))
 		))
-
+;; Use . as separator(for corfu)
 (setq orderless-component-separator "[. ]")
-
-;; Faster orderless
-(defun orderless-fast-dispatch (word index total)
-  (and (= index 0) (= total 1) (length< word 4)
-	   `(orderless-regexp . ,(concat "^" (regexp-quote word)))))
-
-(orderless-define-completion-style orderless+initialism
-  (orderless-matching-styles '(orderless-initialism
-							   orderless-literal
-							   orderless-regexp)))
-
-(orderless-define-completion-style orderless-fast
-  (orderless-style-dispatchers '(orderless-fast-dispatch))
-  (orderless-matching-styles '(orderless-literal orderless-regexp)))
-
 
 ;; Hooks
 ;; =====
@@ -61,11 +47,18 @@
   (setq-local corfu-auto nil)
   (corfu-mode 1))
 
-(defun corfu-mode-fast()
-  (corfu-popupinfo-mode 1)
-  (corfu-mode 1))
+(defun corfu-enable-always-in-minibuffer ()
+  "Enable Corfu in the minibuffer if Vertico/Mct are not active."
+  (unless (or (bound-and-true-p mct--active)
+              (bound-and-true-p vertico--input)
+              (eq (current-local-map) read-passwd-map))
+    (setq-local corfu-auto nil) ;; Enable/disable auto completion
+    (setq-local corfu-echo-delay nil
+                ;; corfu-popupinfo-delay nil
+				)
+    (corfu-mode 1)))
 
-(add-hook 'prog-mode-hook 'corfu-mode-fast)
+(add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 (add-hook 'eshell-mode-hook 'corfu-mode-no-auto)
 
 ;; Enable Modes
@@ -76,6 +69,7 @@
 (vertico-reverse-mode 0)
 (corfu-history-mode 1)
 (global-corfu-mode 1)
+(corfu-popupinfo-mode 1)
 
 (when (not window-system)
   (corfu-terminal-mode +1))
