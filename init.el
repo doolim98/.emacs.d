@@ -7,7 +7,8 @@
     "config/project.el"
     "config/editor.el"
     "config/org.el"
-    "config/appearance")
+    "config/appearance.el"
+	)
   "My configuration files")
 
 (dolist (d '("./lisp/"))
@@ -19,3 +20,4 @@
 ;; ====
 (dolist (f my/config-files)
   (load (file-name-concat user-emacs-directory f)))
+(put 'narrow-to-region 'disabled nil)
