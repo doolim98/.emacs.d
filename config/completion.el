@@ -8,7 +8,9 @@
 
 ;; The default completion-in-region-function
 (setq completion-in-region-function #'consult-completion-in-region)
-(setq-default dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'"))
+(setq-default dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")
+			  dabbrev-abbrev-skip-leading-regexp
+			  (rx (| "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'")))
 
 ;; Corfu
 ;; =====
