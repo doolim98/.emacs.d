@@ -7,12 +7,9 @@
  use-dialog-box nil
  ;; inhibit-startup-screen t
  ring-bell-function 'ignore
- split-width-threshold 160
- split-height-threshold 80
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
- even-window-heights nil
  truncate-lines nil)
 
 ;; Tab Bar
@@ -70,18 +67,19 @@
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
 (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
-;; Buffer Display
-;; ==============
+;; Buffer Display Management
+;; =========================
+;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window.html
+
+(setq even-window-heights 'width-only
+	  split-width-threshold 160
+	  split-height-threshold 50)
 (setq switch-to-buffer-obey-display-actions t)
 (setq display-buffer-alist
 	  `((,(rx (| "*dictionary" "*chatgpt"))
 		 (display-buffer-reuse-window display-buffer-in-side-window)
 		 (side . bottom)
+		 (window-height . 0.3))
+		(,(rx (| "*help" "*eldoc"))
+		 (display-buffer-pop-up-window)
 		 (window-height . 0.3))))
-
-;; Vertico Posframe
-;; ================
-;; (require 'vertico-posframe)
-;; (vertico-posframe-mode 0)
-;; (setq vertico-posframe-width 120)
-;; (setq vertico-count 10)

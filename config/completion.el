@@ -1,3 +1,4 @@
+(require 'vertico-directory)
 (require 'dabbrev)
 (require 'orderless)
 
@@ -11,6 +12,7 @@
 (setq-default dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")
 			  dabbrev-abbrev-skip-leading-regexp
 			  (rx (| "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'")))
+
 
 ;; Corfu
 ;; =====
@@ -30,10 +32,13 @@
 	  vertico-grid-min-columns 1
 	  vertico-resize 'grow-only)
 
+
 ;; Marginalia
 ;; ==========
 (setq marginalia-field-width 100
 	  marginalia-separator "  ")
+(add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+
 
 ;; Completion style
 ;; ================
