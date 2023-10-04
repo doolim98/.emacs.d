@@ -2,6 +2,8 @@
 (require 'electric)
 (require 'cc-styles)
 (require 'eglot)
+(require 'grammarly)
+(require 'flymake-grammarly)
 
 (setq eldoc-echo-area-use-multiline-p nil
 	  flymake-no-changes-timeout 1)
@@ -15,6 +17,9 @@
 ;; =======
 (setq flymake-start-on-save-buffer t
 	  flymake-no-changes-timeout nil)
+(defun config-flymake-mode()
+  (setq-local next-error-function 'flymake-goto-next-error))
+(add-hook 'flymake-mode-hook 'config-flymake-mode)
 
 ;; Ispell & Dictionary
 ;; ===================
@@ -24,6 +29,10 @@
       ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
       ispell-personal-dictionary (file-name-concat org-directory "./aspell.pws"))
 
-(setq dictionary-server "localhost")
-
+;; I don't care :(
+(setq grammarly-username "hojoon.lee@skku.edu")
+(setq grammarly-password "Tltmxpa-l33t!")
+(setenv "OPENAI_API_KEY" "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")
 (electric-pair-mode 1)
+
+(add-hook 'prog-mode-hook 'hs-minor-mode)

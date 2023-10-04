@@ -14,8 +14,11 @@
 (use-package which-key
   :config
   (setq which-key-popup-type 'minibuffer)
-  (setq which-key-idle-delay 0.5)
+  (setq which-key-idle-delay 1)
   (which-key-mode 1))
+
+;; Theme
+(use-package modus-themes)
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -48,3 +51,6 @@
 (use-package org-roam)
 (use-package org)
 
+(use-package chatgpt :load-path "lisp/chatgpt")
+(use-package grammarly)
+(use-package flymake-grammarly)

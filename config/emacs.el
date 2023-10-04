@@ -8,6 +8,7 @@
 (desktop-save-mode 1)
 (winner-mode 1)
 (save-place-mode 1)
+(repeat-mode 1)
 
 (setq-default
  tab-width 4
@@ -20,7 +21,8 @@
  scroll-conservatively 10000
  auto-window-vscroll nil
  recenter-redisplay nil
- help-window-select t)
+ help-window-select t
+ enable-recursive-minibuffers t)
 
 (prefer-coding-system 'utf-8)
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
