@@ -5,14 +5,15 @@
  blink-cursor-blinks 9999
  cursor-type 'box
  use-dialog-box nil
- inhibit-startup-screen t
+ ;; inhibit-startup-screen t
  ring-bell-function 'ignore
  split-width-threshold 160
  split-height-threshold 80
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
- even-window-heights nil)
+ even-window-heights nil
+ truncate-lines nil)
 
 ;; Tab Bar
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
@@ -24,14 +25,16 @@
 
 ;; Theme
 ;; =====
-(use-package modus-themes)
-(setq modus-themes-bold-constructs t
-	  modus-themes-italic-constructs t)
-(setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
-(load-theme 'modus-operandi t)
+(defun my/enable-modus-themes()
+  (setq modus-themes-bold-constructs t
+		modus-themes-italic-constructs t)
+  (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
+  (load-theme 'modus-operandi t))
+
+;; (my/enable-modus-themes)
 
 (when (display-graphic-p)
-  (fringe-mode '(8 . 0)))
+  (fringe-mode '(8 . 8)))
 
 (use-package fontaine
   :unless (not window-system)
@@ -60,6 +63,8 @@
 ;;  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
 ;;  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
 
+;; Color
+;; =====
 (require 'ansi-color)
 (add-hook 'shell-mode-hook 'ansi-color-for-comint-mode-on)
 (add-to-list 'comint-output-filter-functions 'ansi-color-process-output)
@@ -73,3 +78,10 @@
 		 (display-buffer-reuse-window display-buffer-in-side-window)
 		 (side . bottom)
 		 (window-height . 0.2))))
+
+;; Vertico Posframe
+;; ================
+;; (require 'vertico-posframe)
+;; (vertico-posframe-mode 0)
+;; (setq vertico-posframe-width 120)
+;; (setq vertico-count 10)
