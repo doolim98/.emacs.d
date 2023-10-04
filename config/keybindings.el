@@ -9,10 +9,9 @@
 ;; Basic
 ;; =====
 (general-define-key
- :keymaps 'override
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
- "C-x C-k" 'kill-this-buffer
+ "C-c C-k" 'kill-this-buffer
  "C-x b" 'consult-buffer
  "C-x x r" 'crux-rename-buffer-and-file
  "C-x C-r" 'consult-recent-file
@@ -20,18 +19,18 @@
  "C-o" 'crux-smart-open-line
  "C-a" 'crux-move-beginning-of-line)
 
-;; Edit opposite
+;; Edit
 ;; ====
 (general-define-key
- :keymaps 'override
- "C-c C-w" 'fixup-whitespace
- "C-c C-r" 'query-replace
+  "M-z" 'zap-up-to-char)
+(general-define-key
+ "C-c SPC" 'fixup-whitespace
  "s-s" 'le-thesaurus-get-synonyms)
 
 ;; Move & Window
 ;; =============
 (general-define-key
-  "M-z" 'my/toggle-window-size)
+  "C-z" 'my/toggle-window-size)
 (general-define-key
  :keymaps 'override
  "C-t" 'tab-next
@@ -69,12 +68,13 @@
  "C-x M-m" 'compile
  "C-x C-m" 'recompile
  "C-x C-e" 'eshell
+ "C-x x s" 'scratch-buffer
 "s-<backspace>" 'backward-kill-word
  ;; Up/Down case
  "C-x C-u" 'crux-upcase-region
  "C-x C-l" 'crux-downcase-region
  "C-x M-c" 'crux-capitalize-region
- "C-D" 'my/osx-dict)
+ "s-d" 'my/osx-dict)
 (general-define-key
  "C-x l" 'eglot)
 
@@ -111,15 +111,19 @@
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)
 
-;; Corfu
-;; =====
+;; Corfu & Dabbrev
+;; ===============
 (general-define-key
  :keymaps 'corfu-map
  "C-h" 'corfu-popupinfo-toggle)
 
 (general-define-key
  :keymaps 'vertico-map
- "M-z" 'my/vertico-toggle-height)
+ "C-z" 'my/vertico-toggle-height)
+
+(general-define-key
+ "M-/" 'dabbrev-completion
+ "M-C-/" 'dabbrev-expand)
 
 ;; Dired
 ;; =====
@@ -140,6 +144,13 @@
  :keymaps 'c-mode-base-map
  "TAB" 'my/c-indent-complete)
 
+;; HS minor mode
+(general-define-key
+ :keymaps 'hs-minor-mode-map
+ "C-c h" 'hs-hide-all
+ "C-c H" 'hs-show-all
+ "<backtab>" 'hs-toggle-hiding)
+
 ;; Minibuffer
 ;; ==========
 (general-define-key
@@ -150,6 +161,11 @@
 ;; ==================
 (general-define-key
  :keymaps 'org-mode-map
+ "C-c t l" #'(lambda()(interactive)
+			   (org-toggle-link-display)
+			   ; mimics refresh
+			   (enlarge-window +1)
+			   (enlarge-window -1))
  "C-M-y" 'org-download-clipboard
  "M-n" 'org-next-visible-heading
  "M-p" 'org-previous-visible-heading)
