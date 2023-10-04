@@ -26,6 +26,9 @@
 
 ;; Org ROAM
 ;; ========
+(require 'org-roam-dailies)
 (setq org-roam-directory (file-name-concat org-directory "./roam/"))
+(setq org-roam-completion-everywhere nil)
 (setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+(setq org-roam-dailies-directory "journal/")
 (org-roam-db-autosync-mode)

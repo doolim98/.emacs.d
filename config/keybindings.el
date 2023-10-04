@@ -159,6 +159,7 @@
 
 ;; Org Capture & Roam
 ;; ==================
+(require 'org-roam-dailies)
 (general-define-key
  :keymaps 'org-mode-map
  "C-c t l" #'(lambda()(interactive)
@@ -173,6 +174,8 @@
  :keymaps 'override
  :prefix "M-c"
  "M-c" 'org-capture
+ "d" 'org-roam-dailies-map
  "o" 'my/find-file-org-directory
  "n" 'org-roam-capture
  "i" 'org-roam-node-insert)
+

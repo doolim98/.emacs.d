@@ -28,7 +28,7 @@
 ;; =======
 (setq vertico-count 10
 	  vertico-grid-min-columns 1
-	  vertico-resize t)
+	  vertico-resize 'grow-only)
 
 ;; Marginalia
 ;; ==========
