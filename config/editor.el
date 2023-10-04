@@ -45,4 +45,3 @@
   
 (add-hook 'image-mode-hook 'my/immediate-auto-revert-mode)
 
-======= end
