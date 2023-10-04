@@ -30,15 +30,10 @@
 ;; Move & Window
 ;; =============
 (general-define-key
-  "C-z" 'my/toggle-window-size)
-(general-define-key
  :keymaps 'override
  "C-`" 'window-toggle-side-windows
- "C-t" 'tab-next
  ;; Cursor Move
  "C-j" 'avy-goto-word-1
- "M-=" 'er/expand-region
- "M--" 'er/contract-region
  "C-=" 'er/expand-region
  "C--" 'er/contract-region
   ;; Window Manipulation
@@ -83,9 +78,8 @@
 
 ;; Settings
 ;; ========
-(general-unbind "s-,")
 (general-define-key
- :prefix "s-,"
+ :prefix "C-x ,"
  "," 'my/find-file-emacs-configs
  "r" 'my/reload-user-init-file
  "f" 'fontaine-set-preset
@@ -116,14 +110,6 @@
 
 ;; Corfu & Dabbrev
 ;; ===============
-(general-define-key
- :keymaps 'corfu-map
- "C-h" 'corfu-popupinfo-toggle)
-
-(general-define-key
- :keymaps 'vertico-map
- "C-z" 'my/vertico-toggle-height)
-
 (general-define-key
  "M-/" 'dabbrev-completion
  "M-C-/" 'dabbrev-expand)
@@ -165,11 +151,6 @@
 (require 'org-roam-dailies)
 (general-define-key
  :keymaps 'org-mode-map
- "C-c t l" #'(lambda()(interactive)
-			   (org-toggle-link-display)
-			   ; mimics refresh
-			   (enlarge-window +1)
-			   (enlarge-window -1))
  "C-M-y" 'org-download-clipboard
  "M-n" 'org-next-visible-heading
  "M-p" 'org-previous-visible-heading)
