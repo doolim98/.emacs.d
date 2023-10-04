@@ -74,10 +74,10 @@
 ;; ==============
 (setq switch-to-buffer-obey-display-actions t)
 (setq display-buffer-alist
-	  `((,(rx (| "*dictionary"))
+	  `((,(rx (| "*dictionary" "*chatgpt"))
 		 (display-buffer-reuse-window display-buffer-in-side-window)
 		 (side . bottom)
-		 (window-height . 0.2))))
+		 (window-height . 0.3))))
 
 ;; Vertico Posframe
 ;; ================

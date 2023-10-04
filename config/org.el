@@ -5,7 +5,8 @@
 (setq org-pretty-entities nil
 	  org-hide-emphasis-markers nil
 	  org-image-actual-width nil
-	  org-return-follows-link t)
+	  org-return-follows-link t
+	  org-startup-truncated nil)
 (setq org-src-preserve-indentation nil
       org-edit-src-content-indentation 0)
 
@@ -23,12 +24,23 @@
 ;; Org Capture
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
-
 ;; Org ROAM
 ;; ========
 (require 'org-roam-dailies)
 (setq org-roam-directory (file-name-concat org-directory "./roam/"))
 (setq org-roam-completion-everywhere nil)
-(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:10}" 'face 'org-tag)))
+(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:*}" 'face 'org-tag)))
 (setq org-roam-dailies-directory "journal/")
-(org-roam-db-autosync-mode)
+;; (setq org-roam-capture-templates
+;; 	  '(("d" "default" entry "* ${title}
+;; %?" :target
+;; 		 (file+head "%<%Y%m%d%H%M%S>.org" "#+title: ${title}
+;; ")
+;; 		 :unnarrowed t)))
+
+(add-hook 'org-mode-hook 'org-roam-db-autosync-enable)
+
+(defun my/roam-grep()
+  "Use interactive grepping to search my notes"
+  (interactive)
+  (consult-ripgrep org-roam-directory))

@@ -15,6 +15,7 @@
   :config
   (setq which-key-popup-type 'minibuffer)
   (setq which-key-idle-delay 1)
+  (setq which-key-show-early-on-C-h t)
   (which-key-mode 1))
 
 ;; Theme

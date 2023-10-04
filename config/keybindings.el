@@ -11,7 +11,7 @@
 (general-define-key
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
- "C-c C-k" 'kill-this-buffer
+ "C-x C-k" 'kill-this-buffer
  "C-x b" 'consult-buffer
  "C-x x r" 'crux-rename-buffer-and-file
  "C-x C-r" 'consult-recent-file
@@ -33,6 +33,7 @@
   "C-z" 'my/toggle-window-size)
 (general-define-key
  :keymaps 'override
+ "C-`" 'window-toggle-side-windows
  "C-t" 'tab-next
  ;; Cursor Move
  "C-j" 'avy-goto-word-1
@@ -175,9 +176,10 @@
 (general-define-key
  :keymaps 'override
  :prefix "M-c"
- "M-c" 'org-capture
+ "M-c" 'org-roam-capture
  "d" 'org-roam-dailies-map
+ "g" 'my/roam-grep
  "o" 'my/find-file-org-directory
- "n" 'org-roam-capture
+ "f" 'org-roam-node-find
  "i" 'org-roam-node-insert)
 
