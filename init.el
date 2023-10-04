@@ -1,3 +1,6 @@
+(setq my/icloud-directory "~/Library/Mobile Documents/com~apple~CloudDocs/")
+(load (concat my/icloud-directory "secret.el"))
+
 (defvar my/config-files
   '("config/emacs.el"
 	"config/packages.el"

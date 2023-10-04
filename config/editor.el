@@ -35,7 +35,7 @@
 
 ;; ChatGPT
 ;; =======
-(setenv "OPENAI_API_KEY" "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")
+(setenv "OPENAI_API_KEY" secret/openai-api-key)
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
 	  '(("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
