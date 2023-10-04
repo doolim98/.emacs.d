@@ -22,26 +22,25 @@
 	  corfu-preview-current 'nil
 	  corfu-preselect 'directory
 	  corfu-on-exact-match 'insert
-	  corfu-count 5)
+	  corfu-count 7)
 
 ;; Vertico
 ;; =======
-(setq vertico-count 7
+(setq vertico-count 10
 	  vertico-grid-min-columns 1
 	  vertico-resize t)
+
+;; Marginalia
+;; ==========
+(setq marginalia-field-width 100
+	  marginalia-separator "  ")
 
 ;; Completion style
 ;; ================
 (setq completion-ignore-case  t)
 (setq completion-styles '(orderless basic))
-(setq completion-category-overrides
-	  '((file (styles basic partial-completion flex))
-		;; (command (styles orderless))
-		;; (symbol (styles orderless))
-		;; (variable (styles orderless))
-		))
-;; Use . as separator(for corfu)
-(setq orderless-component-separator "[. ]")
+(setq completion-category-overrides '((file (styles basic partial-completion flex))))
+(setq orderless-component-separator "[. ]") ; Use . as separator(for corfu)
 
 ;; Hooks
 ;; =====
