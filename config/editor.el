@@ -32,7 +32,20 @@
 ;; I don't care :(
 (setq grammarly-username "hojoon.lee@skku.edu")
 (setq grammarly-password "Tltmxpa-l33t!")
-(setenv "OPENAI_API_KEY" "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")
+
+;; ChatGPT
+;; =======
+(setenv "OPENAI_API_KEY" "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")
+;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
+(setq chatgpt-code-query-map
+	  '(("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
+		("improve" . "Improve the clarity and coherence of my writing.")
+		("cohesive" . "Can you improve this paragraph to make it more cohesive.")
+		("bug" . "There is a bug in the following, please help me fix it.")
+		("doc" . "Please write the documentation for the following.")
+		("refactor" . "Please refactor the following.")
+		("suggest" . "Please make suggestions for the following.")))
+
 (electric-pair-mode 1)
 
 (add-hook 'prog-mode-hook 'hs-minor-mode)

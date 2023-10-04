@@ -76,7 +76,9 @@
  "C-x M-c" 'crux-capitalize-region
  "s-d" 'my/osx-dict)
 (general-define-key
- "C-x l" 'eglot)
+ "C-x l" 'eglot
+ "C-c q" 'chatgpt-query
+)
 
 ;; Settings
 ;; ========
