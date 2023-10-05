@@ -17,9 +17,9 @@
  create-lockfiles nil
  auto-save-default nil
  make-backup-files nil
- scroll-step 1
- scroll-conservatively 10000
- auto-window-vscroll nil
+ scroll-step 1 ;; not sure :(
+ scroll-conservatively 1 ;; not sure too :(
+ auto-window-vscroll t
  recenter-redisplay nil
  help-window-select t
  enable-recursive-minibuffers t)

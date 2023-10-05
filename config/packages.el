@@ -44,7 +44,7 @@
 (use-package consult)
 (use-package corfu)
 (use-package corfu-terminal)
-
+(use-package embark)
 
 ;; Org
 ;; ===

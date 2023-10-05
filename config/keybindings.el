@@ -17,7 +17,10 @@
  "C-x C-r" 'consult-recent-file
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
- "C-a" 'crux-move-beginning-of-line)
+ "C-a" 'crux-move-beginning-of-line
+ "C-;" nil
+ "M-l" nil
+ "M-k" nil)
 
 ;; Edit
 ;; ====
@@ -65,6 +68,7 @@
  "C-x C-m" 'recompile
  "C-x C-e" 'eshell
  "C-x x s" 'scratch-buffer
+ "C-x x m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
 "s-<backspace>" 'backward-kill-word
  ;; Up/Down case
  "C-x C-u" 'crux-upcase-region
@@ -144,7 +148,8 @@
 ;; ==========
 (general-define-key
  :keymaps 'minibuffer-mode-map
- "M-r" 'consult-history)
+ "M-r" 'consult-history
+ "C-;" 'embark-export)
 
 ;; Org Capture & Roam
 ;; ==================
