@@ -35,8 +35,7 @@
 
 ;; TRAMP
 ;; =====
-(setq tramp-default-method "ssh"
-	  shell-file-name "bash")
+(setq tramp-default-method "ssh")
 (setq tramp-ssh-controlmaster-options
 	  (concat
 	   "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
