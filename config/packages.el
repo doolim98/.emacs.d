@@ -7,6 +7,10 @@
 (use-package avy)
 (use-package tblui)
 (use-package sqlite3)
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns x))
+  (exec-path-from-shell-initialize)))
 (use-package ace-window
   :commands (aw-flip-window)
   :init
