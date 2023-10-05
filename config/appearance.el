@@ -72,14 +72,15 @@
 ;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window.html
 
 (setq even-window-heights 'width-only
-	  split-width-threshold 160
-	  split-height-threshold 50)
+	  split-width-threshold 100
+	  split-height-threshold 100)
 (setq switch-to-buffer-obey-display-actions t)
 (setq display-buffer-alist
-	  `((,(rx (| "*dictionary" "*chatgpt"))
-		 (display-buffer-reuse-window display-buffer-in-side-window)
-		 (side . bottom)
-		 (window-height . 0.3))
-		(,(rx (| "*help" "*eldoc"))
-		 (display-buffer-pop-up-window)
-		 (window-height . 0.3))))
+	  `(;; (,(rx (| "*dictionary" "*chatgpt"))
+		;;  (display-buffer-reuse-window display-buffer-in-side-window)
+		;;  (side . bottom)
+		;;  (window-height . 0.3))
+		;; (,(rx (| "*help" "*eldoc"))
+		;;  (display-buffer-pop-up-window)
+		;;  (window-height . 0.3))
+	  ))
