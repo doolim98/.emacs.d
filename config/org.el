@@ -2,11 +2,18 @@
 	(setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org")
   (setq-default org-directory "~/org"))
 
+(setq org-latex-packages-alist '(("margin=2cm" "geometry" nil))
+	  org-latex-image-default-height ""
+	  org-latex-image-default-width "0.6\\textwidth"
+	  org-latex-image-default-scale "")
+
 (setq org-pretty-entities nil
 	  org-hide-emphasis-markers nil
-	  org-image-actual-width nil
+	  org-image-actual-width '(200)
 	  org-return-follows-link t
-	  org-startup-truncated nil)
+	  org-startup-truncated nil
+	  org-export-allow-bind-keywords t)
+
 (setq org-src-preserve-indentation nil
       org-edit-src-content-indentation 0)
 
