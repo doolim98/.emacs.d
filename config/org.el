@@ -15,8 +15,10 @@
 	  org-download-image-dir "./img/"
 	  org-download-heading-lvl nil
 	  org-download-image-attr-list
-	  '("#+attr_html: :width 80% :align center"
-		"#+attr_org: :width 300px")
+	  '(":PROPERTIES:"
+		":attr_html: :width 80% :align center"
+		":attr_org: :width 300px"
+		":END:")
 	  org-download-timestamp "%y%m%d-%H%M%S_"
 	  org-download-screenshot-method "pngpaste %s")
 ;; (setq-default org-download-image-dir (concat org-directory "/img/"))
