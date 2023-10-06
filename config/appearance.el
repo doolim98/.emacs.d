@@ -10,6 +10,7 @@
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
+ word-wrap t
  truncate-lines nil)
 
 ;; Tab Bar
