@@ -168,7 +168,6 @@
 
 ;; Org Capture & Roam
 ;; ==================
-(require 'org-roam-dailies)
 (general-define-key
  :keymaps 'org-mode-map
  "C-M-y" 'org-download-clipboard
