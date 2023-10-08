@@ -54,14 +54,14 @@
 	 'regular))
   (add-hook 'kill-emacs-hook 'fontaine-store-latest-preset))
 
-(require 'org)
+(when (display-graphic-p)
+  (require 'org)
 (custom-set-faces
  '(org-level-1 ((t (:inherit info-title-1))))
  '(org-level-2 ((t (:inherit info-title-2))))
  '(org-level-3 ((t (:inherit info-title-3))))
  '(org-level-4 ((t (:inherit info-title-4))))
- '(org-level-5 ((t (:inherit info-title-4))))
- )
+ '(org-level-5 ((t (:inherit info-title-4))))))
 
 ;; Color
 ;; =====
