@@ -9,12 +9,14 @@
 (winner-mode 1)
 (save-place-mode 1)
 (repeat-mode 1)
+(auto-save-visited-mode 1)
 
 (setq-default
  tab-width 4
  history-length 1000
  create-lockfiles nil
  auto-save-default nil
+ auto-save-timeout 5
  make-backup-files nil
  scroll-step 1 ;; not sure :(
  scroll-conservatively 1 ;; not sure too :(
