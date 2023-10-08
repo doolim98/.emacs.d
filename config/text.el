@@ -1,9 +1,9 @@
+(require 'ox-md)
 (if (eq system-type 'darwin)
-	(setq-default org-directory "~/Library/Mobile Documents/com~apple~CloudDocs/org")
+	(setq-default org-directory (file-name-concat my/cloud-directory "org/"))
   (setq-default org-directory "~/org"))
 
 (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil))
-	  org-latex-image-default-height ""
 	  org-latex-image-default-width "0.6\\textwidth"
 	  org-latex-image-default-scale "")
 
@@ -21,34 +21,48 @@
 (setq-default org-download-method 'directory
 	  org-download-image-dir "./img/"
 	  org-download-heading-lvl nil
-	  org-download-image-attr-list
-	  '(
-		;; "#+attr_org: :width 300px"
-		)
-	  org-download-timestamp "%y%m%d-%H%M%S_"
+	  org-download-image-attr-list '()
 	  org-download-screenshot-method "pngpaste %s")
-;; (setq-default org-download-image-dir (concat org-directory "/img/"))
+
+;; Export
+(setq org-latex-pdf-process
+	  '(
+		"mkdir -p .tmp/; latexmk -f -pdf -%latex -interaction=nonstopmode -output-directory=.tmp/ %f; mv %f .tmp/; mv .tmp/%b.pdf %o"
+		))
+(setq org-export-with-toc nil)
+(setq org-md-headline-style 'atx)
 
 ;; Org Capture
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
-;; Org ROAM
-;; ========
-(require 'org-roam-dailies)
-(setq org-roam-directory (file-name-concat org-directory "./roam/"))
-(setq org-roam-completion-everywhere nil)
-(setq org-roam-node-display-template (concat "${title:*} " (propertize "${tags:*}" 'face 'org-tag)))
-(setq org-roam-dailies-directory "journal/")
-;; (setq org-roam-capture-templates
-;; 	  '(("d" "default" entry "* ${title}
-;; %?" :target
-;; 		 (file+head "%<%Y%m%d%H%M%S>.org" "#+title: ${title}
-;; ")
-;; 		 :unnarrowed t)))
 
-(add-hook 'org-mode-hook 'org-roam-db-autosync-enable)
 
-(defun my/roam-grep()
-  "Use interactive grepping to search my notes"
-  (interactive)
-  (consult-ripgrep org-roam-directory))
+;; denote
+;; ======
+(require 'denote)
+
+
+;; Remember to check the doc strings of those variables.
+(setq denote-directory (file-name-concat my/cloud-directory "notes/"))
+(setq denote-known-keywords '("emacs" "reference"))
+(setq denote-infer-keywords t)
+(setq denote-sort-keywords t)
+(setq denote-file-type nil)
+(setq denote-prompts '(title keywords))
+(setq denote-org-front-matter
+	  "#+title: %1$s\n"	  )
+
+;; Pick dates, where relevant, with Org's advanced interface:
+(setq denote-date-prompt-use-org-read-date t)
+
+(setq denote-allow-multi-word-keywords t)
+
+
+(add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+;; (add-hook 'org-mode-hook 'my/enable-word-wrap)
+
+(defun my/org-mode-hook()
+  (setq-local visual-fill-column-center-text t
+			  fill-column 80)
+  (visual-line-mode 1))
+(add-hook 'org-mode-hook 'my/org-mode-hook)

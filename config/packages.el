@@ -18,9 +18,13 @@
 (use-package which-key
   :config
   (setq which-key-popup-type 'minibuffer)
-  (setq which-key-idle-delay 1)
-  (setq which-key-show-early-on-C-h t)
+  (setq which-key-idle-delay 0.5)
   (which-key-mode 1))
+(use-package 0x0  :commands (0x0-dwim 0x0-upload-file))
+(use-package visual-fill-column
+  :hook (visual-line-mode . visual-fill-column-mode))
+(use-package loccur)
+
 
 ;; Theme
 (use-package modus-themes)
@@ -39,6 +43,7 @@
 (use-package markdown-mode)
 (use-package rainbow-mode)
 (use-package csv-mode)
+(use-package denote)
 
 ;; Completion
 ;; ==========
@@ -54,7 +59,7 @@
 ;; Org
 ;; ===
 (use-package org-download)
-(use-package org-roam)
+;; (use-package org-roam)
 (use-package org)
 
 (use-package polymode)

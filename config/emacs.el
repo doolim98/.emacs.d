@@ -13,7 +13,6 @@
 (setq-default
  tab-width 4
  history-length 1000
- delete-by-moving-to-trash t
  create-lockfiles nil
  auto-save-default nil
  make-backup-files nil
@@ -24,9 +23,14 @@
  help-window-select t
  enable-recursive-minibuffers t)
 
-(prefer-coding-system 'utf-8)
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
+;; UTF-8 support
+(prefer-coding-system       'utf-8)
+(set-default-coding-systems 'utf-8)
+(set-terminal-coding-system 'utf-8)
+(set-keyboard-coding-system 'utf-8)    
+(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
 
 ;; Garbage Collection
 ;; ==================

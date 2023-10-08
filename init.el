@@ -1,5 +1,6 @@
-(setq my/icloud-directory "~/Library/Mobile Documents/com~apple~CloudDocs/")
-(load (concat my/icloud-directory "secret.el"))
+(setq my/cloud-directory
+	  (expand-file-name "~/Library/Mobile Documents/com~apple~CloudDocs/"))
+(load (concat my/cloud-directory "secret.el"))
 
 (defvar my/config-files
   '("config/emacs.el"
@@ -9,7 +10,7 @@
     "config/completion.el"
     "config/project.el"
     "config/editor.el"
-    "config/org.el"
+    "config/text.el"
     "config/appearance.el"
 	)
   "My configuration files")

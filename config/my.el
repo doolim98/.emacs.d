@@ -77,4 +77,12 @@
     (while (< (current-column) 80)
       (insert-char char))))
 
+(defun my/denote-grep()
+  "Use interactive grepping to search my notes"
+  (interactive)
+  (consult-ripgrep denote-directory))
+
+(defun my/enable-word-wrap()
+  (setq-local word-wrap t))
+
 (provide 'my)

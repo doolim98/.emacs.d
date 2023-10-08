@@ -19,7 +19,7 @@
 (setq corfu-cycle t
 	  corfu-auto t
 	  corfu-auto-prefix 3
-	  corfu-auto-delay 0.05
+	  corfu-auto-delay 0.1
 	  corfu-popupinfo-delay '(1.0 . 0.5)
 	  corfu-preview-current 'nil
 	  corfu-preselect 'directory
@@ -64,8 +64,12 @@
 				)
     (corfu-mode 1)))
 
+(defun disable-corfu-mode()
+  (corfu-mode 0))
+
 (add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
 (add-hook 'eshell-mode-hook 'corfu-mode-no-auto)
+(add-hook 'gud-mode-hook 'disable-corfu-mode)
 
 ;; Enable Modes
 ;; ============

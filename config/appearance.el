@@ -10,8 +10,9 @@
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
- word-wrap t
- truncate-lines nil)
+ word-wrap nil
+ truncate-lines nil
+ compilation-scroll-output t)
 
 ;; Tab Bar
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
@@ -54,12 +55,13 @@
   (add-hook 'kill-emacs-hook 'fontaine-store-latest-preset))
 
 (require 'org)
-;; (custom-set-faces
-;;  '(org-level-1 ((t (:inherit outline-1 :height 1.6))))
-;;  '(org-level-2 ((t (:inherit outline-2 :height 1.4))))
-;;  '(org-level-3 ((t (:inherit outline-3 :height 1.2))))
-;;  '(org-level-4 ((t (:inherit outline-4 :height 1.0))))
-;;  '(org-level-5 ((t (:inherit outline-5 :height 1.0)))))
+(custom-set-faces
+ '(org-level-1 ((t (:inherit info-title-1))))
+ '(org-level-2 ((t (:inherit info-title-2))))
+ '(org-level-3 ((t (:inherit info-title-3))))
+ '(org-level-4 ((t (:inherit info-title-4))))
+ '(org-level-5 ((t (:inherit info-title-4))))
+ )
 
 ;; Color
 ;; =====
@@ -73,7 +75,7 @@
 ;; See https://www.gnu.org/software/emacs/manual/html_node/elisp/Choosing-Window.html
 
 (setq even-window-heights 'width-only
-	  split-width-threshold 100
+	  split-width-threshold 160
 	  split-height-threshold 100)
 (setq switch-to-buffer-obey-display-actions t)
 (setq display-buffer-alist

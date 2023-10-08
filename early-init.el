@@ -1,5 +1,6 @@
 ;; Package
 ;; =======
+(require 'package)
 
 (setq package-archives
       '(("gnu-elpa" . "https://elpa.gnu.org/packages/")
@@ -12,9 +13,9 @@
         ("melpa" . 2)
         ("nongnu" . 1)))
 
+(package-initialize)
 ;; Use-package
 (unless (package-installed-p 'use-package)
-  (package-initialize)
   (package-refresh-contents)
   (package-install 'use-package))
 
