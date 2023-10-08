@@ -1,5 +1,8 @@
 (setq my/cloud-directory
-	  (expand-file-name "~/Library/Mobile Documents/com~apple~CloudDocs/"))
+	  (expand-file-name
+	   (if (eq system-type 'darwin)
+		  "~/Library/CloudStorage/Dropbox/"
+		"~/Dropbox/")))
 
 (let ((secret-file (concat my/cloud-directory "secret.el")))
   (when (file-exists-p secret-file)
