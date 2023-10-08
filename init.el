@@ -1,6 +1,10 @@
 (setq my/cloud-directory
 	  (expand-file-name "~/Library/Mobile Documents/com~apple~CloudDocs/"))
-(load (concat my/cloud-directory "secret.el"))
+
+(let ((secret-file (concat my/cloud-directory "secret.el")))
+  (when (file-exists-p secret-file)
+	(load secret-file)))
+
 
 (defvar my/config-files
   '("config/emacs.el"
