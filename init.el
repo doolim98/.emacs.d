@@ -4,11 +4,6 @@
 		  "~/Library/CloudStorage/Dropbox/"
 		"~/Dropbox/")))
 
-(let ((secret-file (concat my/cloud-directory "secret.el")))
-  (when (file-exists-p secret-file)
-	(load secret-file)))
-
-
 (defvar my/config-files
   '("config/emacs.el"
 	"config/packages.el"

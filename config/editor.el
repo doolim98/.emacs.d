@@ -35,10 +35,11 @@
 
 ;; ChatGPT
 ;; =======
-;; (setenv "OPENAI_API_KEY" secret/openai-api-key)
+(exec-path-from-shell-copy-env "OPENAI_API_KEY")
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
-	  '(("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
+	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing, to a fist year american university level.")
+		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
 		("improve" . "Improve the clarity and coherence of my writing.")
 		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
 		("rewrite 3" . "Rewrite my writing and suggest 3 writings")
@@ -50,13 +51,18 @@
 
 (electric-pair-mode 1)
 
+(defun my/prog-mode-hook ()
+  (setq-local show-trailing-whitespace t))
+
 (add-hook 'prog-mode-hook 'hs-minor-mode)
+(add-hook 'prog-mode-hook 'my/prog-mode-hook)
+
 ;; Auto Revert
 ;; ===========
 (defun my/immediate-auto-revert-mode()
   (setq-local auto-revert-interval 1
 			  auto-revert-remote-files t)
   (auto-revert-mode 1))
-  
+
 (add-hook 'image-mode-hook 'my/immediate-auto-revert-mode)
 
