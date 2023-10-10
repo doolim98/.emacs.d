@@ -1,8 +1,8 @@
 (setq my/cloud-directory
 	  (expand-file-name
-	   (if (eq system-type 'darwin)
-		  "~/Library/CloudStorage/Dropbox/"
-		"~/Dropbox/")))
+	   (let ((path-1 "~/Library/Cloudstorage/Dropbox/")
+			 (path-2 "~/Dropbox/"))
+		 (if (file-exists-p path-1) path-1 path-2))))
 
 (defvar my/config-files
   '("config/emacs.el"
