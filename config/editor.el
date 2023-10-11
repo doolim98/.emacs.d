@@ -6,20 +6,23 @@
 (require 'flymake-grammarly)
 
 (setq eldoc-echo-area-use-multiline-p nil
-	  flymake-no-changes-timeout 1)
+	  flymake-no-changes-timeout 0.5)
 (c-set-offset 'innamespace 0)
-;; (setq eglot-ignored-server-capabilites '(:documentHighlightProvider))
+(setq eglot-ignored-server-capabilities '(:hoverProvider
+	  :documentHighlightProvider :documentOnTypeFormattingProvider
+	  :documentLinkProvider :colorProvider :inlayHintProvider))
 ;; (setq eglot-autoreconnect 1)
 
 ;; (add-hook 'c-mode-hook 'eglot-ensure)
 
 ;; Flymake
 ;; =======
-(setq flymake-start-on-save-buffer t
-	  flymake-no-changes-timeout nil)
-(defun config-flymake-mode()
-  (setq-local next-error-function 'flymake-goto-next-error))
-(add-hook 'flymake-mode-hook 'config-flymake-mode)
+;; (setq flymake-start-on-save-buffer t
+;; 	  flymake-no-changes-timeout nil)
+
+;; (defun config-flymake-mode()
+;;   (setq-local next-error-function 'flymake-goto-next-error))
+;; (add-hook 'flymake-mode-hook 'config-flymake-mode)
 
 ;; Ispell & Dictionary
 ;; ===================
@@ -38,7 +41,7 @@
 (exec-path-from-shell-copy-env "OPENAI_API_KEY")
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
-	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing, to a fist year american university level.")
+	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing like a fist year american university student")
 		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
 		("improve" . "Improve the clarity and coherence of my writing.")
 		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
