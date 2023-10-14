@@ -30,6 +30,7 @@
 
 ;; Theme
 (use-package modus-themes)
+(use-package fontaine)
 
 ;;; VTERM AND ESHELL
 (use-package vterm

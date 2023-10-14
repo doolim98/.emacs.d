@@ -44,6 +44,8 @@
 
 ;; Remember to check the doc strings of those variables.
 (setq denote-directory (file-name-concat my/cloud-directory "notes/"))
+(setq denote-dired-directories `(,denote-directory))
+
 (setq denote-known-keywords '("emacs" "reference"))
 (setq denote-infer-keywords t)
 (setq denote-sort-keywords t)

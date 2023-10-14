@@ -19,14 +19,13 @@
 (setq tab-bar-new-button nil)
 (tab-bar-mode 1)
 
+;; Better Underline
 (setq x-use-underline-position-properties t
 	  x-underline-at-descent-line nil
 	  underline-minimum-offset 1000)
 
 ;; Theme
 ;; =====
-;; In all of the following, WEIGHT is a symbol such as `semibold',
-;; `light', `bold', or anything mentioned in `modus-themes-weights'.
 (setq org-fontify-quote-and-verse-blocks t
 	  org-fontify-whole-heading-line t)
 
@@ -64,20 +63,16 @@
 (add-hook 'modus-themes-after-load-theme-hook #'my/modus-themes-hook)
 
 ;; Load the theme of your choice:
-(load-theme 'modus-operandi :no-confirm)
+(load-theme 'modus-operandi-tinted :no-confirm)
 
 (setq modus-themes-to-toggle '(modus-operandi-tinted modus-operandi))
 
 (when (display-graphic-p)
-  (fringe-mode '(8 . 8)))
-
-(use-package fontaine
-  :unless (not window-system)
-  :config
+  (fringe-mode '(8 . 0))
   (setq fontaine-presets
 		'((regular		:default-height 140)
 		  (small		:default-height 120)
-		  (semi-large	:default-height 160)
+		  (semi-large	:default-height 150)
 		  (large		:default-height 180)
 		  (extra-large	:default-height 220)
 		  (t :default-family "Iosevka"
@@ -88,7 +83,8 @@
    (if (fontaine-restore-latest-preset)
 	   fontaine-recovered-preset
 	 'regular))
-  (add-hook 'kill-emacs-hook 'fontaine-store-latest-preset))
+  (add-hook 'fontaine-set-preset-hook 'fontaine-store-latest-preset)
+  )
 
 ;; Color
 ;; =====

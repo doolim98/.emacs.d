@@ -34,7 +34,7 @@
   (unless (or (bound-and-true-p mct--active)
               (bound-and-true-p vertico--input)
               (eq (current-local-map) read-passwd-map))
-    (setq-local corfu-auto t) ;; Enable/disable auto completion
+    (setq-local corfu-auto nil) ;; Enable/disable auto completion
     (corfu-mode 1)))
 (defun disable-corfu-mode()
   (corfu-mode 0))

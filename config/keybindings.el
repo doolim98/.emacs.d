@@ -32,9 +32,14 @@
 (general-define-key
  :prefix "C-x f"
  "b" 'consult-bookmark
+ "r" 'consult-recent-file
  "n" 'denote-open-or-create
  "o" 'my/find-file-org-directory
  "," 'my/find-file-emacs-configs)
+
+(general-define-key
+ :prefix "C-x p"
+ "a" 'my/project-add)
 
 ;; Edit
 ;; ====
