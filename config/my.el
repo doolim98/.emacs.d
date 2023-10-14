@@ -85,4 +85,18 @@
 (defun my/enable-word-wrap()
   (setq-local word-wrap t))
 
+(defun my/smart-delete-other-windows ()
+  "My smart delete other windows vertically"
+  (interactive)
+  (if (eq 2 (length (window-list)))
+	  (delete-other-windows)
+	(delete-other-windows-vertically)))
+
+(defun my/smart-split-window()
+  "My smart split window"
+  (interactive)
+  (if (eq 1 (length (window-list)))
+	  (split-window-right)
+	(split-window-below)))
+
 (provide 'my)

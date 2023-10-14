@@ -10,6 +10,9 @@
 ;; =====
 (general-define-key
  "M-l" 'execute-extended-command
+ "C-9" 'kmacro-start-macro-or-insert-counter
+ "C-0" 'kmacro-end-or-call-macro
+ "C-)" 'kmacro-set-counter
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
  "C-x C-k" 'kill-this-buffer
@@ -44,27 +47,16 @@
  :keymaps 'override
  "C-`" 'window-toggle-side-windows
  ;; Cursor Move
- "C-j" 'avy-goto-word-1
- "C-=" 'er/expand-region
- "C--" 'er/contract-region
-  ;; Window Manipulation
- "M-o" 'ace-window
- "M-O" 'aw-flip-window
- "M-0" 'delete-window
- ;; NOTE: this keybindings imitate `ace-window' operations using "M-O"
- ;; keybindings "\3571" -> "M-o 1" "\3171" -> "M-O 1"
- "M-1" #'(lambda()(interactive)(execute-kbd-macro "\3571"))
- "M-2" #'(lambda()(interactive)
-		   (when (> 2 (length (window-list)))
-			 (split-window-right))
-		   (execute-kbd-macro "\3572"))
- "M-3" #'(lambda()(interactive)
-		   (when (> 3 (length (window-list)))
-			 (split-window-below)
-			 (balance-windows))
-		   (execute-kbd-macro "\3573"))
- "M-4" #'(lambda()(interactive)(execute-kbd-macro "\3574"))
- "M-5" #'(lambda()(interactive)(execute-kbd-macro "\3575")))
+ "C-j" 'avy-goto-char
+ "M-j" 'avy-goto-line
+ "C-x =" 'er/expand-region
+ "C-x -" 'er/contract-region
+ ;; Window Manipulation
+ "M-1" 'my/smart-delete-other-windows
+ "M-2" 'my/smart-split-window
+ "M-`" 'other-window
+ "M-O" 'window-swap-states
+ )
 
 ;; Project
 (general-unbind "C-q")
@@ -77,8 +69,8 @@
  :keymaps 'override
  "C-x g" 'magit
  "C-x C-t" 'vterm
- "C-x M-m" 'compile
- "C-x C-m" 'recompile
+ "C-x C-m" 'compile
+ "C-x M-m" 'recompile
  "C-x C-e" 'eshell
  "C-x x s" 'scratch-buffer
  "C-x x m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
@@ -87,6 +79,9 @@
  "C-x C-u" 'crux-upcase-region
  "C-x C-l" 'crux-downcase-region
  "C-x M-c" 'crux-capitalize-region
+ "C-q c r" 'avy-copy-region
+ "C-q r r" 'replace-regexp
+ "C-q c q" 'chatgpt-query
  "s-d" 'my/osx-dict)
 (general-define-key
  "C-x l" 'eglot

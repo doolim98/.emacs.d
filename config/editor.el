@@ -11,22 +11,8 @@
 (setq eglot-ignored-server-capabilities '(:hoverProvider
 	  :documentHighlightProvider :documentOnTypeFormattingProvider
 	  :documentLinkProvider :colorProvider :inlayHintProvider))
-;; (setq eglot-autoreconnect 1)
 
-;; (add-hook 'c-mode-hook 'eglot-ensure)
-
-;; Flymake
-;; =======
-;; (setq flymake-start-on-save-buffer t
-;; 	  flymake-no-changes-timeout nil)
-
-;; (defun config-flymake-mode()
-;;   (setq-local next-error-function 'flymake-goto-next-error))
-;; (add-hook 'flymake-mode-hook 'config-flymake-mode)
-
-;; Ispell & Dictionary
-;; ===================
-;; TOOD concern 'spell-fu' package
+;;;; Ispell & Dictionary
 (setq ispell-program-name "aspell"
 	  ispell-silently-savep t
       ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")

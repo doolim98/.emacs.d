@@ -4,7 +4,9 @@
 (use-package avy)
 (use-package crux)
 (use-package expand-region)
-(use-package avy)
+(use-package avy
+  :config
+  (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m ?\;)))
 (use-package tblui)
 (use-package sqlite3)
 (use-package exec-path-from-shell
@@ -40,10 +42,14 @@
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package yaml-mode)
+(use-package nasm-mode
+  :config
+  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode)))
 (use-package markdown-mode)
 (use-package rainbow-mode)
 (use-package csv-mode)
 (use-package denote)
+
 
 ;; Completion
 ;; ==========

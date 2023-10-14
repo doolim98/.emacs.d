@@ -25,6 +25,7 @@
  auto-window-vscroll t
  recenter-redisplay nil
  help-window-select t
+ split-window-keep-point nil
  enable-recursive-minibuffers t)
 
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
@@ -39,16 +40,18 @@
 ;; Garbage Collection
 ;; ==================
 (setq garbage-collection-messages t)
-(setq gc-cons-threshold (* 10000000 300)) ; 300MB
+(setq gc-cons-threshold (* 1024 1024 30))
 
 ;; TRAMP
 ;; =====
-(setq tramp-default-method "ssh")
-(setq tramp-ssh-controlmaster-options
-	  (concat
-	   "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
-	   "-o ControlMaster=auto -o ControlPersist=yes"))
-(setq tramp-verbose 2)
+(setq remote-file-name-inhibit-cache nil)
+(setq remote-file-name-inhibit-locks t)
+(setq tramp-default-method "scpx")
+;; (setq tramp-ssh-controlmaster-options
+;; 	  (concat
+;; 	   "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
+;; 	   "-o ControlMaster=auto -o ControlPersist=yes"))
+(setq tramp-verbose 1)
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; eshell

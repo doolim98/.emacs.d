@@ -1,36 +1,72 @@
+;; Cursor
 (setq-default
  delete-pair-blink-delay 0
  blink-cursor-delay 0.0
  blink-cursor-interval 0.2
- blink-cursor-blinks 9999
- cursor-type 'box
+ blink-cursor-blinks 9999)
+
+(setq-default
  use-dialog-box nil
- ;; inhibit-startup-screen t
  ring-bell-function 'ignore
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
- word-wrap nil
- truncate-lines nil
  compilation-scroll-output t)
 
 ;; Tab Bar
 (setq tab-bar-format '(tab-bar-format-tabs tab-bar-separator))
 (setq tab-bar-close-button-show nil)
 (setq tab-bar-new-button nil)
-(setq tab-bar-new-tab-choice "*scratch*")
 (tab-bar-mode 1)
 
+(setq x-use-underline-position-properties t
+	  x-underline-at-descent-line nil
+	  underline-minimum-offset 1000)
 
 ;; Theme
 ;; =====
-(defun my/enable-modus-themes()
-  (setq modus-themes-bold-constructs t
-		modus-themes-italic-constructs t)
-  (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
-  (load-theme 'modus-operandi t))
+;; In all of the following, WEIGHT is a symbol such as `semibold',
+;; `light', `bold', or anything mentioned in `modus-themes-weights'.
+(setq org-fontify-quote-and-verse-blocks t
+	  org-fontify-whole-heading-line t)
 
-;; (my/enable-modus-themes)
+(setq modus-themes-italic-constructs t
+      modus-themes-bold-constructs t
+      modus-themes-mixed-fonts t
+      modus-themes-variable-pitch-ui nil
+      modus-themes-custom-auto-reload t
+      modus-themes-disable-other-themes t
+      modus-themes-prompts '(bold)
+      modus-themes-completions
+      '((matches . (extrabold))
+        (selection . (semibold text-also)))
+
+	  modus-themes-org-blocks 'gray-background
+      modus-themes-headings
+      '((1 . (extrabold 1.5))
+        (2 . (bold 1.2))
+		(3 . (semibold 1.0))
+		(4 . (semibold 1.0))
+		(5 . (semibold 1.0))
+        (agenda-date . (1.3))
+        (agenda-structure . (variable-pitch light 1.8))
+        (t . (1.1))))
+
+(setq modus-themes-common-palette-overrides
+      '((fg-heading-3 fg-main)
+        (fg-heading-4 fg-main)
+        (fg-heading-5 fg-main)))
+
+(defun my/modus-themes-hook ()
+  (custom-set-faces
+   '(bold ((t :weight semibold)))))
+
+(add-hook 'modus-themes-after-load-theme-hook #'my/modus-themes-hook)
+
+;; Load the theme of your choice:
+(load-theme 'modus-operandi :no-confirm)
+
+(setq modus-themes-to-toggle '(modus-operandi-tinted modus-operandi))
 
 (when (display-graphic-p)
   (fringe-mode '(8 . 8)))
@@ -46,22 +82,13 @@
 		  (extra-large	:default-height 220)
 		  (t :default-family "Iosevka"
 			 :default-weight normal
-			 :bold-weight bold
+			 :bold-weight semibold
 			 :italic-slant italic)))
   (fontaine-set-preset
    (if (fontaine-restore-latest-preset)
 	   fontaine-recovered-preset
 	 'regular))
   (add-hook 'kill-emacs-hook 'fontaine-store-latest-preset))
-
-(when (display-graphic-p)
-  (require 'org)
-(custom-set-faces
- '(org-level-1 ((t (:inherit info-title-1))))
- '(org-level-2 ((t (:inherit info-title-2))))
- '(org-level-3 ((t (:inherit info-title-3))))
- '(org-level-4 ((t (:inherit info-title-4))))
- '(org-level-5 ((t (:inherit info-title-4))))))
 
 ;; Color
 ;; =====
@@ -86,4 +113,4 @@
 		;; (,(rx (| "*help" "*eldoc"))
 		;;  (display-buffer-pop-up-window)
 		;;  (window-height . 0.3))
-	  ))
+		))
