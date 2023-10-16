@@ -87,6 +87,7 @@
  "C-q c r" 'avy-copy-region
  "C-q r r" 'replace-regexp
  "C-q c q" 'chatgpt-query
+ "C-q x g" 'gud-gdb
  "s-d" 'my/osx-dict)
 (general-define-key
  "C-x l" 'eglot
@@ -106,6 +107,8 @@
 ;; =================
 (general-define-key
  :prefix "M-s"
+ "r" 'rg
+ "R" 'rg-menu
  "l" 'consult-line
  "M-l" 'consult-line-multi
  "M-g" 'consult-git-grep
