@@ -6,12 +6,14 @@
 (require 'magit)
 (setq project-switch-use-entire-map t)
 (setq project-switch-commands
-      '((project-find-file "Find file" f)
-        (project-dired "Dired" d)
-        (project-vc-dir "VC-Dir" v)
+      '((project-dired "Dired" d)
 		(project-magit "Magit" m)
         (project-eshell "Eshell" e)
         (project-shell "Shell" s)))
+
+(defun my/project-switch(project)
+  (interactive (list (project-prompt-project-dir)))
+  (dired project))
 
 (defun project-magit  ()
   (interactive)

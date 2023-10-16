@@ -147,6 +147,7 @@
 ;; =======
 (general-define-key
  :keymaps 'project-prefix-map
+ "p" 'my/project-switch
  "m" 'project-magit)
 
 ;; C Mode
