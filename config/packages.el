@@ -43,6 +43,7 @@
 (use-package le-thesaurus)
 (use-package cmake-mode)
 (use-package go-mode)
+(use-package dockerfile-mode)
 (use-package yaml-mode)
 (use-package nasm-mode
   :config
