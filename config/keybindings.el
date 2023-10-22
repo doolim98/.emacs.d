@@ -134,6 +134,10 @@
 (general-define-key
  "M-/" 'dabbrev-completion
  "M-C-/" 'dabbrev-expand)
+(general-define-key
+ :keymaps 'corfu-map
+ "RET" nil)
+
 
 ;; Dired
 ;; =====
