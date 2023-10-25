@@ -146,9 +146,6 @@
  :keymaps 'yas-minor-mode-map
  "C-c C-y" 'company-yasnippet)
 
-
-
-
 ;; Dired
 ;; =====
 (general-define-key

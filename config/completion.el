@@ -15,7 +15,6 @@
 			  dabbrev-abbrev-skip-leading-regexp
 			  (rx (| "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'" "/" "'" "`" "'" "{" "}")))
 
-
 ;; Company
 ;; =======
 (require 'company)
