@@ -20,7 +20,7 @@
 (use-package which-key
   :config
   (setq which-key-popup-type 'minibuffer)
-  (setq which-key-idle-delay 0.5)
+  (setq which-key-idle-delay 2.0)
   (which-key-mode 1))
 (use-package 0x0  :commands (0x0-dwim 0x0-upload-file))
 (use-package visual-fill-column
