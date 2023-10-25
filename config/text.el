@@ -3,6 +3,8 @@
 	(setq-default org-directory (file-name-concat my/cloud-directory "org/"))
   (setq-default org-directory "~/org"))
 
+(setq org-cite-global-bibliography `(,(file-name-concat org-directory "/refer.bib")))
+
 (setq org-latex-packages-alist '(("margin=2cm" "geometry" nil))
 	  org-latex-image-default-width "0.6\\textwidth"
 	  org-latex-image-default-scale "")
@@ -60,7 +62,7 @@
 (setq denote-allow-multi-word-keywords t)
 
 
-(add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
+;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
 ;; (add-hook 'org-mode-hook 'my/enable-word-wrap)
 
 (defun my/org-mode-hook()
