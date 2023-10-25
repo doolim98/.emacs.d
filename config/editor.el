@@ -39,6 +39,7 @@
 
 (add-hook 'prog-mode-hook 'hs-minor-mode)
 (add-hook 'prog-mode-hook 'my/prog-mode-hook)
+(add-hook 'text-mode-hook 'flyspell-mode)
 
 ;; Auto Revert
 ;; ===========

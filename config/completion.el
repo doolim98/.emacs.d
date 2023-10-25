@@ -28,7 +28,7 @@
    (message "hooked org mode"))
 
 (global-company-mode 1)
-(add-hook 'prog-mode-hook 'company-tng-mode)
+
 (add-hook 'org-mode-hook 'my/company-org-mode-hook)
 
 

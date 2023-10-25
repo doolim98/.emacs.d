@@ -199,3 +199,7 @@
  "f" 'denote-open-or-create
  "g" 'my/denote-grep
  "n" 'denote)
+
+(general-define-key
+ :keymaps 'flyspell-mode-map
+ "C-." 'ispell-word)
