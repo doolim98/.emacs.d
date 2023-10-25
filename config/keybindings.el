@@ -137,6 +137,10 @@
 (general-define-key
  :keymaps 'corfu-map
  "RET" nil)
+(general-define-key
+ :keymaps 'company-tng-map
+ "C-n" nil
+ "C-p" nil)
 
 
 ;; Dired

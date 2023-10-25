@@ -19,9 +19,17 @@
 ;; Company
 ;; =======
 (require 'company)
-(setq company-clang-insert-arguments t)
+(setq company-semantic-insert-arguments t)
+(setq company-tooltip-align-annotations t)
+(setq company-tooltip-limit 7)
+
+(defun my/company-org-mode-hook()
+  (setq-local company-backends '(company-capf company-dabbrev-code company-ispell))
+   (message "hooked org mode"))
+
 (global-company-mode 1)
 (add-hook 'prog-mode-hook 'company-tng-mode)
+(add-hook 'org-mode-hook 'my/company-org-mode-hook)
 
 
 ;; Vertico
