@@ -30,13 +30,6 @@
 
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
-;; UTF-8 support
-(prefer-coding-system       'utf-8)
-(set-default-coding-systems 'utf-8)
-(set-terminal-coding-system 'utf-8)
-(set-keyboard-coding-system 'utf-8)
-(setq x-select-request-type '(UTF8_STRING COMPOUND_TEXT TEXT STRING))
-
 ;; Garbage Collection
 ;; ==================
 (setq garbage-collection-messages t)
