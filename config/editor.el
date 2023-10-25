@@ -8,19 +8,13 @@
 (setq eldoc-echo-area-use-multiline-p nil
 	  flymake-no-changes-timeout 0.5)
 (c-set-offset 'innamespace 0)
-(setq eglot-ignored-server-capabilities '(:hoverProvider
-	  :documentHighlightProvider :documentOnTypeFormattingProvider
-	  :documentLinkProvider :colorProvider :inlayHintProvider))
+(setq eglot-ignored-server-capabilities nil)
 
 ;;;; Ispell & Dictionary
 (setq ispell-program-name "aspell"
 	  ispell-silently-savep t
       ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
       ispell-personal-dictionary (file-name-concat org-directory "./aspell.pws"))
-
-;; I don't care :(
-(setq grammarly-username "hojoon.lee@skku.edu")
-(setq grammarly-password "Tltmxpa-l33t!")
 
 ;; ChatGPT
 ;; =======
