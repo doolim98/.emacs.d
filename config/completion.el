@@ -7,7 +7,7 @@
 (setq tab-always-indent 'complete
 	  c-tab-always-indent t)
 (setq completion-ignore-case  t)
-(setq completion-styles '(orderless basic))
+(setq completion-styles '(basic orderless))
 (setq completion-category-overrides '((file (styles basic partial-completion flex))))
 (setq orderless-component-separator "[. ]") ; Use . as separator(for corfu)
 (setq completion-in-region-function #'consult-completion-in-region)
@@ -15,37 +15,13 @@
 			  dabbrev-abbrev-skip-leading-regexp
 			  (rx (| "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'" "/" "'" "`" "'" "{" "}")))
 
-;; Corfu
-;; =====
-(setq corfu-cycle t
-	  corfu-auto t
-	  corfu-auto-prefix 2
-	  corfu-auto-delay 0.1
-	  corfu-popupinfo-delay '(1.0 . 0.5)
-	  corfu-preview-current 'nil
-	  corfu-preselect 'directory
-	  corfu-on-exact-match 'insert
-	  corfu-count 7)
-(defun corfu-mode-no-auto()
-  (setq-local corfu-auto nil)
-  (corfu-mode 1))
-(defun corfu-enable-always-in-minibuffer ()
-  "Enable Corfu in the minibuffer if Vertico/Mct are not active."
-  (unless (or (bound-and-true-p mct--active)
-              (bound-and-true-p vertico--input)
-              (eq (current-local-map) read-passwd-map))
-    (setq-local corfu-auto nil) ;; Enable/disable auto completion
-    (corfu-mode 1)))
-(defun disable-corfu-mode()
-  (corfu-mode 0))
-(add-hook 'minibuffer-setup-hook #'corfu-enable-always-in-minibuffer 1)
-(add-hook 'eshell-mode-hook 'corfu-mode-no-auto)
-(add-hook 'gud-mode-hook 'disable-corfu-mode)
-(corfu-history-mode 1)
-(global-corfu-mode 1)
-(corfu-popupinfo-mode 1)
-(when (not window-system)
-  (corfu-terminal-mode +1))
+
+;; Company
+;; =======
+(require 'company)
+(global-company-mode 1)
+(add-hook 'prog-mode-hook 'company-tng-mode)
+
 
 ;; Vertico
 ;; =======

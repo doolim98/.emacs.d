@@ -62,6 +62,7 @@
 (use-package consult)
 (use-package corfu)
 (use-package corfu-terminal)
+(use-package company :ensure t)
 (use-package embark-consult)
 (use-package embark)
 
