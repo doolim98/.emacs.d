@@ -41,6 +41,10 @@
 ;; Edit
 ;; ====
 (use-package le-thesaurus)
+(use-package yasnippet
+  :config
+  (yas-global-mode 1))
+(use-package yasnippet-snippets)
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package dockerfile-mode)

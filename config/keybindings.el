@@ -142,6 +142,12 @@
  "C-n" nil
  "C-p" nil)
 
+(general-define-key
+ :keymaps 'yas-minor-mode-map
+ "C-c C-y" 'company-yasnippet)
+
+
+
 
 ;; Dired
 ;; =====
