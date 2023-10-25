@@ -40,7 +40,7 @@
       '((matches . (extrabold))
         (selection . (semibold text-also)))
 
-	  modus-themes-org-blocks 'tinted-background
+	  modus-themes-org-blocks nil
       modus-themes-headings
       '((1 . (extrabold 1.0))
         (2 . (semibold 1.0))
