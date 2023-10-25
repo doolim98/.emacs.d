@@ -40,21 +40,22 @@
       '((matches . (extrabold))
         (selection . (semibold text-also)))
 
-	  modus-themes-org-blocks 'gray-background
+	  modus-themes-org-blocks 'tinted-background
       modus-themes-headings
-      '((1 . (extrabold 1.5))
-        (2 . (bold 1.2))
-		(3 . (semibold 1.0))
-		(4 . (semibold 1.0))
-		(5 . (semibold 1.0))
+      '((1 . (extrabold 1.0))
+        (2 . (semibold 1.0))
+		(3 . (regular 1.0))
+		(4 . (regular 1.0))
+		(5 . (regular 1.0))
         (agenda-date . (1.3))
         (agenda-structure . (variable-pitch light 1.8))
         (t . (1.1))))
 
 (setq modus-themes-common-palette-overrides
-      '((fg-heading-3 fg-main)
-        (fg-heading-4 fg-main)
-        (fg-heading-5 fg-main)))
+      '(;;(fg-heading-3 fg-main)
+        ;;(fg-heading-4 fg-main)
+        ;;(fg-heading-5 fg-main)
+		))
 
 (defun my/modus-themes-hook ()
   (custom-set-faces
@@ -63,7 +64,7 @@
 (add-hook 'modus-themes-after-load-theme-hook #'my/modus-themes-hook)
 
 ;; Load the theme of your choice:
-(load-theme 'modus-operandi-tinted :no-confirm)
+(load-theme 'modus-operandi :no-confirm)
 
 (setq modus-themes-to-toggle '(modus-operandi-tinted modus-operandi))
 

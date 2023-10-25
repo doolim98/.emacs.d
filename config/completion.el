@@ -19,6 +19,7 @@
 ;; Company
 ;; =======
 (require 'company)
+(setq company-clang-insert-arguments t)
 (global-company-mode 1)
 (add-hook 'prog-mode-hook 'company-tng-mode)
 
