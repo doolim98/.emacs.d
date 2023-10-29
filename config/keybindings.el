@@ -9,7 +9,6 @@
 ;; Basic
 ;; =====
 (general-define-key
- "M-l" 'execute-extended-command
  "C-9" 'kmacro-start-macro-or-insert-counter
  "C-0" 'kmacro-end-or-call-macro
  "C-)" 'kmacro-set-counter
@@ -18,7 +17,7 @@
  "C-x C-k" 'kill-this-buffer
  "C-x b" 'consult-buffer
  "C-x x r" 'crux-rename-buffer-and-file
- "C-x C-r" 'consult-recent-file
+ "C-x C-r" 'revert-buffer-quick
  "M-g m" 'consult-mark
  "C-x C-SPC" 'consult-global-mark
  "M-y" 'consult-yank-pop
@@ -26,6 +25,8 @@
  "C-a" 'crux-move-beginning-of-line
  "C-;" nil
  "M-l" nil
+ "M-r" nil
+ "M-R" 'query-replace
  "M-k" nil)
 
 (general-unbind "C-x f")
@@ -128,19 +129,6 @@
  "C-c C-f" 'eglot-format-buffer
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)
-
-;; Corfu & Dabbrev
-;; ===============
-(general-define-key
- "M-/" 'dabbrev-completion
- "M-C-/" 'dabbrev-expand)
-(general-define-key
- :keymaps 'corfu-map
- "RET" nil)
-(general-define-key
- :keymaps 'company-tng-map
- "C-n" nil
- "C-p" nil)
 
 (general-define-key
  :keymaps 'yas-minor-mode-map
