@@ -30,6 +30,14 @@
 
 (add-hook 'org-mode-hook 'my/company-org-mode-hook)
 
+(add-hook 'prog-mode-hook (lambda ()
+			   (add-function :before-until (local 'electric-pair-inhibit-predicate)
+					 (lambda (c) (eq c ?<)))))
+
+(add-hook 'org-mode-hook (lambda ()
+			   (add-function :before-until (local 'electric-pair-inhibit-predicate)
+					 (lambda (c) (eq c ?<)))))
+
 
 ;; Vertico
 ;; =======

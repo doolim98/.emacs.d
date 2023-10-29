@@ -124,7 +124,7 @@
 ;; =====
 (general-define-key
  :keymaps 'eglot-mode-map
- "C-c C-q" 'eglot-code-action-quickfix
+ "C-." 'eglot-code-action-quickfix
  "C-c C-f" 'eglot-format-buffer
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)

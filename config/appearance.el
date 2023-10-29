@@ -49,7 +49,7 @@
 		(5 . (regular 1.0))
         (agenda-date . (1.3))
         (agenda-structure . (variable-pitch light 1.8))
-        (t . (1.1))))
+        (t . (1.0))))
 
 (setq modus-themes-common-palette-overrides
       '(;;(fg-heading-3 fg-main)
