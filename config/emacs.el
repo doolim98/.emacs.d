@@ -28,6 +28,8 @@
  split-window-keep-point nil
  enable-recursive-minibuffers t)
 
+(setq debug-on-error t)
+
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
 ;; Garbage Collection
