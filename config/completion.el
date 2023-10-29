@@ -23,8 +23,7 @@
 (setq company-tooltip-limit 7)
 
 (defun my/company-org-mode-hook()
-  (setq-local company-backends '(company-capf company-dabbrev-code company-ispell))
-   (message "hooked org mode"))
+  (setq-local company-backends '(company-capf company-dabbrev-code company-ispell)))
 
 (global-company-mode 1)
 
