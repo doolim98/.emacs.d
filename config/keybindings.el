@@ -40,7 +40,8 @@
 
 (general-define-key
  :prefix "C-x p"
- "a" 'my/project-add)
+ "a" 'my/project-add
+ "i" 'my/project-init)
 
 ;; Edit
 ;; ====

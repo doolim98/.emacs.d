@@ -25,11 +25,18 @@
       (cons 'transient override)
       nil)))
 
+(defun my/project-init()
+  (interactive)
+  (when (not (file-exists-p "./.dir-locals.el"))
+	(make-empty-file ".dir-locals.el"))
+  (my/project-add))
+
 (defun my/project-add()
   (interactive)
   (when (not (project-current))
 	(make-empty-file ".dir-locals.el"))
-  (project-remember-project (project-current)))
+  (project-remember-project (project-current))
+  (message "Added project %s" (project-root (project-current))))
 
 (add-to-list 'project-find-functions 'my/find-project)
 
