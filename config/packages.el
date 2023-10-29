@@ -76,5 +76,3 @@
 
 (use-package polymode)
 (use-package chatgpt :load-path "lisp/chatgpt")
-(use-package grammarly)
-(use-package flymake-grammarly)
