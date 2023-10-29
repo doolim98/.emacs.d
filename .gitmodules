@@ -1,3 +1,0 @@
-[submodule "lisp/chatgpt"]
-	path = lisp/chatgpt
-	url = https://github.com/joshcho/ChatGPT.el

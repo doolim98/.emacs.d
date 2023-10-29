@@ -70,9 +70,11 @@
 
 ;; Org
 ;; ===
+(use-package org)
 (use-package org-download)
 ;; (use-package org-roam)
-(use-package org)
+
 
 (use-package polymode)
-(use-package chatgpt :load-path "lisp/chatgpt")
+(use-package chatgpt
+  :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el")))
