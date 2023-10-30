@@ -4,7 +4,7 @@
 ;; =======
 (when (eq system-type 'darwin)
   (setq mac-command-modifier 'meta
-		mac-option-modifier 'super))
+        mac-option-modifier 'super))
 
 ;; Basic
 ;; =====

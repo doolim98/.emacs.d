@@ -18,20 +18,21 @@
   "Cycle through the list `my/dired-switches-list' of switches for ls"
   (interactive)
   (setq my/dired-switches-list
-		(append (cdr my/dired-switches-list)
-				(list (car my/dired-switches-list))))
+        (append (cdr my/dired-switches-list)
+                (list (car my/dired-switches-list))))
   (setq dired-listing-switches (car my/dired-switches-list))
   (dired-sort-other (car my/dired-switches-list)))
 
 (defun my/find-file-org-directory ()
   (interactive)
   (let ((default-directory (file-name-concat org-directory "./")))
-	(call-interactively 'find-file)))
+    (call-interactively 'find-file)))
 
 (defun my/find-file-emacs-configs ()
   (interactive)
   (let ((default-directory (file-name-concat user-emacs-directory "config/")))
-	(call-interactively 'find-file)))
+    (call-interactively 'find-file)))
+
 (defun my/find-file-workspace ()
   (interactive)
   (let ((default-directory
@@ -49,16 +50,16 @@
 (defun my/toggle-window-size ()
   (interactive)
   (let ((wh (window-height))
-		(half (/ (frame-height) 2))
-		(quart (/ (frame-height) 4)))
-	(if (>= half wh)
-		(enlarge-window (- (* 3 quart) wh))
-	  (enlarge-window (- half wh)))))
+        (half (/ (frame-height) 2))
+        (quart (/ (frame-height) 4)))
+    (if (>= half wh)
+        (enlarge-window (- (* 3 quart) wh))
+      (enlarge-window (- half wh)))))
 
 (defun my/magit-pull-user-emacs-directory()
   (interactive)
   (let ((default-directory user-emacs-directory))
-	(call-interactively 'magit-pull-from-pushremote)))
+    (call-interactively 'magit-pull-from-pushremote)))
 
 (defun my/is-tramp ()
   (file-remote-p default-directory))
@@ -102,14 +103,14 @@
   "My smart delete other windows vertically"
   (interactive)
   (if (eq 2 (length (window-list)))
-	  (delete-other-windows)
-	(delete-other-windows-vertically)))
+      (delete-other-windows)
+    (delete-other-windows-vertically)))
 
 (defun my/smart-split-window()
   "My smart split window"
   (interactive)
   (if (eq 1 (length (window-list)))
-	  (split-window-right)
-	(split-window-below)))
+      (split-window-right)
+    (split-window-below)))
 
 (provide 'my)
