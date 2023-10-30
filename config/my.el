@@ -32,6 +32,19 @@
   (interactive)
   (let ((default-directory (file-name-concat user-emacs-directory "config/")))
 	(call-interactively 'find-file)))
+(defun my/find-file-workspace ()
+  (interactive)
+  (let ((default-directory
+         (if (file-remote-p default-directory)
+             (tramp-make-tramp-file-name
+              (tramp-dissect-file-name default-directory) "~/Workspace/")
+           "~/Workspace/")))
+    (call-interactively 'find-file)))
+
+(defun my/find-file-tramp ()
+  (interactive)
+  (let ((default-directory "/scp:"))
+  (call-interactively 'find-file)))
 
 (defun my/toggle-window-size ()
   (interactive)
