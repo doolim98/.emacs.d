@@ -23,7 +23,6 @@
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
  "C-a" 'crux-move-beginning-of-line
- "C-;" nil
  "M-l" nil
  "M-r" nil
  "M-R" 'query-replace
@@ -36,6 +35,8 @@
  "r" 'consult-recent-file
  "n" 'denote-open-or-create
  "o" 'my/find-file-org-directory
+ "w" 'my/find-file-workspace
+ "t" 'my/find-file-tramp
  "," 'my/find-file-emacs-configs)
 
 (general-define-key
@@ -46,13 +47,14 @@
 ;; Edit
 ;; ====
 (general-define-key
-  "M-z" 'zap-up-to-char)
+ "M-z" 'zap-up-to-char
+ "M-'" 'dabbrev-expand
+ "C-M-'" 'dabbrev-completion)
 
 ;; Move & Window
 ;; =============
 (general-define-key
  :keymaps 'override
- "C-`" 'window-toggle-side-windows
  ;; Cursor Move
  "C-j" 'avy-goto-char
  "M-j" 'avy-goto-line
@@ -75,10 +77,10 @@
 (general-define-key
  :keymaps 'override
  "C-x g" 'magit
- "C-x C-t" 'vterm
- "C-x C-m" 'compile
- "C-x M-m" 'recompile
- "C-x C-e" 'eshell
+ "C-`" 'vterm
+ "C-x m" 'compile
+ "C-x C-m" 'recompile
+ "C-x e" 'eshell
  "C-x x s" 'scratch-buffer
  "C-x x m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
 "s-<backspace>" 'backward-kill-word
@@ -86,15 +88,23 @@
  "C-x C-u" 'crux-upcase-region
  "C-x C-l" 'crux-downcase-region
  "C-x M-c" 'crux-capitalize-region
- "C-q c r" 'avy-copy-region
- "C-q r r" 'replace-regexp
- "C-q c q" 'chatgpt-query
- "C-q x g" 'gud-gdb
  "s-d" 'my/osx-dict)
+
+(general-define-key
+ "C-; C-;" 'async-shell-command
+ "C-; q r" 'query-replace
+ "C-; c r" 'avy-copy-region
+ "C-; r r" 'replace-regexp
+ "C-; c q" 'chatgpt-query
+ "C-; w c" 'whitespace-cleanup
+ "C-; x g" 'gud-gdb
+ "C-; s b" 'scratch-buffer)
+
 (general-define-key
  "C-x l" 'eglot
- "C-c q" 'chatgpt-query
-)
+ "C-c q" 'chatgpt-query)
+
+
 
 ;; Settings
 ;; ========
@@ -167,8 +177,7 @@
 ;; ==========
 (general-define-key
  :keymaps 'minibuffer-mode-map
- "M-r" 'consult-history
- "C-;" 'embark-export)
+ "M-r" 'consult-history)
 
 ;; Org Capture & Roam
 ;; ==================
