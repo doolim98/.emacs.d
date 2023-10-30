@@ -5,6 +5,8 @@
 (require 'grammarly)
 (require 'flymake-grammarly)
 
+(setq-default indent-tabs-mode nil)
+
 (setq eldoc-echo-area-use-multiline-p nil
 	  flymake-no-changes-timeout 0.5)
 (c-set-offset 'innamespace 0)
