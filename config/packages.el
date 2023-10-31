@@ -78,3 +78,6 @@
 (use-package polymode)
 (use-package chatgpt
   :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el")))
+(use-package gptel
+  :config
+  (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))
