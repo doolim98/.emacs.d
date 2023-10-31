@@ -38,11 +38,17 @@
 (setq org-default-notes-file (concat org-directory "/notes.org"))
 
 
+;;;; Ispell & Dictionary
+(setq ispell-program-name "aspell"
+	  ispell-silently-savep t
+      ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
+      ispell-personal-dictionary (file-name-concat org-directory "./aspell.pws"))
+
+
 
 ;; denote
 ;; ======
 (require 'denote)
-
 
 ;; Remember to check the doc strings of those variables.
 (setq denote-directory (file-name-concat my/cloud-directory "notes/"))
@@ -61,12 +67,24 @@
 
 (setq denote-allow-multi-word-keywords t)
 
-
-;; (add-hook 'dired-mode-hook #'denote-dired-mode-in-directories)
-;; (add-hook 'org-mode-hook 'my/enable-word-wrap)
-
 (defun my/org-mode-hook()
   (setq-local visual-fill-column-center-text t
 			  fill-column 80)
   (visual-line-mode 1))
 (add-hook 'org-mode-hook 'my/org-mode-hook)
+
+;; ChatGPT
+;; =======
+(exec-path-from-shell-copy-env "OPENAI_API_KEY")
+;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
+(setq chatgpt-code-query-map
+	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing like a fist year american university student")
+		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
+		("improve" . "Improve the clarity and coherence of my writing.")
+		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
+		("rewrite 3" . "Rewrite my writing and suggest 3 writings")
+		("cohesive" . "Can you improve this paragraph to make it more cohesive.")
+		("bug" . "There is a bug in the following, please help me fix it.")
+		("doc" . "Please write the documentation for the following.")
+		("refactor" . "Please refactor the following.")
+		("suggest" . "Please make suggestions for the following.")))
