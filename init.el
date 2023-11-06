@@ -24,6 +24,7 @@
 
 ;; Load
 ;; ====
+(setq debug-on-error t)
 (dolist (f my/config-files)
   (load (file-name-concat user-emacs-directory f)))
-(put 'narrow-to-region 'disabled nil)
+(setq debug-on-error nil)
