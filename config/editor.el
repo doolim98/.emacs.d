@@ -7,7 +7,8 @@
 
 (setq-default indent-tabs-mode nil)
 
-(setq eldoc-echo-area-use-multiline-p nil
+(setq eldoc-echo-area-use-multiline-p 'truncate-sym-name-if-fit
+      eldoc-echo-area-display-truncation-message nil
 	  flymake-no-changes-timeout 0.5)
 (c-set-offset 'innamespace 0)
 (setq eglot-ignored-server-capabilities nil)

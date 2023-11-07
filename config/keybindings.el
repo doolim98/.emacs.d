@@ -22,6 +22,7 @@
  "C-x C-SPC" 'consult-global-mark
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
+ "C-k" 'crux-smart-kill-line
  "C-a" 'crux-move-beginning-of-line
  "M-l" nil
  "M-r" nil
@@ -60,6 +61,7 @@
  "M-j" 'avy-goto-line
  "C-x =" 'er/expand-region
  "C-x -" 'er/contract-region
+ "C-`" 'window-toggle-side-windows
  ;; Window Manipulation
  "M-1" 'my/smart-delete-other-windows
  "M-2" 'my/smart-split-window
@@ -77,7 +79,7 @@
 (general-define-key
  :keymaps 'override
  "C-x g" 'magit
- "C-`" 'vterm
+ "C-x t" 'vterm
  "C-x m" 'compile
  "C-x C-m" 'recompile
  "C-x e" 'eshell
