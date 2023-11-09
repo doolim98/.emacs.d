@@ -143,9 +143,16 @@
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)
 
+;; Company
+;; =======
 (general-define-key
  :keymaps 'yas-minor-mode-map
  "C-c C-y" 'company-yasnippet)
+
+(general-define-key
+ :keymaps 'company-active-map
+ "<return>" nil
+ "<tab>" 'company-complete-common-or-cycle)
 
 ;; Dired
 ;; =====
