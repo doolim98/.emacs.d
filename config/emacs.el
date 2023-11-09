@@ -37,6 +37,7 @@
 
 ;; TRAMP
 ;; =====
+(setq enable-remote-dir-locals t)
 (setq remote-file-name-inhibit-cache nil)
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-default-method "scpx")

@@ -4,6 +4,8 @@
 			 (path-2 "~/Dropbox/"))
 		 (if (file-exists-p path-1) path-1 path-2))))
 
+(setq my/cloud-directory (expand-file-name "~/Dropbox/"))
+
 (defvar my/config-files
   '("config/emacs.el"
 	"config/packages.el"

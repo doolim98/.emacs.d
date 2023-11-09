@@ -11,7 +11,8 @@
       eldoc-echo-area-display-truncation-message nil
 	  flymake-no-changes-timeout 0.5)
 (c-set-offset 'innamespace 0)
-(setq eglot-ignored-server-capabilities nil)
+(setq eglot-ignored-server-capabilities
+      '(:documentHighlight :documentOnTypeFormattingProvider :inlayHint))
 
 (electric-pair-mode 1)
 
