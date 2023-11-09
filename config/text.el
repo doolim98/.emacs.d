@@ -16,6 +16,13 @@
 	  org-startup-truncated nil
 	  org-export-allow-bind-keywords t)
 
+(setq org-file-apps
+      '((auto-mode . emacs)
+        (directory . emacs)
+        ("\\.mm\\'" . default)
+        ("\\.x?html?\\'" . default)
+        ("\\.pdf\\'" . emacs)))
+
 (setq org-src-preserve-indentation nil
       org-edit-src-content-indentation 0)
 
@@ -88,3 +95,34 @@
 		("doc" . "Please write the documentation for the following.")
 		("refactor" . "Please refactor the following.")
 		("suggest" . "Please make suggestions for the following.")))
+
+;; Latex
+(defun my/find-TeX-master()
+  (let* ((master-name "main.tex")
+         (master-dir (locate-dominating-file "./" master-name)))
+    (if master-dir
+        (file-name-concat master-dir master-name)
+      nil)))
+(setq bibtex-files '("refer.bib"
+                     "refers.bib"
+                     "ref.bib"
+                     "refs.bib"
+                     "reference.bib"))
+
+(defun my/LaTeX-mode-hook()
+  (add-to-list 'TeX-command-list
+               '("LaTeXmk" "latexmk -c -pdf" TeX-run-command t t :help "Run LaTeXmk")
+               t)
+  ;; (setq TeX-parse-self t)
+
+  (setq reftex-default-bibliography
+        `("refer.bib" "../refer.bib" "ref.bib" "../ref.bib" "refs.bib" "../refs.bib"))
+  (setq reftex-plug-into-AUCTeX t)
+  (setq reftex-mode t)
+
+  (setq TeX-command-default "LaTeXmk")
+  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
+        TeX-source-correlate-start-server t)
+  (setq TeX-master (my/find-TeX-master)))
+(add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)
+;; (setq-default TeX-master "master") ; All master files called "master".

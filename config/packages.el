@@ -65,6 +65,12 @@
 (use-package marginalia)
 (use-package consult)
 (use-package company :ensure t)
+(use-package company-reftex
+  :config
+  (defun my/add-company-reftex-backend()
+    (add-to-list 'company-backends 'company-reftex-citations)
+    (add-to-list 'company-backends 'company-reftex-labels))
+  (add-hook 'reftex-mode-hook #'my/add-company-reftex-backend))
 (use-package embark-consult)
 (use-package embark)
 
@@ -81,3 +87,19 @@
 (use-package gptel
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))
+
+(use-package tex
+  :straight nil
+  :ensure auctex)
+
+(use-package pdf-tools
+  :ensure t
+  :config
+  (custom-set-variables
+   '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
+  (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
+  (pdf-tools-install)
+  (setq pdf-view-display-size 'fit-height)
+  ;; (add-hook)
+  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+
