@@ -92,14 +92,15 @@
   :straight nil
   :ensure auctex)
 
-(use-package pdf-tools
-  :ensure t
-  :config
-  (custom-set-variables
-   '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
-  (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
-  (pdf-tools-install)
-  (setq pdf-view-display-size 'fit-height)
-  ;; (add-hook)
-  (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-
+(when (memq window-system '(mac ns x))
+  (use-package pdf-tools
+    :ensure t
+    :config
+    (custom-set-variables
+     '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
+    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
+    (pdf-tools-install)
+    (setq pdf-view-display-size 'fit-height)
+    ;; (add-hook)
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+  )
