@@ -79,7 +79,7 @@
 (general-define-key
  :keymaps 'override
  "C-x g" 'magit
- "C-x t" 'vterm
+ "C-x C-t" 'vterm
  "C-x m" 'compile
  "C-x C-m" 'recompile
  "C-x e" 'eshell
