@@ -12,7 +12,7 @@
 (use-package exec-path-from-shell
   :init
   (when (memq window-system '(mac ns x))
-  (exec-path-from-shell-initialize)))
+    (exec-path-from-shell-initialize)))
 (use-package ace-window
   :commands (aw-flip-window)
   :init
