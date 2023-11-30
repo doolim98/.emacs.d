@@ -45,6 +45,7 @@
   :config
   (yas-global-mode 1))
 (use-package yasnippet-snippets)
+(require 'llvm-mode)
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package dockerfile-mode)
