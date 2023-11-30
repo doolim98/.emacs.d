@@ -11,6 +11,7 @@
  use-short-answers t
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
+ shell-command-prompt-show-cwd t
  compilation-scroll-output t)
 
 ;; Tab Bar
@@ -66,7 +67,7 @@
 ;; Load the theme of your choice:
 (load-theme 'modus-operandi :no-confirm)
 
-(setq modus-themes-to-toggle '(modus-operandi-tinted modus-operandi))
+(setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
 
 (when (display-graphic-p)
   (fringe-mode '(8 . 0))
