@@ -146,13 +146,18 @@
 ;; Company
 ;; =======
 (general-define-key
+ :keymaps 'company-mode-map
+ "C-M-/" 'company-dabbrev)
+
+(general-define-key
  :keymaps 'yas-minor-mode-map
  "C-c C-y" 'company-yasnippet)
 
 (general-define-key
  :keymaps 'company-active-map
- "<return>" nil
- "<tab>" 'company-complete-common-or-cycle)
+ ;; "<return>" nil
+ ;; "<tab>" 'company-complete-common-or-cycle
+ )
 
 ;; Dired
 ;; =====

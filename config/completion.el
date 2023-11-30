@@ -23,12 +23,16 @@
 (setq company-tooltip-align-annotations t)
 (setq company-tooltip-maximum-width 40)
 (setq company-tooltip-limit 7)
+(setq company-backends
+      '(company-bbdb company-semantic company-cmake company-capf company-clang company-files
+                     (company-gtags company-etags company-keywords)
+                     company-oddmuse))
 
 (defun my/company-org-mode-hook()
   (setq-local company-backends '(company-capf company-dabbrev-code company-ispell)))
 
 (global-company-mode 1)
-(company-tng-mode 1)
+;; (company-tng-mode 1)
 
 (add-hook 'org-mode-hook 'my/company-org-mode-hook)
 
