@@ -156,8 +156,9 @@
 
 (general-define-key
  :keymaps 'company-active-map
- ;; "<return>" nil
- ;; "<tab>" 'company-complete-common-or-cycle
+ "SPC" #'(lambda()(interactive)(company-abort)(insert " "))
+ "C-f" nil
+ "<tab>" 'company-complete-common-or-cycle
  )
 
 ;; Dired

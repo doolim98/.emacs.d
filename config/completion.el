@@ -19,7 +19,7 @@
 ;; =======
 (require 'company)
 (setq company-semantic-insert-arguments t)
-(setq company-insertion-on-trigger t)
+(setq company-insertion-on-trigger nil)
 (setq company-tooltip-align-annotations t)
 (setq company-tooltip-maximum-width 40)
 (setq company-tooltip-limit 7)
