@@ -172,6 +172,7 @@
 (general-define-key
  :keymaps 'project-prefix-map
  "p" 'my/project-switch
+ "b" 'consult-project-buffer
  "m" 'project-magit)
 
 ;; C Mode
