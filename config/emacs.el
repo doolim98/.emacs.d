@@ -33,7 +33,7 @@
 ;; Garbage Collection
 ;; ==================
 (setq garbage-collection-messages t)
-(setq gc-cons-threshold (* 1024 1024 30))
+(setq gc-cons-threshold (* 1024 1024 300))
 
 ;; TRAMP
 ;; =====
