@@ -139,6 +139,7 @@
 (general-define-key
  :keymaps 'eglot-mode-map
  "C-." 'eglot-code-action-quickfix
+ "C-c ." 'eglot-code-action-quickfix
  "C-c C-f" 'eglot-format-buffer
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)
