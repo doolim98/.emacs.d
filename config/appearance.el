@@ -112,14 +112,3 @@
 		;;  (display-buffer-pop-up-window)
 		;;  (window-height . 0.3))
 		))
-
-
-;; Mode line
-;; =========
-(with-eval-after-load 'subr-x
-  (setq-default mode-line-buffer-identification
-                '(:eval (format-mode-line (propertized-buffer-identification
-                                           (or (when-let* ((buffer-file-truename buffer-file-truename)
-                                                           (prj (cdr-safe (project-current)))
-                                                           (prj-parent (file-name-directory (directory-file-name (expand-file-name prj)))))
-                                                 (concat (file-relative-name (file-name-directory buffer-file-truename) prj-parent) (file-name-nondirectory buffer-file-truename)))))))))
