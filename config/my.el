@@ -113,4 +113,15 @@
       (split-window-right)
     (split-window-below)))
 
+(defun my/create-etags(dir-name)
+  "Create etags"
+  (interactive "DDirectory: ")
+  (let ((default-directory dir-name))
+    (shell-command
+     (format "find . -type f \
+-name \"*.[chCH]\" \
+-o -iname \"*.cpp\" \
+-o -iname \"*.h\" \
+| etags -"))))
+
 (provide 'my)
