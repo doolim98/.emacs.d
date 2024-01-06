@@ -26,7 +26,9 @@
  recenter-redisplay nil
  help-window-select t
  split-window-keep-point nil
- enable-recursive-minibuffers t)
+ enable-recursive-minibuffers t
+ revert-without-query t
+ auto-revert-interval 1)
 
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 

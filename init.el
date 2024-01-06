@@ -15,6 +15,7 @@
     "config/project.el"
     "config/editor.el"
     "config/text.el"
+    "config/latex.el"
     "config/appearance.el"
 	)
   "My configuration files")
