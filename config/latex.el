@@ -48,7 +48,7 @@
 (defun my/project-latex-compile-command()
   "My async latexmk "
   (interactive)
-  (my/project-compile-command "latexmk -C;latexmk -pdf;latexmk -pvc -view=none")
+  (my/project-compile-command "latexmk -C;latexmk -bibtex;latexmk;latexmk;latexmk;latexmk -pvc -view=none")
   )
 
 (add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)
