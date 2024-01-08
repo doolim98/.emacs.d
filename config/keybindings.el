@@ -22,7 +22,8 @@
  "C-x C-SPC" 'consult-global-mark
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
- "C-k" 'crux-smart-kill-line
+ ;; "C-k" 'crux-smart-kill-line
+ "C-k" 'kill-line
  "C-a" 'crux-move-beginning-of-line
  "M-l" nil
  "M-r" nil
@@ -173,7 +174,7 @@
 ;; =======
 (general-define-key
  :keymaps 'project-prefix-map
- "p" 'my/project-switch
+ "p" 'project-switch-project
  "b" 'consult-project-buffer
  "m" 'project-magit)
 

@@ -28,6 +28,19 @@
 (use-package loccur)
 (use-package rg)
 
+(use-package ibuffer
+  :config
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("dired" (mode . dired-mode))
+                 ("eglot" (predicate eglot-managed-p))
+                 ("prog" (used-mode . prog-mode))
+                 ("emacs" (or
+                           (name . "^\\*scratch\\*$")
+                           (name . "^\\*Messages\\*$")))
+                 )))))
+
+(use-package hydra)
 
 ;; Theme
 (use-package modus-themes)
@@ -41,10 +54,10 @@
 ;; Edit
 ;; ====
 (use-package le-thesaurus)
-(use-package yasnippet
+(use-package yasnippet :disabled t
   :config
   (yas-global-mode 1))
-(use-package yasnippet-snippets)
+(use-package yasnippet-snippets :disabled t)
 (require 'llvm-mode)
 (use-package cmake-mode)
 (use-package go-mode)
@@ -66,6 +79,8 @@
 (use-package marginalia)
 (use-package consult)
 (use-package company :ensure t)
+(use-package corfu :init (global-corfu-mode))
+
 (use-package company-reftex
   :config
   (defun my/add-company-reftex-backend()
@@ -84,7 +99,9 @@
 
 (use-package polymode)
 (use-package chatgpt
-  :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el")))
+  :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el"))
+  :config
+  (add-hook 'chatgpt-mode-hook #'(lambda()(setq-local comint-scroll-to-bottom-on-output t))))
 (use-package gptel
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))

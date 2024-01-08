@@ -60,6 +60,7 @@
 
 ;; recentf
 (setq recentf-auto-cleanup 'never)
-(customize-set-value 'recentf-make-menu-items 150)
-(customize-set-value 'recentf-make-saved-items 150)
+(setq-default recentf-max-menu-items 150
+              recentf-max-saved-items 150)
+
 (recentf-mode 1)

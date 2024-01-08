@@ -154,4 +154,48 @@ If PROJECT is not specified, assume current project root."
       (switch-to-buffer-other-window (current-buffer)))
     ))
 
+(defun my/project-recentf-find-file (&optional filter)
+  "Find a recent file using `completing-read'.
+When optional argument FILTER is a function, it is used to
+transform recent files before completion."
+  (interactive)
+  (let* ((filter (if (functionp filter) filter #'abbreviate-file-name))
+         (project-dir (project-root (project-current t)))
+         (file (completing-read (format "Recentf %s: " )
+                                (seq-filter #'(lambda (file-name)
+                                                (file-in-directory-p file-name (project-root (project-current t))))
+                                            (delete-dups (mapcar filter recentf-list)))
+                                nil t)))
+    (when file
+      (find-file file))))
+
+;; Examples
+(defun my/hydra-print-project-list()
+  (let* ((len (length project--list))
+         (idx-list (number-sequence 1 len))
+         (idx-prj-list (seq-mapn #'list idx-list (seq-map #'car project--list))))
+    (seq-reduce (lambda(p c)(format "%s\n[%d] %s" p (car c) (cadr c)))
+                idx-prj-list "")
+  ))
+
+(message (my/hydra-print-project-list))
+
+(defhydra hydra-example
+  (:color pink
+          :pre (progn
+                 (setq-local my/hydra-project-list-string (my/hydra-print-project-list))))
+  "
+%s(my/hydra-print-project-list)
+"
+  ("s" #'(lambda()(interactive)(setq-local my/name "hey")))
+  ("f" find-file)
+  ("b" forward-char)
+  ("q" nil "cancel"))
+
+
+(defhydra my/find-file-menu ()
+  ;""
+  ("r" #'crux-recentf-find-file))
+
+
 (provide 'my)
