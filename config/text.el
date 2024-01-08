@@ -87,10 +87,10 @@
 (setq chatgpt-code-query-map
 	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing like a fist year american university student")
 		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
-		("improve" . "Improve the clarity and coherence of my writing. Also, do not change the latex syntax")
+		("improve" . "Improve the clarity and coherence of my writing. Also, do not change the latex syntax and seperate sentences with newline.")
 		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
 		("rewrite 3" . "Rewrite my writing and suggest 3 writings")
-		("cohesive" . "Can you improve this paragraph to make it more cohesive. Also, do not change the latex syntax.")
+		("cohesive" . "Can you improve this paragraph to make it more cohesive. Also, do not change the latex syntax and seperate sentences with newline.")
 		("bug" . "There is a bug in the following, please help me fix it.")
 		("doc" . "Please write the documentation for the following.")
 		("refactor" . "Please refactor the following.")
