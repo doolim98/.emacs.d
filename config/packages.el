@@ -59,6 +59,7 @@
   (yas-global-mode 1))
 (use-package yasnippet-snippets :disabled t)
 (require 'llvm-mode)
+(use-package ein)
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package dockerfile-mode)
@@ -106,6 +107,8 @@
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))
 
+(use-package biblio)
+
 (use-package tex
   :straight nil
   :ensure auctex)
@@ -122,3 +125,5 @@
     ;; (add-hook)
     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
   )
+
+
