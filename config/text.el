@@ -85,12 +85,13 @@
 (exec-path-from-shell-copy-env "OPENAI_API_KEY")
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
-	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing like a fist year american university student")
-		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
-		("improve" . "Improve the clarity and coherence of my writing. Also, do not change the latex syntax and seperate sentences with newline.")
-		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
-		("rewrite 3" . "Rewrite my writing and suggest 3 writings")
-		("cohesive" . "Can you improve this paragraph to make it more cohesive. Also, do not change the latex syntax and seperate sentences with newline.")
+	  '(
+		("improve" . "You are my english writing assistance.
+Improve the clarity,coherence and cohesivity of my writing.
+Also, do not change the latex syntax and seperate sentences with newline.")
+        ("naming" . "You are my english writing assistance.
+I want to find good name of the following description.
+Suggest me 10 names")
 		("bug" . "There is a bug in the following, please help me fix it.")
 		("doc" . "Please write the documentation for the following.")
 		("refactor" . "Please refactor the following.")
