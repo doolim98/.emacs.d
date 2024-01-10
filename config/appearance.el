@@ -117,10 +117,19 @@
 ;; Mode line
 ;; =========
 (with-eval-after-load 'subr-x
-  (setq-default mode-line-buffer-identification
-                '(:eval (format-mode-line (propertized-buffer-identification
-                                           (or (when-let* ((buffer-file-truename buffer-file-truename)
-                                                           (prj (project-root (project-current)))
-                                                           (prj-parent (file-name-directory (directory-file-name (expand-file-name prj)))))
-                                                 (concat (file-relative-name (file-name-directory buffer-file-truename) prj-parent) (file-name-nondirectory buffer-file-truename)))
-                                               "%b"))))))
+  (setq-default
+   mode-line-buffer-identification
+   '(:eval
+     (format-mode-line
+      (propertized-buffer-identification
+       (or
+        (when-let* ((buffer-file-truename buffer-file-truename)
+                    (prj-parent-truename (file-name-directory
+                                          (directory-file-name
+                                           (expand-file-name
+                                            (file-truename (project-root (project-current))))))))
+          (concat
+           (file-relative-name
+            (file-name-directory buffer-file-truename) prj-parent-truename)
+           (file-name-nondirectory buffer-file-truename)))
+        "%b"))))))
