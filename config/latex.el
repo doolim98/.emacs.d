@@ -35,6 +35,7 @@
   ;; (setq reftex-mode t)
 
   ;; (setq TeX-command-default "LaTeXmk")
+  (setq TeX-output-dir "./build")
   (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
         TeX-source-correlate-start-server t)
   (setq TeX-master (my/find-TeX-master))
@@ -48,7 +49,7 @@
 (defun my/project-latex-compile-command()
   "My async latexmk "
   (interactive)
-  (my/project-compile-command "latexmk -C;latexmk -bibtex;latexmk;latexmk;latexmk;latexmk -pvc -view=none")
+  (my/project-compile-command "latexmk -C;latexmk;latexmk -pvc -view=none")
   )
 
 (add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)

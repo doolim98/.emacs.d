@@ -178,7 +178,7 @@ transform recent files before completion."
                 idx-prj-list "")
   ))
 
-(message (my/hydra-print-project-list))
+;; (message (my/hydra-print-project-list))
 
 (defhydra hydra-example
   (:color pink

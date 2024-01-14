@@ -89,6 +89,8 @@
 		("improve" . "You are my english writing assistance.
 Improve the clarity,coherence and cohesivity of my writing.
 Also, do not change the latex syntax and seperate sentences with newline.")
+        ("short" . "You are my english writing assistance.
+Make my sentences shorter and more concise by using appropriate adjectives and nouns.")
         ("naming" . "You are my english writing assistance.
 I want to find good name of the following description.
 Suggest me 10 names")
