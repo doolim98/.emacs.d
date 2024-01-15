@@ -54,10 +54,11 @@
 ;; Edit
 ;; ====
 (use-package le-thesaurus)
-(use-package yasnippet :disabled t
+(use-package yasnippet
+  ;; :disabled t
   :config
   (yas-global-mode 1))
-(use-package yasnippet-snippets :disabled t)
+;; (use-package yasnippet-snippets :disabled t)
 (require 'llvm-mode)
 (use-package ein)
 (use-package cmake-mode)
@@ -80,14 +81,44 @@
 (use-package marginalia)
 (use-package consult)
 (use-package company :ensure t)
-(use-package corfu :init (global-corfu-mode))
 
-(use-package company-reftex
+(use-package corfu
+  :init
+  (global-corfu-mode 1)
+  (corfu-popupinfo-mode 1)
+  (setq corfu-auto t
+        corfu-quit-no-match t))
+(use-package cape
+  ;; Available: cape-file cape-dabbrev cape-history cape-keyword
+  ;; cape-tex cape-sgml cape-rfc1345 cape-abbrev cape-ispell
+  ;; cape-dict cape-symbol cape-line
+  :after company
+  :disabled t
+  :init
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev 90)
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions
+                        #'cape-keyword nil t)))
   :config
-  (defun my/add-company-reftex-backend()
-    (add-to-list 'company-backends 'company-reftex-citations)
-    (add-to-list 'company-backends 'company-reftex-labels))
-  (add-hook 'reftex-mode-hook #'my/add-company-reftex-backend))
+  (require 'company)
+  (cl-loop for backend in '(company-cmake company-etags company-gtags)
+           do (add-hook 'completion-at-point-functions
+                        (cape-company-to-capf backend)))
+  ;; (add-hook 'cmake-mode-hook (lambda() (add-hook 'completion-at-point-functions )))
+  )
+
+
+;; (use-package nerd-icons-corfu
+;;   :after corfu
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package corfu-terminal
+  :after corfu
+  :init (corfu-terminal-mode))
+
 (use-package embark-consult)
 (use-package embark)
 
@@ -109,9 +140,9 @@
 
 (use-package biblio)
 
-(use-package tex
-  :straight nil
-  :ensure auctex)
+(use-package auctex)
+  ;; :straight nil
+  ;; :ensure auctex)
 
 (when (memq window-system '(mac ns x))
   (use-package pdf-tools

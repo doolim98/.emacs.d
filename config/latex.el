@@ -44,7 +44,8 @@
   (eglot-ensure)
 
   (auto-save-mode 0)
-  )
+  (auto-revert-mode 0)
+  (auto-save-visited-mode 0))
 
 (defun my/project-latex-compile-command()
   "My async latexmk "

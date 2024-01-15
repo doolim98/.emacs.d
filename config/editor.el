@@ -2,8 +2,6 @@
 (require 'electric)
 (require 'cc-styles)
 (require 'eglot)
-(require 'grammarly)
-(require 'flymake-grammarly)
 
 (setq-default indent-tabs-mode nil)
 
