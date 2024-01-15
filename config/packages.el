@@ -93,7 +93,7 @@
   ;; cape-tex cape-sgml cape-rfc1345 cape-abbrev cape-ispell
   ;; cape-dict cape-symbol cape-line
   :after company
-  :disabled t
+  ;; :disabled t
   :init
   (add-hook 'completion-at-point-functions #'cape-file)
   (add-hook 'completion-at-point-functions #'cape-dabbrev 90)
@@ -108,7 +108,6 @@
                         (cape-company-to-capf backend)))
   ;; (add-hook 'cmake-mode-hook (lambda() (add-hook 'completion-at-point-functions )))
   )
-
 
 ;; (use-package nerd-icons-corfu
 ;;   :after corfu
