@@ -87,8 +87,11 @@
 (setq chatgpt-code-query-map
 	  '(
 		("improve" . "You are my english writing assistance.
-Improve the clarity,coherence and cohesivity of my writing.
-Also, do not change the latex syntax and seperate sentences with newline.")
+Improve the coherence and cohesivity of my writing.
+Also, do not change the latex syntax.")
+        ("academic" . "You are my computer-engineering paper writer.
+Improve the coherence and cohesivity of my writing in academic style.
+Also, do not change the latex syntax.")
         ("short" . "You are my english writing assistance.
 Make my sentences shorter and more concise by using appropriate adjectives and nouns.")
         ("naming" . "You are my english writing assistance.
@@ -98,3 +101,12 @@ Suggest me 10 names")
 		("doc" . "Please write the documentation for the following.")
 		("refactor" . "Please refactor the following.")
 		("suggest" . "Please make suggestions for the following.")))
+
+
+
+;; Dictionary
+(defun my/read-word-at-point ()
+  "READ CURRENT WORD."
+  (interactive)
+  (message "reading: %s" (thing-at-point 'word 'no-properties))
+  (shell-command (format "espeak -v en-us %s" (thing-at-point 'word 'no-properties))))

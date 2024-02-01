@@ -12,6 +12,10 @@
 (setq eglot-ignored-server-capabilities
       '(:documentHighlight :documentOnTypeFormattingProvider :inlayHint))
 
+(setq-default eglot-workspace-configuration
+    '((:pyright .
+        ((useLibraryCodeForTypes . t)))))
+
 (electric-pair-mode 1)
 
 (defun my/prog-mode-hook ()

@@ -77,8 +77,10 @@
 		  (semi-large	:default-height 150)
 		  (large		:default-height 180)
 		  (extra-large	:default-height 220)
-		  (t :default-family "Iosevka"
-			 :default-weight normal
+		  (t
+           ;; :default-family "Iosevka"
+             :default-family "Fira Code"
+		     :default-weight normal
 			 :bold-weight semibold
 			 :italic-slant italic)))
   (fontaine-set-preset
@@ -102,15 +104,23 @@
 (setq even-window-heights 'width-only
 	  split-width-threshold 160
 	  split-height-threshold 100)
-(setq switch-to-buffer-obey-display-actions t)
+(setq switch-to-buffer-obey-display-actions nil)
+(defun my/switch-to-buffer-list (buffer alist)
+  (select-window  (display-buffer-use-some-window buffer alist)))
 (setq display-buffer-alist
-	  `(;; (,(rx (| "*dictionary" "*chatgpt"))
+	  `(
+        ;; (,(rx (| "*dictionary" "*chatgpt"))
 		;;  (display-buffer-reuse-window display-buffer-in-side-window)
 		;;  (side . bottom)
 		;;  (window-height . 0.3))
-		;; (,(rx (| "*help" "*eldoc"))
-		;;  (display-buffer-pop-up-window)
-		;;  (window-height . 0.3))
+		(,(rx (| "*compil"
+                 "*help"
+                 ;; "*eldoc"
+                 "*xxxx"))
+		 ;;(display-buffer-reuse-window display-buffer-pop-up-window)
+         (display-buffer--maybe-same-window display-buffer-below-selected)
+         ;;(display-buffer-reuse-window display-buffer-in-side-window)
+		 (window-height . 0.3))
 		))
 
 
