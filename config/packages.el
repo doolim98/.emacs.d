@@ -139,9 +139,7 @@
 
 (use-package biblio)
 
-(use-package auctex)
-  ;; :straight nil
-  ;; :ensure auctex)
+(use-package tex :straight auctex)
 
 (when (memq window-system '(mac ns x))
   (use-package pdf-tools

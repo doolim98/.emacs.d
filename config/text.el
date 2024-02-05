@@ -86,6 +86,7 @@
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
 	  '(
+        ("lipsumX4" . "You are my computer-engineering paper writer. Increase my writing by 4 times in academic style. Add notification that this is dumm text at first sentence.")
 		("improve" . "You are my english writing assistance.
 Improve the coherence and cohesivity of my writing.
 Also, do not change the latex syntax.")

@@ -114,6 +114,7 @@
 		;;  (side . bottom)
 		;;  (window-height . 0.3))
 		(,(rx (| "*compil"
+                 "*chatgpt"
                  "*help"
                  ;; "*eldoc"
                  "*xxxx"))
