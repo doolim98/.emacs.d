@@ -1,3 +1,4 @@
+;;; my.el --- My emacs scripts -*- lexical-binding: t -*-
 (defun my/scroll-down (arg)
   "Move cursor down half a screen ARG times."
   (interactive "p")
@@ -123,5 +124,119 @@
 -o -iname \"*.cpp\" \
 -o -iname \"*.h\" \
 | etags -"))))
+
+(defun my/project-name (&optional project)
+  "Return the name for PROJECT.
+If PROJECT is not specified, assume current project root."
+  (when-let (root (or project (my/project-root)))
+    (file-name-nondirectory
+     (directory-file-name
+      (file-name-directory root)))))
+
+(defun my/project-root ()
+  "Return the current project root."
+  (when-let (project (project-current))
+    (project-root project)))
+
+(defun my/project-compile-command(command)
+  "My project compile command"
+  (interactive (list
+                (let ((command (eval compile-command)))
+                  (if (or compilation-read-command current-prefix-arg)
+                      (compilation-read-command command)
+                    command))))
+  (let ((default-directory (project-root (project-current t)))
+        (command-name command))
+    (with-current-buffer
+        (get-buffer-create (format "*%s$ %s*" (my/project-name) command-name))
+      (compilation-mode 1)
+      (compilation-start command)
+      ;; (start-process-shell-command command (current-buffer) command)
+      (switch-to-buffer-other-window (current-buffer)))))
+
+(defun my/project-async-command()
+  "My project async command"
+  (interactive)
+  (let* ((default-directory (project-root (project-current t)))
+         (command (read-shell-command "Project Command: "))
+         (output-buffer (get-buffer-create (format "<%s> %s" (my/project-name) command)))
+         (proc (progn
+                 (shell-command command output-buffer)
+                 (get-buffer-process output-buffer))))
+    (if (process-live-p proc)
+        (set-process-sentinel proc #'(lambda ()(message "Good")))
+      (message "No process running."))))
+
+(defun my/project-recentf-find-file (&optional filter)
+  "Find a recent file using `completing-read'.
+When optional argument FILTER is a function, it is used to
+transform recent files before completion."
+  (interactive)
+  (let* ((filter (if (functionp filter) filter #'abbreviate-file-name))
+         (project-dir (project-root (project-current t)))
+         (file
+          (completing-read
+           (format "Recentf %s: " )
+           (seq-filter
+            #'(lambda (file-name)
+                (file-in-directory-p
+                 file-name
+                 (project-root (project-current t))))
+            (delete-dups (mapcar filter recentf-list)))
+           nil t)))
+    (when file
+      (find-file file))))
+
+(defun my/reset-custom-var (symbl)
+  "Reset SYMBL to its standard value."
+  (set symbl (eval (car (get symbl 'standard-value)))))
+
+(require 'consult)
+;; (defcustom consult-global-args
+;;   "global --no-pager --color=never --ignore-case\
+;;    --extended-regexp --line-number -I --grep"
+(defcustom my/consult-global-args
+  "global --color=never --ignore-case \
+   --extended-regexp"
+  "Command line arguments for global, see `consult-git-grep'.
+The dynamically computed arguments are appended.
+Can be either a string, or a list of strings or expressions."
+  :type '(choice string (repeat (choice string sexp))))
+
+(my/reset-custom-var 'my/consult-global-args)
+
+(defun my/consult--global-make-builder (paths)
+  "Create grep command line builder given PATHS."
+  (let ((cmd (consult--build-args my/consult-global-args)))
+    (lambda (input)
+      (pcase-let* ((`(,arg . ,opts) (consult--command-split input)))
+        (append cmd paths)))
+    ))
+    ;; (lambda (input)
+    ;;   ;; (pcase-let* ((`(,arg . ,opts) (consult--command-split input))
+    ;;   ;;              (flags (append cmd opts))
+    ;;   ;;              (ignore-case (or (member "-i" flags) (member "--ignore-case" flags))))
+    ;;     ;; (if (or (member "-F" flags) (member "--fixed-strings" flags))
+    ;;     ;;     (cons (append cmd (list "-e" arg) opts paths)
+    ;;     ;;           (apply-partially #'consult--highlight-regexps
+    ;;     ;;                            (list (regexp-quote arg)) ignore-case))
+    ;;       (pcase-let ((`(,re . ,hl) (funcall consult--regexp-compiler arg 'extended ignore-case)))
+    ;;         (when re
+    ;;           (cons cmd ;; (append cmd
+    ;;                 ;;         (cdr (mapcan (lambda (x) (list "-E" x)) re))
+    ;;                 ;;         opts paths)
+    ;;                 hl))))))
+;; )
+;;))
+
+
+;;;###autoload
+(defun my/consult-global (&optional dir initial)
+  "Search with `git grep' for files in DIR with INITIAL input.
+See `consult-grep' for details."
+  (interactive "P")
+  (consult--grep "Global" #'my/consult--global-make-builder dir initial))
+
+
 
 (provide 'my)

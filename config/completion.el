@@ -6,9 +6,15 @@
 ;; ======
 (setq tab-always-indent 'complete
 	  c-tab-always-indent t)
-(setq completion-ignore-case  t)
+(setq completion-ignore-case  t
+      read-file-name-completion-ignore-case t
+      read-buffer-completion-ignore-case t)
 (setq completion-styles '(basic orderless))
-(setq completion-category-overrides '((file (styles basic partial-completion flex))))
+(setq completion-category-overrides
+      '((file
+         (styles basic partial-completion flex))
+        (xref-location
+          (styles substring))))
 (setq orderless-component-separator "[. ]") ; Use . as separator(for corfu)
 (setq completion-in-region-function #'consult-completion-in-region)
 (setq-default dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")

@@ -16,7 +16,7 @@
 (use-package ace-window
   :commands (aw-flip-window)
   :init
-  (setq aw-dispatch-always t))
+  (setq aw-dispatch-always nil))
 (use-package which-key
   :config
   (setq which-key-popup-type 'minibuffer)
@@ -27,11 +27,22 @@
   :hook (visual-line-mode . visual-fill-column-mode))
 (use-package loccur)
 (use-package rg)
+(use-package evil-numbers
+  :config
+  :bind (("C-c =" . #'evil-numbers/inc-at-pt)
+         ("C-c -" . #'evil-numbers/dec-at-pt)))
 
 
 ;; Theme
 (use-package modus-themes)
 (use-package fontaine)
+(use-package breadcrumb
+  :config
+  (setq breadcrumb-project-max-length 0.5)
+  (setq breadcrumb-project-crumb-separator "/")
+  (setq breadcrumb-imenu-max-length 1.0)
+  (setq breadcrumb-imenu-crumb-separator " > ")
+  (breadcrumb-mode 1))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -57,6 +68,7 @@
 (use-package rainbow-mode)
 (use-package csv-mode)
 (use-package denote)
+(use-package gtags-mode)
 
 
 ;; Completion
@@ -64,7 +76,13 @@
 (use-package vertico)
 (use-package orderless :commands (orderless))
 (use-package marginalia)
-(use-package consult)
+(use-package consult
+  :init
+  (setq xref-show-xrefs-function #'consult-xref
+        xref-show-definitions-function #'consult-xref)
+  (setq xref-show-xrefs-function #'xref--show-xref-buffer
+        xref-show-definitions-function #'xref-show-definitions-buffer-at-bottom)
+  )
 (use-package company :ensure t)
 (use-package company-reftex
   :config
@@ -74,6 +92,17 @@
   (add-hook 'reftex-mode-hook #'my/add-company-reftex-backend))
 (use-package embark-consult)
 (use-package embark)
+(use-package dumb-jump
+  :config
+  (add-hook 'xref-backend-functions #'dumb-jump-xref-activate)
+  (setq xref-show-definitions-function #'consult-xref)
+  (setq dumb-jump-project-denoters
+        '(".dumbjump" ".projectile" ".git"))
+
+  ;; (setq dumb-jump-force-searcher 'ag)
+  (setq dumb-jump-force-searcher nil)
+  (setq dumb-jump-prefer-searcher 'git-grep)
+  )
 
 ;; Org
 ;; ===

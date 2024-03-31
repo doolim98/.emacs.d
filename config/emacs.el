@@ -26,7 +26,8 @@
  recenter-redisplay nil
  help-window-select t
  split-window-keep-point nil
- enable-recursive-minibuffers t)
+ enable-recursive-minibuffers t
+ shell-command-dont-erase-buffer 'end-last-out)
 
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 

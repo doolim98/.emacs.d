@@ -9,12 +9,12 @@
 ;; Basic
 ;; =====
 (general-define-key
- "C-9" 'kmacro-start-macro-or-insert-counter
- "C-0" 'kmacro-end-or-call-macro
- "C-)" 'kmacro-set-counter
+ "M-9" 'kmacro-start-macro-or-insert-counter
+ "M-0" 'kmacro-end-or-call-macro
+ "M-)" 'kmacro-set-counter
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
- "C-x C-k" 'kill-this-buffer
+ "C-x k" 'kill-this-buffer
  "C-x b" 'consult-buffer
  "C-x x r" 'crux-rename-buffer-and-file
  "C-x C-r" 'revert-buffer-quick
@@ -22,12 +22,25 @@
  "C-x C-SPC" 'consult-global-mark
  "M-y" 'consult-yank-pop
  "C-o" 'crux-smart-open-line
- "C-k" 'crux-smart-kill-line
+ "C-k" 'kill-line ;; 'crux-smart-kill-line
  "C-a" 'crux-move-beginning-of-line
- "M-l" nil
+ "M-o" 'ace-window
  "M-r" nil
  "M-R" 'query-replace
- "M-k" nil)
+ "M-[" 'previous-buffer
+ "M-]" 'next-buffer
+ "M-l" 'find-file
+ "M-w" 'kill-buffer
+ "M-c" 'kill-ring-save
+ ;;"C-d" 'my/scroll-down
+ ;;"C-u" 'my/scroll-up
+ "C-u" 'universal-argument
+ "M-k" nil
+ "C-z" project-prefix-map
+)
+
+;; (general-define-key :prefix "C-o"
+;;  "C-f" ')
 
 (general-unbind "C-x f")
 (general-define-key
@@ -67,9 +80,12 @@
  "M-2" 'my/smart-split-window
  "M-`" 'other-window
  "M-O" 'window-swap-states
+ "C-o" 'other-window-prefix
+ "C-M-o" 'other-frame-prefix
  )
 
-;; Project
+(general-define-key :keymaps 'other-window-p)
+
 (general-unbind "C-q")
 (general-define-key
  "C-x q" 'quoted-insert)
@@ -78,11 +94,14 @@
 ;; =========
 (general-define-key
  :keymaps 'override
+ "C-M-b" 'previous-buffer
+ "C-M-f" 'next-buffer
+ "C-t" tab-prefix-map
  "C-x g" 'magit
  "C-x C-t" 'vterm
  "C-x m" 'compile
  "C-x C-m" 'recompile
- "C-x e" 'eshell
+ "C-x x e" 'eshell
  "C-x x s" 'scratch-buffer
  "C-x x m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
 "s-<backspace>" 'backward-kill-word
@@ -105,8 +124,6 @@
 (general-define-key
  "C-x l" 'eglot
  "C-c q" 'chatgpt-query)
-
-
 
 ;; Settings
 ;; ========
@@ -171,11 +188,17 @@
 
 ;; Project
 ;; =======
+(general-define-key "C-z" project-prefix-map)
 (general-define-key
  :keymaps 'project-prefix-map
  "p" 'my/project-switch
+ "C-c" 'project-recompile
+ ";" 'my/project-async-command
+ "r" 'project-async-shell-command
+ "C-f" 'project-find-file
+ "C-z" 'project-switch-project
  "b" 'consult-project-buffer
- "m" 'project-magit)
+ "g" 'project-magit)
 
 ;; C Mode
 ;; ======
