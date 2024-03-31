@@ -32,6 +32,19 @@
   :bind (("C-c =" . #'evil-numbers/inc-at-pt)
          ("C-c -" . #'evil-numbers/dec-at-pt)))
 
+(use-package ibuffer
+  :config
+  (setq ibuffer-saved-filter-groups
+        (quote (("default"
+                 ("dired" (mode . dired-mode))
+                 ("eglot" (predicate eglot-managed-p))
+                 ("prog" (used-mode . prog-mode))
+                 ("emacs" (or
+                           (name . "^\\*scratch\\*$")
+                           (name . "^\\*Messages\\*$")))
+                 )))))
+
+(use-package hydra)
 
 ;; Theme
 (use-package modus-themes)
@@ -53,10 +66,12 @@
 ;; ====
 (use-package le-thesaurus)
 (use-package yasnippet
+  ;; :disabled t
   :config
   (yas-global-mode 1))
-(use-package yasnippet-snippets)
+;; (use-package yasnippet-snippets :disabled t)
 (require 'llvm-mode)
+(use-package ein)
 (use-package cmake-mode)
 (use-package go-mode)
 (use-package dockerfile-mode)
@@ -84,12 +99,43 @@
         xref-show-definitions-function #'xref-show-definitions-buffer-at-bottom)
   )
 (use-package company :ensure t)
-(use-package company-reftex
+
+(use-package corfu
+  :init
+  (global-corfu-mode 1)
+  (corfu-popupinfo-mode 1)
+  (setq corfu-auto t
+        corfu-quit-no-match t))
+(use-package cape
+  ;; Available: cape-file cape-dabbrev cape-history cape-keyword
+  ;; cape-tex cape-sgml cape-rfc1345 cape-abbrev cape-ispell
+  ;; cape-dict cape-symbol cape-line
+  :after company
+  ;; :disabled t
+  :init
+  (add-hook 'completion-at-point-functions #'cape-file)
+  (add-hook 'completion-at-point-functions #'cape-dabbrev 90)
+  (add-hook 'prog-mode-hook
+            (lambda ()
+              (add-hook 'completion-at-point-functions
+                        #'cape-keyword nil t)))
   :config
-  (defun my/add-company-reftex-backend()
-    (add-to-list 'company-backends 'company-reftex-citations)
-    (add-to-list 'company-backends 'company-reftex-labels))
-  (add-hook 'reftex-mode-hook #'my/add-company-reftex-backend))
+  (require 'company)
+  (cl-loop for backend in '(company-cmake company-etags company-gtags)
+           do (add-hook 'completion-at-point-functions
+                        (cape-company-to-capf backend)))
+  ;; (add-hook 'cmake-mode-hook (lambda() (add-hook 'completion-at-point-functions )))
+  )
+
+;; (use-package nerd-icons-corfu
+;;   :after corfu
+;;   :config
+;;   (add-to-list 'corfu-margin-formatters #'nerd-icons-corfu-formatter))
+
+(use-package corfu-terminal
+  :after corfu
+  :init (corfu-terminal-mode))
+
 (use-package embark-consult)
 (use-package embark)
 (use-package dumb-jump
@@ -113,14 +159,16 @@
 
 (use-package polymode)
 (use-package chatgpt
-  :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el")))
+  :straight (:host github :repo "joshcho/ChatGPT.el" :files ("dist" "*.el"))
+  :config
+  (add-hook 'chatgpt-mode-hook #'(lambda()(setq-local comint-scroll-to-bottom-on-output t))))
 (use-package gptel
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))
 
-(use-package tex
-  :straight nil
-  :ensure auctex)
+(use-package biblio)
+
+(use-package tex :straight auctex)
 
 (when (memq window-system '(mac ns x))
   (use-package pdf-tools
@@ -134,3 +182,5 @@
     ;; (add-hook)
     (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
   )
+
+

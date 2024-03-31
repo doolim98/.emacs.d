@@ -9,7 +9,9 @@
       '((project-dired "Dired" d)
 		(project-magit "Magit" m)
         (project-eshell "Eshell" e)
-        (project-shell "Shell" s)))
+        (project-shell "Shell" s)
+        (project-compile "Compile" c)
+        (project-async-shell-command "Async Shell Command" &)))
 
 (defun my/project-switch(project)
   (interactive (list (project-prompt-project-dir)))
@@ -39,6 +41,11 @@
   (message "Added project %s" (project-root (project-current))))
 
 (add-to-list 'project-find-functions 'my/find-project)
+
+
+(defcustom my/project-commands
+  '("./build.sh" "make")
+  "List of project commands")
 
 ;; Compile
 ;; =======

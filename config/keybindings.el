@@ -168,10 +168,6 @@
  "C-M-/" 'company-dabbrev)
 
 (general-define-key
- :keymaps 'yas-minor-mode-map
- "C-c C-y" 'company-yasnippet)
-
-(general-define-key
  :keymaps 'company-active-map
  "SPC" #'(lambda()(interactive)(company-abort)(insert " "))
  "C-f" nil

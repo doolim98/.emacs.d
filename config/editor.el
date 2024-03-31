@@ -2,8 +2,6 @@
 (require 'electric)
 (require 'cc-styles)
 (require 'eglot)
-(require 'grammarly)
-(require 'flymake-grammarly)
 
 (setq-default indent-tabs-mode nil)
 
@@ -13,6 +11,10 @@
 (c-set-offset 'innamespace 0)
 (setq eglot-ignored-server-capabilities
       '(:documentHighlight :documentOnTypeFormattingProvider :inlayHint))
+
+(setq-default eglot-workspace-configuration
+    '((:pyright .
+        ((useLibraryCodeForTypes . t)))))
 
 (electric-pair-mode 1)
 
@@ -31,4 +33,4 @@
   (auto-revert-mode 1))
 
 (add-hook 'image-mode-hook 'my/immediate-auto-revert-mode)
-
+(add-hook 'pdf-view-mode-hook 'my/immediate-auto-revert-mode)

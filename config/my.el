@@ -141,14 +141,13 @@ If PROJECT is not specified, assume current project root."
 (defun my/project-compile-command(command)
   "My project compile command"
   (interactive (list
-                (let ((command (eval compile-command)))
-                  (if (or compilation-read-command current-prefix-arg)
-                      (compilation-read-command command)
-                    command))))
+    (let ((command (eval compile-command)))
+      (if (or compilation-read-command current-prefix-arg)
+	  (compilation-read-command command)
+	command))))
   (let ((default-directory (project-root (project-current t)))
         (command-name command))
-    (with-current-buffer
-        (get-buffer-create (format "*%s$ %s*" (my/project-name) command-name))
+    (with-current-buffer (get-buffer-create (format "*%s$ %s*" (my/project-name) command-name))
       (compilation-mode 1)
       (compilation-start command)
       ;; (start-process-shell-command command (current-buffer) command)
@@ -186,6 +185,7 @@ transform recent files before completion."
            nil t)))
     (when file
       (find-file file))))
+
 
 (defun my/reset-custom-var (symbl)
   "Reset SYMBL to its standard value."
@@ -236,6 +236,34 @@ Can be either a string, or a list of strings or expressions."
 See `consult-grep' for details."
   (interactive "P")
   (consult--grep "Global" #'my/consult--global-make-builder dir initial))
+
+
+;; Examples
+(defun my/hydra-print-project-list()
+  (let* ((len (length project--list))
+         (idx-list (number-sequence 1 len))
+         (idx-prj-list (seq-mapn #'list idx-list (seq-map #'car project--list))))
+    (seq-reduce (lambda(p c)(format "%s\n[%d] %s" p (car c) (cadr c)))
+                idx-prj-list "")
+  ))
+
+
+(defhydra hydra-example
+  (:color pink
+          :pre (progn
+                 (setq-local my/hydra-project-list-string (my/hydra-print-project-list))))
+  "
+%s(my/hydra-print-project-list)
+"
+  ("s" #'(lambda()(interactive)(setq-local my/name "hey")))
+  ("f" find-file)
+  ("b" forward-char)
+  ("q" nil "cancel"))
+
+
+(defhydra my/find-file-menu ()
+  ;""
+  ("r" #'crux-recentf-find-file))
 
 
 

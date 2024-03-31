@@ -85,44 +85,29 @@
 (exec-path-from-shell-copy-env "OPENAI_API_KEY")
 ;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
 (setq chatgpt-code-query-map
-	  '(("improve 1st univ" . "Improve the clarity and coherence of my writing like a fist year american university student")
-		("grammar" . "Could you check the grammar in this paragraph and suggest any corrections?")
-		("improve" . "Improve the clarity and coherence of my writing.")
-		("improve 3" . "Improve the clarity and coherence of my writing and suggest 3 writings")
-		("rewrite 3" . "Rewrite my writing and suggest 3 writings")
-		("cohesive" . "Can you improve this paragraph to make it more cohesive.")
+	  '(
+        ("lipsumX4" . "You are my computer-engineering paper writer. Increase my writing by 4 times in academic style. Add notification that this is dumm text at first sentence.")
+		("improve" . "You are my english writing assistance.
+Improve the coherence and cohesivity of my writing.
+Also, do not change the latex syntax.")
+        ("academic" . "You are my computer-engineering paper writer.
+Improve the coherence and cohesivity of my writing in academic style.
+Also, do not change the latex syntax.")
+        ("short" . "You are my english writing assistance.
+Make my sentences shorter and more concise by using appropriate adjectives and nouns.")
+        ("naming" . "You are my english writing assistance.
+I want to find good name of the following description.
+Suggest me 10 names")
 		("bug" . "There is a bug in the following, please help me fix it.")
 		("doc" . "Please write the documentation for the following.")
 		("refactor" . "Please refactor the following.")
 		("suggest" . "Please make suggestions for the following.")))
 
-;; Latex
-(defun my/find-TeX-master()
-  (let* ((master-name "main.tex")
-         (master-dir (locate-dominating-file "./" master-name)))
-    (if master-dir
-        (file-name-concat master-dir master-name)
-      nil)))
-(setq bibtex-files '("refer.bib"
-                     "refers.bib"
-                     "ref.bib"
-                     "refs.bib"
-                     "reference.bib"))
 
-(defun my/LaTeX-mode-hook()
-  (add-to-list 'TeX-command-list
-               '("LaTeXmk" "latexmk -c -pdf" TeX-run-command t t :help "Run LaTeXmk")
-               t)
-  ;; (setq TeX-parse-self t)
 
-  (setq reftex-default-bibliography
-        `("refer.bib" "../refer.bib" "ref.bib" "../ref.bib" "refs.bib" "../refs.bib"))
-  (setq reftex-plug-into-AUCTeX t)
-  (setq reftex-mode t)
-
-  (setq TeX-command-default "LaTeXmk")
-  (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-        TeX-source-correlate-start-server t)
-  (setq TeX-master (my/find-TeX-master)))
-(add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)
-;; (setq-default TeX-master "master") ; All master files called "master".
+;; Dictionary
+(defun my/read-word-at-point ()
+  "READ CURRENT WORD."
+  (interactive)
+  (message "reading: %s" (thing-at-point 'word 'no-properties))
+  (shell-command (format "espeak -v en-us %s" (thing-at-point 'word 'no-properties))))

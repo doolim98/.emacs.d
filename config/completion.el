@@ -37,7 +37,7 @@
 (defun my/company-org-mode-hook()
   (setq-local company-backends '(company-capf company-dabbrev-code company-ispell)))
 
-(global-company-mode 1)
+(global-company-mode 0)
 ;; (company-tng-mode 1)
 
 (add-hook 'org-mode-hook 'my/company-org-mode-hook)

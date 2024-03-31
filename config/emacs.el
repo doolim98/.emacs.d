@@ -28,6 +28,8 @@
  split-window-keep-point nil
  enable-recursive-minibuffers t
  shell-command-dont-erase-buffer 'end-last-out)
+ revert-without-query t
+ auto-revert-interval 1)
 
 (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
@@ -59,6 +61,7 @@
 
 ;; recentf
 (setq recentf-auto-cleanup 'never)
-(customize-set-value 'recentf-make-menu-items 150)
-(customize-set-value 'recentf-make-saved-items 150)
+(setq-default recentf-max-menu-items 150
+              recentf-max-saved-items 150)
+
 (recentf-mode 1)
