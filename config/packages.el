@@ -49,6 +49,22 @@
 ;; Theme
 (use-package modus-themes)
 (use-package fontaine)
+(use-package spacious-padding
+  :config
+  (setq spacious-padding-widths
+      '( :internal-border-width 15
+         :header-line-width 2
+         :mode-line-width 6
+         :tab-width 4
+         :right-divider-width 30
+         :scroll-bar-width 0
+         :left-fringe-width 8
+         :right-fringe-width 8))
+  (setq spacious-padding-subtle-mode-line
+        nil
+  ;; '(:mode-line-inactive error)
+  )
+  (spacious-padding-mode 1))
 (use-package breadcrumb
   :config
   (setq breadcrumb-project-max-length 0.5)

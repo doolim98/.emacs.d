@@ -45,7 +45,8 @@
 
   (auto-save-mode 0)
   (auto-revert-mode 0)
-  (auto-save-visited-mode 0))
+  (auto-save-visited-mode 0)
+  (electric-indent-local-mode -1))
 
 (defun my/project-latex-compile-command()
   "My async latexmk "

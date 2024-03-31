@@ -74,13 +74,14 @@
   (fringe-mode '(8 . 0))
   (setq fontaine-presets
 		'((regular		:default-height 140)
+          (semi-small		:default-height 130)
 		  (small		:default-height 120)
 		  (semi-large	:default-height 150)
 		  (large		:default-height 180)
 		  (extra-large	:default-height 220)
 		  (t
-           ;; :default-family "Iosevka"
-             :default-family "Fira Code"
+           :default-family "Iosevka"
+             ;; :default-family "Fira Code"
 		     :default-weight normal
 			 :bold-weight semibold
 			 :italic-slant italic)))
