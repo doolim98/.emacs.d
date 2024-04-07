@@ -265,6 +265,92 @@ See `consult-grep' for details."
   ;""
   ("r" #'crux-recentf-find-file))
 
+(defun my/select-window-by-number (n)
+  "Select the Nth window ordered from left to right."
+  (let ((windows
+         (sort (window-list)
+               (lambda (w1 w2)
+                 (let ((lc1 (window-left-column w1))
+                       (lc2 (window-left-column w2))
+                       (tl1 (window-top-line w1))
+                       (tl2 (window-top-line w2)))
+                   (< (+ (* lc1 12345) tl1) (+ (* lc2 12345) tl2)))
+                 ))))
+    (if (<= n (length windows))
+        (select-window (nth (1- n) windows))
+      (if (split-window-right)
+          (my/select-window-by-number n)))))
+
+(defun my/select-window-0 ()
+  (interactive)
+  (my/select-window-by-number 0))
+
+(defun my/select-window-1 ()
+  (interactive)
+  (my/select-window-by-number 1))
+
+(defun my/select-window-2 ()
+  (interactive)
+  (my/select-window-by-number 2))
+
+(defun my/select-window-3 ()
+  (interactive)
+  (my/select-window-by-number 3))
+
+
+(defun my/select-window-4 ()
+  (interactive)
+  (my/select-window-by-number 4))
+
+(defun my/select-tab-1 ()
+  (interactive)
+  (tab-select 1))
+(defun my/select-tab-2 ()
+  (interactive)
+  (tab-select 2))
+(defun my/select-tab-3 ()
+  (interactive)
+  (tab-select 3))
+(defun my/select-tab-4 ()
+  (interactive)
+  (tab-select 4))
+
+
+(defun my/open-preferred-shell ()
+  "Open a shell in the current file's directory or the project root. Prefers zsh, then bash, then sh."
+  (interactive)
+  (let* ((default-directory
+           (if (buffer-file-name)
+               (file-name-directory (buffer-file-name))
+             (or (projectile-project-root) default-directory))) ;; Use projectile or similar for project root
+        (shell-file-name
+         (or (executable-find "zsh")
+             (executable-find "bash")
+             (executable-find "sh"))))
+    (shell (concat "shell-" (file-name-nondirectory shell-file-name)))))
+
+(defun my/balance-windows ()
+  "Balance windows automatically."
+  (unless (or (one-window-p) (active-minibuffer-window))
+    (balance-windows)))
+
+
+
+
+
+
+;; (defun my/show-flymake-diagnostics-at-point ()
+;;   "Show Flymake diagnostics for the current line in a tooltip."
+;;   (interactive)
+;;   (if (flymake-mode) ; Check if Flymake is enabled in the current buffer
+;;       (let ((diagnostics (flymake-diagnostics (line-beginning-position) (line-end-position))))
+;;         (message diagnostics)
+;;         (if diagnostics
+;;             (tooltip-show (mapconcat #'flymake-diagnostic-text diagnostics "\n"))
+;;           (message "No Flymake diagnostics for the current line")))
+;;     (message "Flymake is not enabled in this buffer")))
+
+;; (define-key flymake-mode-map (kbd "C-c ! m") 'my/show-flymake-diagnostics-at-point)
 
 
 (provide 'my)

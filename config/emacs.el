@@ -27,7 +27,7 @@
  help-window-select t
  split-window-keep-point nil
  enable-recursive-minibuffers t
- shell-command-dont-erase-buffer 'end-last-out)
+ shell-command-dont-erase-buffer 'end-last-out
  revert-without-query t
  auto-revert-interval 1)
 

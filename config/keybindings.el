@@ -76,13 +76,26 @@
  "C-x -" 'er/contract-region
  "C-`" 'window-toggle-side-windows
  ;; Window Manipulation
- "M-1" 'my/smart-delete-other-windows
- "M-2" 'my/smart-split-window
+ "M-0" 'delete-window
+ "M-1" 'my/select-window-1
+ "M-2" 'my/select-window-2
+ "M-3" 'my/select-window-3
+ "M-4" 'my/select-window-4
+ "M-C-0" 'tab-close
+ "M-C-1" 'my/select-tab-1
+ "M-C-2" 'my/select-tab-2
+ "M-C-3" 'my/select-tab-3
+ "M-C-4" 'my/select-tab-4
+ "<f1>" 'my/select-tab-1
+ "<f2>" 'my/select-tab-2
+ "<f3>" 'my/select-tab-3
+ "<f4>" 'my/select-tab-4
  "M-`" 'other-window
  "M-O" 'window-swap-states
  "C-o" 'other-window-prefix
  "C-M-o" 'other-frame-prefix
  )
+
 
 (general-define-key :keymaps 'other-window-p)
 

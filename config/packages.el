@@ -52,11 +52,11 @@
 (use-package spacious-padding
   :config
   (setq spacious-padding-widths
-      '( :internal-border-width 15
+      '( :internal-border-width 0
          :header-line-width 2
          :mode-line-width 6
          :tab-width 4
-         :right-divider-width 30
+         :right-divider-width 20
          :scroll-bar-width 0
          :left-fringe-width 8
          :right-fringe-width 8))

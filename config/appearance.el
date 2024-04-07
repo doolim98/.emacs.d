@@ -121,10 +121,12 @@
                  ;; "*eldoc"
                  "*xxxx"))
 		 ;;(display-buffer-reuse-window display-buffer-pop-up-window)
-         (display-buffer--maybe-same-window display-buffer-below-selected)
+         (display-buffer-reuse-window display-buffer--maybe-same-window display-buffer-pop-up-window)
          ;;(display-buffer-reuse-window display-buffer-in-side-window)
 		 (window-height . 0.3))
 		))
+
+(add-hook 'window-configuration-change-hook 'my/balance-windows)
 
 
 ;; Mode line

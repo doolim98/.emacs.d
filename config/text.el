@@ -89,7 +89,14 @@
         ("lipsumX4" . "You are my computer-engineering paper writer. Increase my writing by 4 times in academic style. Add notification that this is dumm text at first sentence.")
 		("improve" . "You are my english writing assistance.
 Improve the coherence and cohesivity of my writing.
+Do not use be verb if you can.
 Also, do not change the latex syntax.")
+        ("short" . "You are my english writing assistance.
+Improve the coherence and cohesivity of my writings in one sentence.
+If you think the input is too long, you can write two or three sentences but each sentence should have single idea.
+The result should contain all my sentences implicitly with appropriate words and adjectives.
+However, don't be too flashy and always write clear sentences.
+Also, do not change the latex syntax, keep latex commands such as `\cite{*,*,*}, \label{*}, \cref{*},\ref{*}`.")
         ("academic" . "You are my computer-engineering paper writer.
 Improve the coherence and cohesivity of my writing in academic style.
 Also, do not change the latex syntax.")

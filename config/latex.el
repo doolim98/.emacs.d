@@ -1,14 +1,14 @@
 ;;; latex.el --- My Latex config -*- lexical-binding: t -*-
 
-(defun biblio-dblp--forward-bibtex (metadata forward-to)
-  "Forward BibTeX for DBLP entry METADATA to FORWARD-TO."
-  (let* ((source-url (biblio-alist-get 'url metadata))
-         (url (replace-regexp-in-string "/rec/" "/rec/bib1/" source-url t t)))
-    (biblio-url-retrieve url (biblio-generic-url-callback
-                              (lambda () ;; No allowed errors, so no arguments
-                                "Parse DBLP BibTeX results."
-                                (funcall forward-to
-                                         (biblio-response-as-utf-8)))))))
+;; (defun biblio-dblp--forward-bibtex (metadata forward-to)
+;;   "Forward BibTeX for DBLP entry METADATA to FORWARD-TO."
+;;   (let* ((source-url (biblio-alist-get 'url metadata))
+;;          (url (replace-regexp-in-string "/rec/" "/rec/bib1/" source-url t t)))
+;;     (biblio-url-retrieve url (biblio-generic-url-callback
+;;                               (lambda () ;; No allowed errors, so no arguments
+;;                                 "Parse DBLP BibTeX results."
+;;                                 (funcall forward-to
+;;                                          (biblio-response-as-utf-8)))))))
 
 (defun my/find-TeX-master()
   (let* ((master-name "main.tex")
@@ -40,7 +40,8 @@
         TeX-source-correlate-start-server t)
   (setq TeX-master (my/find-TeX-master))
 
-  (setq eglot-workspace-configuration '((texlab . (:rootDirectory "./"))))
+  (setq eglot-workspace-configuration '((texlab . (:rootDirectory "./"))
+                                        (digestif . (:config (:data_dirs ("./" "./build"))))))
   (eglot-ensure)
 
   (auto-save-mode 0)
