@@ -68,10 +68,20 @@
 ;; Load the theme of your choice:
 (load-theme 'modus-operandi :no-confirm)
 
+
 (setq modus-themes-to-toggle '(modus-operandi modus-vivendi))
 
+;; Remove wrapping chracter '\'
+;; Notice that after the '\' there is a whitespace character but you
+;; can use other characters.
+(set-display-table-slot standard-display-table 'wrap ?\\)
+
 (when (display-graphic-p)
-  (fringe-mode '(8 . 0))
+  (fringe-mode '(8 . 1))
+  (set-face-attribute 'fringe nil :background nil)
+  ;; Disable line wrap indicators
+  (setf (cdr (assq 'truncation fringe-indicator-alist)) '(nil nil))
+  (setf (cdr (assq 'continuation fringe-indicator-alist)) '(nil nil))
   (setq fontaine-presets
 		'((regular		:default-height 140)
           (semi-small		:default-height 130)
@@ -107,35 +117,30 @@
 	  split-width-threshold 160
 	  split-height-threshold 100)
 (setq switch-to-buffer-obey-display-actions nil)
-(defun my/switch-to-buffer-list (buffer alist)
-  (select-window  (display-buffer-use-some-window buffer alist)))
-(setq display-buffer-alist
-	  `(
-        ;; (,(rx (| "*dictionary" "*chatgpt"))
-		;;  (display-buffer-reuse-window display-buffer-in-side-window)
-		;;  (side . bottom)
-		;;  (window-height . 0.3))
-		(,(rx (| "*compil"
-                 "*chatgpt"
-                 "*help"
-                 ;; "*eldoc"
-                 "*xxxx"))
-		 ;;(display-buffer-reuse-window display-buffer-pop-up-window)
-         (display-buffer-reuse-window display-buffer--maybe-same-window display-buffer-pop-up-window)
-         ;;(display-buffer-reuse-window display-buffer-in-side-window)
-		 (window-height . 0.3))
-		))
 
-(add-hook 'window-configuration-change-hook 'my/balance-windows)
+(setq display-buffer-base-action
+      '((display-buffer-use-some-window)
+        ;; (reusable-frames .t)
+        (window-min-height . 0.4)
+        ))
 
+(setq display-buffer-alist '())
 
-;; Mode line
-;; =========
-;; (with-eval-after-load 'subr-x
-;;   (setq-default mode-line-buffer-identification
-;;                 '(:eval (format-mode-line (propertized-buffer-identification
-;;                                            (or (when-let* ((buffer-file-truename buffer-file-truename)
-;;                                                            (prj (project-root (project-current)))
-;;                                                            (prj-parent (file-name-directory (directory-file-name (expand-file-name prj)))))
-;;                                                  (concat (file-relative-name (file-name-directory buffer-file-truename) prj-parent) (file-name-nondirectory buffer-file-truename)))
-;;                                                "%b"))))))
+;; Side-window --  Use Bottom Right
+(add-to-list 'display-buffer-alist `(,(rx (| "*async"
+                                             ))
+                                     (display-buffer-in-side-window)
+                                     (side . bottom)
+                                     (slot . 1) ;; -1 == L  0 == Mid 1 == R
+                                     (window-height . 0.20)
+                                     (window-parameters
+                                      (no-delete-other-windows . nil))))
+;; Side-Window --  Use Bottom Left
+(add-to-list 'display-buffer-alist `(,(rx (| "*compilation*"
+                                             ))
+                                     (display-buffer-in-side-window)
+                                     (side . bottom)
+                                     (slot . -1) ;; -1 == L  0 == Mid 1 == R
+                                     (window-height . 0.20)
+                                     (window-parameters
+                                      (no-delete-other-windows . nil))))

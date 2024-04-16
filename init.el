@@ -7,7 +7,8 @@
 (setq my/cloud-directory (expand-file-name "~/Dropbox/"))
 
 (defvar my/config-files
-  '("config/emacs.el"
+  '("config/my-variables.el"
+    "config/emacs.el"
 	"config/packages.el"
 	"config/my.el"
 	"config/keybindings.el"

@@ -52,63 +52,8 @@
       ispell-personal-dictionary (file-name-concat org-directory "./aspell.pws"))
 
 
-
-;; denote
-;; ======
-(require 'denote)
-
-;; Remember to check the doc strings of those variables.
-(setq denote-directory (file-name-concat my/cloud-directory "notes/"))
-(setq denote-dired-directories `(,denote-directory))
-
-(setq denote-known-keywords '("emacs" "reference"))
-(setq denote-infer-keywords t)
-(setq denote-sort-keywords t)
-(setq denote-file-type nil)
-(setq denote-prompts '(title keywords))
-(setq denote-org-front-matter
-	  "#+title: %1$s\n"	  )
-
-;; Pick dates, where relevant, with Org's advanced interface:
-(setq denote-date-prompt-use-org-read-date t)
-
-(setq denote-allow-multi-word-keywords t)
-
-(defun my/org-mode-hook()
-  (setq-local visual-fill-column-center-text t
-			  fill-column 80)
-  (visual-line-mode 1))
-(add-hook 'org-mode-hook 'my/org-mode-hook)
-
 ;; ChatGPT
 ;; =======
-(exec-path-from-shell-copy-env "OPENAI_API_KEY")
-;; See https://github.com/ahmetbersoz/chatgpt-prompts-for-academic-writing
-(setq chatgpt-code-query-map
-	  '(
-        ("lipsumX4" . "You are my computer-engineering paper writer. Increase my writing by 4 times in academic style. Add notification that this is dumm text at first sentence.")
-		("improve" . "You are my english writing assistance.
-Improve the coherence and cohesivity of my writing.
-Do not use be verb if you can.
-Also, do not change the latex syntax.")
-        ("short" . "You are my english writing assistance.
-Improve the coherence and cohesivity of my writings in one sentence.
-If you think the input is too long, you can write two or three sentences but each sentence should have single idea.
-The result should contain all my sentences implicitly with appropriate words and adjectives.
-However, don't be too flashy and always write clear sentences.
-Also, do not change the latex syntax, keep latex commands such as `\cite{*,*,*}, \label{*}, \cref{*},\ref{*}`.")
-        ("academic" . "You are my computer-engineering paper writer.
-Improve the coherence and cohesivity of my writing in academic style.
-Also, do not change the latex syntax.")
-        ("short" . "You are my english writing assistance.
-Make my sentences shorter and more concise by using appropriate adjectives and nouns.")
-        ("naming" . "You are my english writing assistance.
-I want to find good name of the following description.
-Suggest me 10 names")
-		("bug" . "There is a bug in the following, please help me fix it.")
-		("doc" . "Please write the documentation for the following.")
-		("refactor" . "Please refactor the following.")
-		("suggest" . "Please make suggestions for the following.")))
 
 
 

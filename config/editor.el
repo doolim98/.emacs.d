@@ -33,4 +33,5 @@
   (auto-revert-mode 1))
 
 (add-hook 'image-mode-hook 'my/immediate-auto-revert-mode)
-(add-hook 'pdf-view-mode-hook 'my/immediate-auto-revert-mode)
+;; (add-hook 'pdf-view-mode-hook 'my/immediate-auto-revert-mode)
+

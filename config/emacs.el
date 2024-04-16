@@ -3,9 +3,12 @@
 (require 'dired)
 (require 'recentf)
 
+(global-hl-line-mode 1)
 (savehist-mode 1)
 (show-paren-mode 1)
-(desktop-save-mode 1)
+(setq show-paren-style 'mixed)
+
+(desktop-save-mode 0)
 (winner-mode 1)
 (save-place-mode 1)
 (repeat-mode 1)
@@ -27,11 +30,11 @@
  help-window-select t
  split-window-keep-point nil
  enable-recursive-minibuffers t
- shell-command-dont-erase-buffer 'end-last-out
+ shell-command-dont-erase-buffer nil ; 'end-last-out
  revert-without-query t
  auto-revert-interval 1)
 
-(fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
+;; (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
 ;; Garbage Collection
 ;; ==================
@@ -60,8 +63,3 @@
 (setq dired-listing-switches "-lh") ;; Hide hidden files by default
 
 ;; recentf
-(setq recentf-auto-cleanup 'never)
-(setq-default recentf-max-menu-items 150
-              recentf-max-saved-items 150)
-
-(recentf-mode 1)

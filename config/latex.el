@@ -23,31 +23,52 @@
                      "refs.bib"
                      "reference.bib"))
 
+(defun my/revert-pdf-buffers ()
+  (progn
+    (dolist (buf (buffer-list))
+      (with-current-buffer buf
+        (when (and (string-match "\\.pdf\\'" (buffer-name))
+                   (file-exists-p (buffer-file-name)))
+          (revert-buffer t t t))))))
+
+(defun my/compilation-finish-function (buffer msg)
+  (progn
+    (my/revert-pdf-buffers)))
+
+(add-hook 'compilation-finish-functions 'my/compilation-finish-function)
+
 (defun my/LaTeX-mode-hook()
-  (add-to-list 'TeX-command-list
-               '("LaTeXmk" "latexmk -c -pdf" TeX-run-command t t :help "Run LaTeXmk")
-               t)
-  ;; (setq TeX-parse-self t)
-
-  ;; (setq reftex-default-bibliography
-  ;;       `("refer.bib" "../refer.bib" "ref.bib" "../ref.bib" "refs.bib" "../refs.bib"))
-  ;; (setq reftex-plug-into-AUCTeX t)
-  ;; (setq reftex-mode t)
-
-  ;; (setq TeX-command-default "LaTeXmk")
   (setq TeX-output-dir "./build")
   (setq TeX-view-program-selection '((output-pdf "PDF Tools"))
-        TeX-source-correlate-start-server t)
+        TeX-source-correlate-start-server nil)
   (setq TeX-master (my/find-TeX-master))
 
-  (setq eglot-workspace-configuration '((texlab . (:rootDirectory "./"))
-                                        (digestif . (:config (:data_dirs ("./" "./build"))))))
+  (setq eglot-workspace-configuration '((digestif . (:config (:data_dirs ("./" "./build"))))))
   (eglot-ensure)
 
   (auto-save-mode 0)
   (auto-revert-mode 0)
   (auto-save-visited-mode 0)
-  (electric-indent-local-mode -1))
+  (electric-indent-local-mode -1)
+
+  (setq-local compile-command "latexmk;echo done!")
+  )
+
+
+(defun my/insert-string-at-buffer-top (string)
+  "Insert a specific STRING at the top of the current buffer."
+  (save-excursion  ; Preserve the point's original position
+    (goto-char (point-min))  ; Move to the beginning of the buffer
+    (insert string)  ; Insert the specified string
+    (insert "\n")))  ; Optionally, insert a newline after the string
+
+(defun my/latex-save-and-compile()
+  (interactive)
+  (let* ((default-directory (project-root (project-current t))))
+    (save-some-buffers t)
+    (compile "latexmk"))
+  )
+
 
 (defun my/project-latex-compile-command()
   "My async latexmk "
@@ -55,4 +76,37 @@
   (my/project-compile-command "latexmk -C;latexmk;latexmk -pvc -view=none")
   )
 
+;; (defun my/toggle-window-dedicated ()
+;;   "Toggle whether the current window is dedicated to its current buffer and highlight modeline."
+;;   (interactive)
+;;   (let ((window (selected-window))
+;;         (frame (selected-frame)))
+;;     (set-window-dedicated-p window (not (window-dedicated-p window)))
+;;     (if (window-dedicated-p window)
+;;         (progn
+;;           ;; Change modeline background for dedicated window
+;;           (set-face-background 'mode-line "black" frame)
+;;           (set-face-foreground 'mode-line "white" frame))
+;;       ;; Revert modeline color for non-dedicated window
+;;       (progn
+;;         (set-face-background 'mode-line (face-background 'default) frame)
+;;         (set-face-foreground 'mode-line (face-foreground 'default) frame)))
+;;     (message "Window %sdedicated to %s"
+;;              (if (window-dedicated-p window) "" "not ")
+;;              (buffer-name))))
+
+
 (add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)
+
+
+;; (defun my/project-compile-latexmk-and-revert-pdf ()
+;;   "Compile the current LaTeX file and revert any open PDF buffers."
+;;   (interactive)
+;;   ;; Check if the major mode is LaTeX to avoid running on other files
+;;   (when (eq major-mode 'latex-mode)
+
+;;     ;; Compile the LaTeX file. Change "pdflatex" to your preferred compiler command.
+;;     (let ((default-directory (project-root (project-current t)))
+;;           (compile-command "latexmk"))
+;;       (compile compile-command))
+;;     (message "Compilation started...")))

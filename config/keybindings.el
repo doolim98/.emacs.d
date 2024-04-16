@@ -34,9 +34,14 @@
  "M-c" 'kill-ring-save
  ;;"C-d" 'my/scroll-down
  ;;"C-u" 'my/scroll-up
+ "s-o" 'crux-open-with
  "C-u" 'universal-argument
  "M-k" nil
  "C-z" project-prefix-map
+
+ "M-e" 'forward-sexp
+ "M-a" 'backward-sexp
+ "M-*" 'my/toggle-window-dedicated
 )
 
 ;; (general-define-key :prefix "C-o"
@@ -76,7 +81,7 @@
  "C-x -" 'er/contract-region
  "C-`" 'window-toggle-side-windows
  ;; Window Manipulation
- "M-0" 'delete-window
+ "M-0" 'window-toggle-side-windows
  "M-1" 'my/select-window-1
  "M-2" 'my/select-window-2
  "M-3" 'my/select-window-3
@@ -94,6 +99,8 @@
  "M-O" 'window-swap-states
  "C-o" 'other-window-prefix
  "C-M-o" 'other-frame-prefix
+ "M-=" #'(lambda() (interactive) (enlarge-window (/ (frame-height) 6)))
+ "M--" #'(lambda() (interactive) (enlarge-window (/ (frame-height) -6)))
  )
 
 
@@ -201,7 +208,7 @@
 (general-define-key
  :keymaps 'project-prefix-map
  "p" 'my/project-switch
- "C-c" 'project-recompile
+ "RET" 'my/project-compile
  ";" 'my/project-async-command
  "r" 'project-async-shell-command
  "C-f" 'project-find-file
@@ -247,3 +254,16 @@
 (general-define-key
  :keymaps 'flyspell-mode-map
  "C-." 'ispell-word)
+
+(general-define-key
+ :keymaps 'LaTeX-mode-map
+ "C-c C-c" 'my/latex-save-and-compile)
+
+
+
+(general-define-key
+ :keymaps 'image-mode-map
+ "C-a" 'image-bol
+ "S-<wheel-right>" 'image-scroll-left
+ "S-<wheel-left>" 'image-scroll-right)
+

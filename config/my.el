@@ -158,7 +158,7 @@ If PROJECT is not specified, assume current project root."
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
          (command (read-shell-command "Project Command: "))
-         (output-buffer (get-buffer-create (format "<%s> %s" (my/project-name) command)))
+         (output-buffer (get-buffer-create (format "*Async <%s> %s" (my/project-name) command)))
          (proc (progn
                  (shell-command command output-buffer)
                  (get-buffer-process output-buffer))))
@@ -266,20 +266,38 @@ See `consult-grep' for details."
   ("r" #'crux-recentf-find-file))
 
 (defun my/select-window-by-number (n)
-  "Select the Nth window ordered from left to right."
-  (let ((windows
+  "Select the Nth column window ordered from left to right."
+  (let* ((cur-lc (window-left-column (selected-window)))
+         (windows
          (sort (window-list)
                (lambda (w1 w2)
                  (let ((lc1 (window-left-column w1))
                        (lc2 (window-left-column w2))
                        (tl1 (window-top-line w1))
                        (tl2 (window-top-line w2)))
-                   (< (+ (* lc1 12345) tl1) (+ (* lc2 12345) tl2)))
-                 ))))
-    (if (<= n (length windows))
-        (select-window (nth (1- n) windows))
-      (if (split-window-right)
-          (my/select-window-by-number n)))))
+                   (< (+ (* tl1 12345) lc1) (+ (* tl2 12345) lc2)))
+                 )))
+         (nth-col-top-window (nth (1- n) windows)))
+    (if (not (eq cur-lc (window-left-column nth-col-top-window)))
+        (select-window nth-col-top-window)
+      (my/cycle-windows-vertical-in-column))))
+
+(defun my/cycle-windows-vertical-in-column ()
+  "Cycle through windows that are vertically aligned with the current window."
+  (interactive)
+  (let* ((current-window (selected-window))
+         (current-left (window-left-column current-window))
+         (current-right (+ current-left (window-width current-window)))
+         (windows-in-column (seq-filter (lambda (w)
+                                          (and (<= current-left (+ (window-left-column w) (window-width w)))
+                                               (>= current-right (window-left-column w))))
+                                        (window-list nil 'no-minibuf))))
+    ;; Sort the windows by their top position
+    (setq windows-in-column (sort windows-in-column (lambda (w1 w2)
+                                                      (< (window-top-line w1) (window-top-line w2)))))
+    ;; Find the next window to select
+    (select-window (or (cadr (memq current-window windows-in-column))  ; Next window in list
+                       (car windows-in-column)))))  ; Or first if at end
 
 (defun my/select-window-0 ()
   (interactive)
@@ -352,5 +370,47 @@ See `consult-grep' for details."
 
 ;; (define-key flymake-mode-map (kbd "C-c ! m") 'my/show-flymake-diagnostics-at-point)
 
+
+
+;; Usage
+;; (run-process-with-timeout "long-running-command --option" 10
+;;                           (lambda (proc)
+;;                             (message "Process %s finished with exit code %d"
+;;                                      (process-name proc) (process-exit-status proc))))
+
+(defun my/run-process-with-timeout (command timeout callback)
+  "Run COMMAND asynchronously with a TIMEOUT in seconds.
+CALLBACK is called with one argument: the process object when the process finishes or is killed."
+  (let ((process (start-process "my-process" "*my-process-buffer*" shell-file-name shell-command-switch command)))
+    ;; Set up the process sentinel
+    (set-process-sentinel process
+                          (lambda (proc event)
+                            (when (memq (process-status proc) '(exit signal))
+                              (funcall callback proc)
+                              ;; Cancel the timer if it's still running
+                              (when timer (cancel-timer timer)))))
+    ;; Set up the timeout timer
+    (let ((timer (run-at-time timeout nil
+                              (lambda ()
+                                (unless (eq (process-status process) 'exit)
+                                  (kill-process process)
+                                  (message "Process killed due to timeout."))))))
+      ;; Ensure the local variable timer is captured by the lambda by returning it
+      timer)))
+
+(defun my/project-compile ()
+  "Run a compile command silently without displaying the compilation buffer automatically."
+  (interactive)
+  ;; Start compilation in the background
+  (let* ((default-directory (project-root (project-current t)))
+         (compilation-buffer-name (format "*Compilation - %s*" (project-name (project-current t))))
+         (compilation-buffer (get-buffer-create compilation-buffer-name)))
+    ;; Perform compilation
+    (save-window-excursion
+      (call-interactively #'compile))
+    ;; Ensure the compilation buffer is not shown
+    (with-current-buffer compilation-buffer
+      (set-window-dedicated-p (get-buffer-window compilation-buffer 'visible) t)
+      (bury-buffer))))
 
 (provide 'my)

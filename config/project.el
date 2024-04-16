@@ -1,5 +1,3 @@
-(use-package magit)
-
 ;; Project.el
 ;; ==========
 (require 'project)
@@ -21,6 +19,7 @@
   (interactive)
   (let ((dir (project-root (project-current t))))
 	(magit-status dir)))
+
 (defun my/find-project (dir)
   (let ((override (locate-dominating-file dir ".dir-locals.el")))
     (if override
@@ -40,7 +39,8 @@
   (project-remember-project (project-current))
   (message "Added project %s" (project-root (project-current))))
 
-(add-to-list 'project-find-functions 'my/find-project)
+;; (add-hook 'project-find-functions 'my/find-project)
+;; (remove-hook 'project-find-functions 'my/find-project)
 
 
 (defcustom my/project-commands
