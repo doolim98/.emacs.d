@@ -36,6 +36,9 @@
 
 ;; (fset 'yes-or-no-p 'y-or-n-p)    ; don't ask to spell out "yes"
 
+;; Use submodules as project
+(setq project-vc-merge-submodules nil)
+
 ;; Garbage Collection
 ;; ==================
 (setq garbage-collection-messages t)
