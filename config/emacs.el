@@ -10,9 +10,9 @@
 
 (desktop-save-mode 0)
 (winner-mode 1)
-(save-place-mode 1)
+(save-place-mode 0)
 (repeat-mode 1)
-(auto-save-visited-mode 1)
+(auto-save-visited-mode 0)
 
 (setq package-install-upgrade-built-in t)
 
@@ -50,12 +50,13 @@
 
 ;; TRAMP
 ;; =====
+(tramp-cleanup-all-connections)
 (setq enable-remote-dir-locals nil)
 (setq remote-file-name-inhibit-cache nil)
 (setq remote-file-name-inhibit-locks t)
 (setq tramp-default-method "scp")
 (setq tramp-use-scp-direct-remote-copying t)
-(setq tramp-use-ssh-controlmaster-options t)
+(setq tramp-use-ssh-controlmaster-options nil)
 (setq tramp-ssh-controlmaster-options
 	  (concat
 	   "-o ControlPath=tramp.%%C "

@@ -18,18 +18,6 @@
 
 (use-package rg)
 
-(use-package ibuffer
-  :config
-  (setq ibuffer-saved-filter-groups
-        (quote (("default"
-                 ("dired" (mode . dired-mode))
-                 ("eglot" (predicate eglot-managed-p))
-                 ("prog" (used-mode . prog-mode))
-                 ("emacs" (or
-                           (name . "^\\*scratch\\*$")
-                           (name . "^\\*Messages\\*$")))
-                 )))))
-
 (use-package hydra)
 (use-package magit)
 
@@ -42,8 +30,8 @@
   :commands vterm
   :custom (vterm-max-scrollback 10000))
 
-;; Edit
-;; ====
+;; Edit & Language
+;; ===============
 (use-package yasnippet
   :config
   (yas-global-mode 1))
@@ -127,11 +115,41 @@
   (setq dumb-jump-prefer-searcher 'git-grep)
   )
 
-;; Org
-;; ===
+;; Writing & Latex
+;; ===============
 (use-package org)
 (use-package org-download)
-;; (use-package org-roam)
+(use-package biblio)
+
+(use-package tex :straight auctex)
+
+(when (memq window-system '(mac ns x))
+  (use-package pdf-tools
+    :ensure t
+    :config
+    (custom-set-variables
+     '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
+    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
+    (pdf-tools-install)
+    (setq pdf-view-display-size 'fit-height
+          pdf-view-resize-factor 1.5
+          pdf-view-continuous t
+          pdf-view-bounding-box-margin 0.2)
+    ;; (add-hook)
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
+  (use-package openwith
+    :ensure t
+    :config
+    ;; Make sure to set this variable before you enable `openwith-mode`.
+    (setq openwith-associations
+          (list
+           (list (openwith-make-extension-regexp
+                  '("graffle" "docx" "doc" "hwp" "hwpx"))
+                 "open"
+                 '(file))))
+    (openwith-mode t))
+  )
+
 
 
 (use-package polymode)
@@ -182,40 +200,6 @@ Suggest me 10 names")
 		  ("suggest" . "Please make suggestions for the following.")))
   )
 
-
 (use-package gptel
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY")))
-
-(use-package biblio)
-
-(use-package tex :straight auctex)
-
-(when (memq window-system '(mac ns x))
-  (use-package pdf-tools
-    :ensure t
-    :config
-    (custom-set-variables
-     '(pdf-tools-handle-upgrades nil)) ; Use brew upgrade pdf-tools instead.
-    (setq pdf-info-epdfinfo-program "/usr/local/bin/epdfinfo")
-    (pdf-tools-install)
-    (setq pdf-view-display-size 'fit-height
-          pdf-view-resize-factor 1.5
-          pdf-view-continuous t
-          pdf-view-bounding-box-margin 0.2)
-    ;; (add-hook)
-    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer))
-  (use-package openwith
-    :ensure t
-    :config
-    ;; Make sure to set this variable before you enable `openwith-mode`.
-    (setq openwith-associations
-          (list
-           (list (openwith-make-extension-regexp
-                  '("graffle" "docx" "doc" "hwp" "hwpx"))
-                 "open"
-                 '(file))))
-    (openwith-mode t))
-  )
-
-
