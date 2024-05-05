@@ -1,14 +1,12 @@
 ;; Basic packages
 ;; ==============
 (use-package general)
-(use-package avy)
 (use-package crux)
 (use-package expand-region)
 (use-package avy
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m ?\;)))
-(use-package tblui)
-(use-package sqlite3)
+;(use-package sqlite3)
 (use-package exec-path-from-shell
   :init
   (when (memq window-system '(mac ns x))
@@ -17,20 +15,8 @@
   :commands (aw-flip-window)
   :init
   (setq aw-dispatch-always nil))
-(use-package which-key
-  :config
-  (setq which-key-popup-type 'minibuffer)
-  (setq which-key-idle-delay 2.0)
-  (which-key-mode 1))
-(use-package 0x0  :commands (0x0-dwim 0x0-upload-file))
-(use-package visual-fill-column
-  :hook (visual-line-mode . visual-fill-column-mode))
-(use-package loccur)
+
 (use-package rg)
-(use-package evil-numbers
-  :config
-  :bind (("C-c =" . #'evil-numbers/inc-at-pt)
-         ("C-c -" . #'evil-numbers/dec-at-pt)))
 
 (use-package ibuffer
   :config
@@ -45,7 +31,6 @@
                  )))))
 
 (use-package hydra)
-
 
 (use-package magit)
 
@@ -68,14 +53,6 @@
   ;; '(:mode-line-inactive error)
   )
   (spacious-padding-mode 1))
-
-;; (use-package breadcrumb
-;;   :config
-;;   (setq breadcrumb-project-max-length 0.5)
-;;   (setq breadcrumb-project-crumb-separator "/")
-;;   (setq breadcrumb-imenu-max-length 1.0)
-;;   (setq breadcrumb-imenu-crumb-separator " > ")
-;;   (breadcrumb-mode 1))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -133,9 +110,20 @@
 
 ;; Completion
 ;; ==========
-(use-package vertico)
-(use-package orderless :commands (orderless))
-(use-package marginalia)
+(use-package vertico
+  :config
+  (setq vertico-count 13
+	  vertico-resize 'grow-only)
+  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+  (vertico-mode 1))
+
+(use-package orderless
+  :config
+  (setq completion-styles '(orderless)
+        orderless-component-separator "[. ]"))
+(use-package marginalia
+  :config
+  (marginalia-mode 1))
 (use-package consult
   :init
   (setq xref-show-xrefs-function #'consult-xref
@@ -143,7 +131,7 @@
   (setq xref-show-xrefs-function #'xref--show-xref-buffer
         xref-show-definitions-function #'xref-show-definitions-buffer-at-bottom)
   )
-(use-package company :ensure t)
+;; (use-package company :ensure t)
 
 (use-package corfu
   :init

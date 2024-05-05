@@ -29,7 +29,7 @@
  recenter-redisplay nil
  help-window-select t
  split-window-keep-point nil
- enable-recursive-minibuffers t
+ enable-recursive-minibuffers nil
  shell-command-dont-erase-buffer nil ; 'end-last-out
  revert-without-query t
  auto-revert-interval 1)
@@ -41,8 +41,8 @@
 
 ;; Garbage Collection
 ;; ==================
-(setq garbage-collection-messages t)
-(setq gc-cons-threshold (* 1024 1024 300))
+(setq garbage-collection-messages nil)
+(setq gc-cons-threshold (* 10 1024 1024))
 
 ;; TRAMP
 ;; =====

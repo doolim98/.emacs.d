@@ -12,7 +12,8 @@
  frame-resize-pixelwise t
  frame-inhibit-implied-resize t
  shell-command-prompt-show-cwd t
- compilation-scroll-output t
+ compilation-scroll-output 'first-error
+ ; compilation-scroll-output t
  split-window-keep-point t)
 
 ;; Tab Bar
@@ -25,6 +26,10 @@
 (setq x-use-underline-position-properties t
 	  x-underline-at-descent-line nil
 	  underline-minimum-offset 1000)
+
+
+;; Lowest font lock
+(setq font-lock-maximum-decoration 2)
 
 ;; Theme
 ;; =====
@@ -116,13 +121,15 @@
 (setq even-window-heights 'width-only
 	  split-width-threshold 160
 	  split-height-threshold 100)
+
 (setq switch-to-buffer-obey-display-actions nil)
 
-(setq display-buffer-base-action
-      '((display-buffer--maybe-same-window display-buffer-reuse-window)
-        ;; (reusable-frames .t)
-        (window-min-height . 0.4)
-        ))
+;; (setq display-buffer-base-action
+;;       ;; Copied from display-buffer-fallback-acion
+;;       '((display-buffer--maybe-same-window display-buffer-reuse-window display-buffer--maybe-pop-up-frame-or-window display-buffer-in-previous-window display-buffer-use-some-window display-buffer-pop-up-frame)
+;;         ;; (reusable-frames .t)
+;;         (window-min-height . 0.4)
+;;         ))
 
 (setq display-buffer-alist '())
 
@@ -144,3 +151,44 @@
                                      (window-height . 0.20)
                                      (window-parameters
                                       (no-delete-other-windows . nil))))
+
+
+;; Mode line
+
+(defun mode-line-fill (face reserve)
+  "Return empty space using FACE and leaving RESERVE space on the right."
+  (propertize " "
+              'display `((space :align-to (- (+ right right-fringe right-margin) ,reserve)))
+              'face face))
+
+
+
+(require 'my-modeline)
+(run-with-timer 0 0.5 #'(lambda () (force-mode-line-update t)))
+
+
+(setq-default mode-line-format
+              `("%e" ; "%e" mode-line-front-space
+                (:eval (let ((bufstr (format "%s%s " (if (buffer-modified-p) "*" " ") (buffer-name))))
+                         (if (mode-line-window-selected-p)
+                             (propertize bufstr 'face 'highlight)
+                           (propertize bufstr 'face 'normal))))
+                " "
+                (:eval (my-mode-line-major-mode-indicator))
+                " "
+                (:eval (capitalize (string-replace "-mode" "" (symbol-name major-mode))))
+                " "
+                (:eval (when (mode-line-window-selected-p)
+                         (list
+                          '(:eval (mode-line-fill 'mode-line-active 45))
+                          '(:eval (when (bound-and-true-p flymake-mode)
+                                    (list
+                                     (flymake--mode-line-counter :error t)
+                                     (propertize "‼ " 'face 'shadow)
+                                     (flymake--mode-line-counter :warning t)
+                                     (propertize "! " 'face 'shadow)
+                                     (flymake--mode-line-counter :note t))))
+                          '(:eval (mode-line-fill 'mode-line-active 30))
+                          '(:eval (propertize (format "%28s" (format-time-string "%m/%d %H:%M:%S"))
+                                              'face 'bold)))))))
+

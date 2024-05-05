@@ -46,8 +46,3 @@
 (defcustom my/project-commands
   '("./build.sh" "make")
   "List of project commands")
-
-;; Compile
-;; =======
-(require 'compile)
-(setq compilation-scroll-output t)
