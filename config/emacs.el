@@ -44,18 +44,25 @@
 (setq garbage-collection-messages nil)
 (setq gc-cons-threshold (* 10 1024 1024))
 
+;; I only use git for version control
+;; Used this configuration for faster tramp connection
+(setq vc-handled-backends '(git))
+
 ;; TRAMP
 ;; =====
-(setq enable-remote-dir-locals t)
+(setq enable-remote-dir-locals nil)
 (setq remote-file-name-inhibit-cache nil)
 (setq remote-file-name-inhibit-locks t)
-(setq tramp-default-method "scpx")
-;; (setq tramp-ssh-controlmaster-options
-;; 	  (concat
-;; 	   "-o ControlPath=/tmp/ssh-ControlPath-%%r@%%h:%%p "
-;; 	   "-o ControlMaster=auto -o ControlPersist=yes"))
-(setq tramp-verbose 1)
-(add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+(setq tramp-default-method "scp")
+(setq tramp-use-scp-direct-remote-copying t)
+(setq tramp-use-ssh-controlmaster-options t)
+(setq tramp-ssh-controlmaster-options
+	  (concat
+	   "-o ControlPath=tramp.%%C "
+	   "-o ControlMaster=auto -o ControlPersist=yes"))
+
+(setq tramp-verbose 3)
+;; (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;; eshell
 (add-hook 'eshell-mode-hook (lambda () (setenv "TERM" "xterm-256color")))

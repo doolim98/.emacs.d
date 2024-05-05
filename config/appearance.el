@@ -1,4 +1,10 @@
-;; Cursor
+;;; appearance.el --- my apperacne configuration
+
+;;; Commentary:
+;; My apperacne configurations
+
+;;; Code:
+
 (setq-default
  delete-pair-blink-delay 0
  blink-cursor-delay 0.0
@@ -33,36 +39,36 @@
 
 ;; Theme
 ;; =====
-(setq org-fontify-quote-and-verse-blocks t
-	  org-fontify-whole-heading-line t)
+;; (setq org-fontify-quote-and-verse-blocks t
+;; 	  org-fontify-whole-heading-line t)
 
-(setq modus-themes-italic-constructs t
-      modus-themes-bold-constructs t
-      modus-themes-mixed-fonts t
-      modus-themes-variable-pitch-ui nil
-      modus-themes-custom-auto-reload t
-      modus-themes-disable-other-themes t
-      modus-themes-prompts '(bold)
-      modus-themes-completions
-      '((matches . (extrabold))
-        (selection . (semibold text-also)))
+;; (setq modus-themes-italic-constructs t
+;;       modus-themes-bold-constructs t
+;;       modus-themes-mixed-fonts t
+;;       modus-themes-variable-pitch-ui nil
+;;       modus-themes-custom-auto-reload t
+;;       modus-themes-disable-other-themes t
+;;       modus-themes-prompts '(bold)
+;;       modus-themes-completions
+;;       '((matches . (extrabold))
+;;         (selection . (semibold text-also)))
 
-	  modus-themes-org-blocks nil
-      modus-themes-headings
-      '((1 . (extrabold 1.0))
-        (2 . (semibold 1.0))
-		(3 . (regular 1.0))
-		(4 . (regular 1.0))
-		(5 . (regular 1.0))
-        (agenda-date . (1.3))
-        (agenda-structure . (variable-pitch light 1.8))
-        (t . (1.0))))
+;; 	  modus-themes-org-blocks nil
+;;       modus-themes-headings
+;;       '((1 . (extrabold 1.0))
+;;         (2 . (semibold 1.0))
+;; 		(3 . (regular 1.0))
+;; 		(4 . (regular 1.0))
+;; 		(5 . (regular 1.0))
+;;         (agenda-date . (1.3))
+;;         (agenda-structure . (variable-pitch light 1.8))
+;;         (t . (1.0))))
 
-(setq modus-themes-common-palette-overrides
-      '(;;(fg-heading-3 fg-main)
-        ;;(fg-heading-4 fg-main)
-        ;;(fg-heading-5 fg-main)
-		))
+;; (setq modus-themes-common-palette-overrides
+;;       '(;;(fg-heading-3 fg-main)
+;;         ;;(fg-heading-4 fg-main)
+;;         ;;(fg-heading-5 fg-main)
+;; 		))
 
 (defun my/modus-themes-hook ()
   (custom-set-faces
@@ -164,7 +170,9 @@
 
 
 (require 'my-modeline)
-(run-with-timer 0 0.5 #'(lambda () (force-mode-line-update t)))
+
+(unless (timerp 'my-mode-line-timer)
+  (setq my-mode-line-timer (run-with-timer 0 0.5 #'(lambda () (force-mode-line-update t)))))
 
 
 (setq-default mode-line-format
@@ -172,11 +180,13 @@
                 (:eval (let ((bufstr (format "%s%s " (if (buffer-modified-p) "*" " ") (buffer-name))))
                          (if (mode-line-window-selected-p)
                              (propertize bufstr 'face 'highlight)
-                           (propertize bufstr 'face 'normal))))
+                           (propertize bufstr 'face nil))))
                 " "
-                (:eval (my-mode-line-major-mode-indicator))
-                " "
-                (:eval (capitalize (string-replace "-mode" "" (symbol-name major-mode))))
+                (:eval (when (mode-line-window-selected-p)
+                         (list
+                          '(:eval (my-mode-line-major-mode-indicator))
+                          " "
+                          '(:eval (capitalize (string-replace "-mode" "" (symbol-name major-mode)))))))
                 " "
                 (:eval (when (mode-line-window-selected-p)
                          (list
@@ -184,9 +194,9 @@
                           '(:eval (when (bound-and-true-p flymake-mode)
                                     (list
                                      (flymake--mode-line-counter :error t)
-                                     (propertize "‼ " 'face 'shadow)
+                                     (propertize "‼" 'face 'shadow)
                                      (flymake--mode-line-counter :warning t)
-                                     (propertize "! " 'face 'shadow)
+                                     (propertize "!" 'face 'shadow)
                                      (flymake--mode-line-counter :note t))))
                           '(:eval (mode-line-fill 'mode-line-active 30))
                           '(:eval (propertize (format "%28s" (format-time-string "%m/%d %H:%M:%S"))

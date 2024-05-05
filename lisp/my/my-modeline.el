@@ -55,20 +55,6 @@ TYPE is usually keyword `:error', `:warning' or `:note'."
          )
         )))
 
-(defvar-local prot-modeline-flymake
-    `(:eval
-      (when (and (bound-and-true-p flymake-mode)
-                 (mode-line-window-selected-p))
-        (list
-         ;; See the calls to the macro `prot-modeline-flymake-type'
-         '(:eval "hey")
-         '(:eval (prot-modeline-flymake-error))
-         '(:eval (prot-modeline-flymake-warning))
-         '(:eval (prot-modeline-flymake-note)))))
-  "Mode line construct displaying `flymake-mode-line-format'.
-Specific to the current window's mode line.")
-
-
 (dolist (construct '(;;prot-modeline-kbd-macro
                      ;;prot-modeline-narrow
                      ;;prot-modeline-input-method

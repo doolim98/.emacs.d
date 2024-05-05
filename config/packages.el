@@ -31,28 +31,11 @@
                  )))))
 
 (use-package hydra)
-
 (use-package magit)
 
 ;; Theme
 (use-package modus-themes)
 (use-package fontaine)
-(use-package spacious-padding
-  :config
-  (setq spacious-padding-widths
-      '( :internal-border-width 0
-         :header-line-width 2
-         :mode-line-width 3
-         :tab-width 2
-         :right-divider-width 20
-         :scroll-bar-width 0
-         :left-fringe-width 8
-         :right-fringe-width 8))
-  (setq spacious-padding-subtle-mode-line
-        nil
-  ;; '(:mode-line-inactive error)
-  )
-  (spacious-padding-mode 1))
 
 ;;; VTERM AND ESHELL
 (use-package vterm
@@ -61,12 +44,9 @@
 
 ;; Edit
 ;; ====
-(use-package le-thesaurus)
 (use-package yasnippet
-  ;; :disabled t
   :config
   (yas-global-mode 1))
-;; (use-package yasnippet-snippets :disabled t)
 (require 'llvm-mode)
 (use-package ein)
 (use-package cmake-mode)
@@ -80,26 +60,6 @@
 (use-package rainbow-mode)
 (use-package denote)
 (use-package gtags-mode)
-
-(use-package csv-mode
-  :config
-  (setq csv-align-min-width 10)
-  (setq csv-align-padding 2)
-  (defun my/csv-mode-hook()
-    (progn
-      (setq-local buffer-invisibility-spec nil)
-      (csv-guess-set-separator)
-      (csv-align-mode 0)))
-
-  (defun my/csv-mode-untabify ()
-    "Replace whitespace, including tabs, between characters with a single space."
-    (interactive)
-    (save-excursion
-      (goto-char (point-min))
-      (while (re-search-forward "\\(.\\)[[:space:]]+\\(.\\)" nil t)
-        (replace-match (format "\\1%s\\2" (car csv-separators)) nil nil))))
-
-  (add-hook 'csv-mode-hook 'my/csv-mode-hook))
 
 (use-package recentf :ensure nil
   :config
@@ -140,26 +100,14 @@
   (setq corfu-auto t
         corfu-quit-no-match t))
 
-(use-package cape
-  ;; Available: cape-file cape-dabbrev cape-history cape-keyword
-  ;; cape-tex cape-sgml cape-rfc1345 cape-abbrev cape-ispell
-  ;; cape-dict cape-symbol cape-line
-  :after company
-  ;; :disabled t
-  :init
-  (add-hook 'completion-at-point-functions #'cape-file)
-  (add-hook 'completion-at-point-functions #'cape-dabbrev 90)
-  (add-hook 'prog-mode-hook
-            (lambda ()
-              (add-hook 'completion-at-point-functions
-                        #'cape-keyword nil t)))
-  :config
-  (require 'company)
-  (cl-loop for backend in '(company-cmake company-etags company-gtags)
-           do (add-hook 'completion-at-point-functions
-                        (cape-company-to-capf backend)))
-  ;; (add-hook 'cmake-mode-hook (lambda() (add-hook 'completion-at-point-functions )))
-  )
+
+;; (use-package cape
+;;   ;; Available: cape-file cape-dabbrev cape-history cape-keyword
+;;   ;; cape-tex cape-sgml cape-rfc1345 cape-abbrev cape-ispell
+;;   ;; cape-dict cape-symbol cape-line
+;;   :init
+;;   (add-hook 'completion-at-point-functions #'cape-file)
+;;   (add-hook 'completion-at-point-functions #'cape-dabbrev 90))
 
 (use-package corfu-terminal
   :after corfu
