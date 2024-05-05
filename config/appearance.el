@@ -119,7 +119,7 @@
 (setq switch-to-buffer-obey-display-actions nil)
 
 (setq display-buffer-base-action
-      '((display-buffer-use-some-window)
+      '((display-buffer--maybe-same-window display-buffer-reuse-window)
         ;; (reusable-frames .t)
         (window-min-height . 0.4)
         ))
