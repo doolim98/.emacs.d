@@ -32,3 +32,9 @@
    (horizontal-scroll-bars . nil)))
 
 (setq custom-file (expand-file-name "custom.el" user-emacs-directory))
+
+
+;; Add lisp/ into the load-path
+(let ((default-directory (concat user-emacs-directory "./lisp/")))
+  (add-to-list 'load-path default-directory)
+  (normal-top-level-add-subdirs-to-load-path))

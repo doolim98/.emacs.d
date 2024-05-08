@@ -11,18 +11,7 @@
   (let ((dist (/ (window-height) 3)))
     (previous-line dist)))
 
-(defcustom my/dired-switches-list
-  '("-lh" "-lah")
-  "List of ls switches for dired to cycle among.")
 
-(defun my/cycle-dired-switches ()
-  "Cycle through the list `my/dired-switches-list' of switches for ls"
-  (interactive)
-  (setq my/dired-switches-list
-        (append (cdr my/dired-switches-list)
-                (list (car my/dired-switches-list))))
-  (setq dired-listing-switches (car my/dired-switches-list))
-  (dired-sort-other (car my/dired-switches-list)))
 
 (defun my/find-file-org-directory ()
   (interactive)
@@ -351,32 +340,6 @@ See `consult-grep' for details."
   "Balance windows automatically."
   (unless (or (one-window-p) (active-minibuffer-window))
     (balance-windows)))
-
-
-
-
-
-
-;; (defun my/show-flymake-diagnostics-at-point ()
-;;   "Show Flymake diagnostics for the current line in a tooltip."
-;;   (interactive)
-;;   (if (flymake-mode) ; Check if Flymake is enabled in the current buffer
-;;       (let ((diagnostics (flymake-diagnostics (line-beginning-position) (line-end-position))))
-;;         (message diagnostics)
-;;         (if diagnostics
-;;             (tooltip-show (mapconcat #'flymake-diagnostic-text diagnostics "\n"))
-;;           (message "No Flymake diagnostics for the current line")))
-;;     (message "Flymake is not enabled in this buffer")))
-
-;; (define-key flymake-mode-map (kbd "C-c ! m") 'my/show-flymake-diagnostics-at-point)
-
-
-
-;; Usage
-;; (run-process-with-timeout "long-running-command --option" 10
-;;                           (lambda (proc)
-;;                             (message "Process %s finished with exit code %d"
-;;                                      (process-name proc) (process-exit-status proc))))
 
 (defun my/run-process-with-timeout (command timeout callback)
   "Run COMMAND asynchronously with a TIMEOUT in seconds.

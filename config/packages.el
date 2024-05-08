@@ -1,4 +1,70 @@
-;; Basic packages
+;; Emacs Basic Configurations
+;; ==========================
+(setq straight-use-package-by-default nil) ; Don't use straight for basic configs
+(use-package emacs :ensure nil
+  :config
+  (setq-default
+   tab-width 4
+   history-length 1000)
+  ;; System
+  (setq garbage-collection-messages nil
+        gc-cons-threshold (* 10 1024 1024))
+
+  ;; File managements
+  (setq-default
+   create-lockfiles nil
+   auto-save-default nil
+   make-backup-files nil
+   auto-save-timeout 5
+   revert-without-query t
+   auto-revert-interval 1
+   )
+  ;; Window
+  (setq-default
+   scroll-step 1                        ; not sure :(
+   scroll-conservatively 1              ; not sure too :(
+   auto-window-vscroll t
+   recenter-redisplay nil               ; Prevents annoying flashs on C-l in terminal emacs
+   help-window-select t
+   split-window-keep-point nil
+   enable-recursive-minibuffers nil
+   shell-command-dont-erase-buffer nil)
+  )
+(use-package dired :ensure nil
+  :config
+  (when (string= system-type "darwin")
+    (setq dired-use-ls-dired t
+          insert-directory-program "gls"))
+  (setq dired-kill-when-opening-new-dired-buffer t
+        dired-dwim-target t
+        dired-listing-switches "-aBhl --group-directories-first"))
+(use-package tramp :ensure nil
+  :config
+  (tramp-cleanup-all-connections)
+  (setq enable-remote-dir-locals nil)
+  (setq remote-file-name-inhibit-cache nil)
+  (setq remote-file-name-inhibit-locks t)
+  (setq tramp-default-method "sshx")
+  (setq tramp-use-scp-direct-remote-copying t)
+  (setq tramp-use-ssh-controlmaster-options t
+        tramp-ssh-controlmaster-options
+	    (concat
+	     "-o ControlPath=tramp.%%C "
+	     "-o ControlMaster=auto -o ControlPersist=yes"))
+  ;; (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
+  (setq tramp-verbose 1))
+
+;; Essential Packages
+;; ==================
+(setq straight-use-package-by-default t) ; Use straight for 3rd-party packages
+(use-package exec-path-from-shell
+  :init
+  (when (memq window-system '(mac ns x))
+    (exec-path-from-shell-initialize)))
+(use-package magit)
+(use-package rg)
+
+;; Basic Packages
 ;; ==============
 (use-package general)
 (use-package crux)
@@ -7,19 +73,11 @@
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m ?\;)))
 ;(use-package sqlite3)
-(use-package exec-path-from-shell
-  :init
-  (when (memq window-system '(mac ns x))
-    (exec-path-from-shell-initialize)))
+
 (use-package ace-window
   :commands (aw-flip-window)
   :init
   (setq aw-dispatch-always nil))
-
-(use-package rg)
-
-(use-package hydra)
-(use-package magit)
 
 ;; Theme
 (use-package modus-themes)

@@ -9,9 +9,6 @@
 ;; Basic
 ;; =====
 (general-define-key
- "M-9" 'kmacro-start-macro-or-insert-counter
- "M-0" 'kmacro-end-or-call-macro
- "M-)" 'kmacro-set-counter
  "C-4" 'ctl-x-4-prefix
  "C-\\" 'ctl-x-4-prefix ;; ="C-4" in terminal
  "C-x k" 'kill-this-buffer
@@ -27,25 +24,19 @@
  "M-o" 'ace-window
  "M-r" nil
  "M-R" 'query-replace
+ )
+
+(general-define-key
  "M-[" 'previous-buffer
  "M-]" 'next-buffer
  "M-l" 'find-file
- "M-w" 'kill-buffer
+ "M-w" 'burry-buffer
  "M-c" 'kill-ring-save
- ;;"C-d" 'my/scroll-down
- ;;"C-u" 'my/scroll-up
  "s-o" 'crux-open-with
  "C-u" 'universal-argument
  "M-k" nil
  "C-z" project-prefix-map
-
- "M-e" 'forward-sexp
- "M-a" 'backward-sexp
- "M-*" 'my/toggle-window-dedicated
 )
-
-;; (general-define-key :prefix "C-o"
-;;  "C-f" ')
 
 (general-unbind "C-x f")
 (general-define-key
@@ -181,19 +172,6 @@
  "C-c C-r" 'eglot-rename
  "C-x l" 'eglot-reconnect)
 
-;; Company
-;; =======
-(general-define-key
- :keymaps 'company-mode-map
- "C-M-/" 'company-dabbrev)
-
-(general-define-key
- :keymaps 'company-active-map
- "SPC" #'(lambda()(interactive)(company-abort)(insert " "))
- "C-f" nil
- "<tab>" 'company-complete-common-or-cycle
- )
-
 ;; Dired
 ;; =====
 (general-define-key
@@ -242,14 +220,6 @@
  "C-M-y" 'org-download-clipboard
  "M-n" 'org-next-visible-heading
  "M-p" 'org-previous-visible-heading)
-
-;; Denote
-(general-unbind "C-x n")
-(general-define-key
- :prefix "C-x n"
- "f" 'denote-open-or-create
- "g" 'my/denote-grep
- "n" 'denote)
 
 (general-define-key
  :keymaps 'flyspell-mode-map

@@ -1,19 +1,13 @@
-;;; latex.el --- My Latex config -*- lexical-binding: t -*-
+;;; my-latex.el --- My Latex config -*- lexical-binding: t -*-
 
-(defun my/find-TeX-master()
+(defun my-latex/find-TeX-master()
   (let* ((master-name "main.tex")
          (master-dir (locate-dominating-file "./" master-name)))
     (if master-dir
         (file-name-concat master-dir master-name)
       nil)))
 
-(setq bibtex-files '("refer.bib"
-                     "refers.bib"
-                     "ref.bib"
-                     "refs.bib"
-                     "reference.bib"))
-
-(defun my/revert-pdf-buffers ()
+(defun my-latex/revert-pdf-buffers ()
   (progn
     (dolist (buf (buffer-list))
       (with-current-buffer buf
@@ -67,3 +61,6 @@
   )
 
 (add-hook 'LaTeX-mode-hook #'my/LaTeX-mode-hook)
+
+
+(provide 'my-latex)
