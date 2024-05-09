@@ -1,16 +1,14 @@
+;; References
+;; - https://www.mattduck.com/2023-08-28-extending-use-package-bind
+;;
 ;; Emacs Basic Configurations
 ;; ==========================
 (require 'my-common)
+;; (require 'use-package)
 (setq straight-use-package-by-default nil
       use-package-always-ensure nil)
 
 (use-package emacs
-  :bind (("M-z" . undo)
-		 ("M-Z" . undo-redo)
-		 ("M-c" . kill-ring-save)
-		 ("M-v" . yank)
-		 ("M-C-v" . scroll-down-command)
-		 )
   :config
   ;; Meta Key Configuration
   (when (eq system-type 'darwin)
@@ -76,6 +74,9 @@
    dabbrev-abbrev-skip-leading-regexp
    (rx (or "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'" "/" "`" "'" "{" "}"))))
 
+(use-package modus-themes :ensure t :straight t
+  :config
+  (modus-themes-load-theme 'modus-operandi))
 ;; https://emacs.stackexchange.com/questions/69074/how-to-make-buffer-order-in-tab-line-persistent
 (use-package tab-line
   :bind (("M-w" . #'bury-buffer)
@@ -87,23 +88,23 @@
   (global-tab-line-mode 1)
   (setq-default ;; tab-line-separator (propertize (propertize "| " 'face 'shadow) 'face 'bold)
    ;; tab-line-format '(:eval )
-   tab-line-separator (propertize " " 'face 'shadow)
+   tab-line-separator (propertize "🬓 " 'face '(:foreground "gray40"))
    tab-line-new-button-show nil
    tab-line-close-button-show t
-   tab-line-close-button "")
-  (set-face-attribute 'tab-line nil :height 1.0 :background (modus-themes-get-color-value 'bg-mode-line-inactive)
-					  :box nil
-					  ;; :box '(:line-width (1 . 1) :color "black")
-					  )
-  (set-face-attribute 'tab-line-tab-current nil
-					  :box '(:line-width (1 . 1) :color "black"))
-  (set-face-attribute 'tab-line-tab nil
-					  :inherit 'tab-line-tab-current)
-  (set-face-attribute 'tab-line-tab-inactive nil
-					  :background (modus-themes-get-color-value 'bg-mode-line-inactive)
-					  :box '(:line-width (1 . 1) :color "black"))
-  (set-face-attribute 'mode-line nil :height 1.0)
-  (set-face-attribute 'mode-line-inactive nil :height 1.0)
+   tab-line-close-button " 🯀")
+  ;; (set-face-attribute 'tab-line nil :height 1.0 :background (modus-themes-get-color-value 'bg-mode-line-inactive)
+  ;; 					  :box nil
+  ;; 					  ;; :box '(:line-width (1 . 1) :color "black")
+  ;; 					  )
+  ;; (set-face-attribute 'tab-line-tab-current nil
+  ;; 					  :box '(:line-width (1 . 1) :color "black"))
+  ;; (set-face-attribute 'tab-line-tab nil
+  ;; 					  :inherit 'tab-line-tab-current)
+  ;; (set-face-attribute 'tab-line-tab-inactive nil
+  ;; 					  :background (modus-themes-get-color-value 'bg-mode-line-inactive)
+  ;; 					  :box '(:line-width (1 . 1) :color "black"))
+  ;; (set-face-attribute 'mode-line nil :height 1.0)
+  ;; (set-face-attribute 'mode-line-inactive nil :height 1.0)
   ;; (set-face-attribute 'mode-line nil :box '(:line-width (1 . 10) :color "black"  :style nil))
   )
 (use-package dired
@@ -117,10 +118,9 @@
   (setq dired-kill-when-opening-new-dired-buffer t
         dired-dwim-target t
         dired-listing-switches "-aBhl --group-directories-first")
-  (defun my-set-dried-face-attribute ()
-	))
+  (defun my-set-dried-face-attribute ()))
 (use-package tramp
-n  :config
+  :config
   (tramp-cleanup-all-connections)
   (setq enable-remote-dir-locals nil
         remote-file-name-inhibit-cache nil
@@ -149,13 +149,50 @@ n  :config
 ;; Basic Packages
 ;; ==============
 (use-package evil
-  :bind (("M-s" . #'save-buffer))
+  :init
+  (setq evil-want-C-u-scroll t
+		evil-undo-system 'undo-redo)
+  :bind (("M-s" . #'save-buffer)
+		 :repeat-map my/tab-line--repeat
+		 ("]" . #'next-buffer)
+		 ("[" . #'previous-buffer)
+		 :map evil-motion-state-map
+		 ("SPC" . nil)
+		 ("SPC [" . #'previous-buffer)
+		 ("SPC ]" . #'next-buffer)
+		 :map evil-normal-state-map
+		 ("SPC" . nil)
+		 ("SPC [" . #'previous-buffer)
+		 ("SPC ]" . #'next-buffer)
+		 ("SPC f f" . #'find-file)
+		 ("SPC b" . #'switch-to-buffer)
+		 ("M-." . nil)
+		 :map evil-insert-state-map
+		 ("C-n" . nil)
+		 ("C-p" . nil))
   :config
+  (defface my-evil-state-emacs-face
+	'((t (:background "Green" :foreground "Blue")))
+	"Evil Mode Emacs State Face")
+
+  (defface my-evil-state-insert-face
+	'((t (:background "DodgerBlue1" :foreground "White")))
+	"Evil Mode Insert State Face")
+
+  (defface my-evil-state-normal-face
+	'((t (:background "Red" :foreground "White")))
+	"Evil Mode Normal Stace Face")
+
+  (defface my-evil-state-visual-face
+	'((t (:background "Purple" :foreground "White")))
+	"Evil Mode Normal Stace Face")
   (evil-mode 1)
-  (setq evil-want-C-u scroll t)
-  )
+  (use-package key-chord
+	:init
+	(key-chord-mode 1)
+	(key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
+	))
 (use-package evil-collection
-  
   )
 (use-package general)
 (use-package crux
@@ -184,8 +221,8 @@ n  :config
 		  (large		:default-height 180)
 		  (extra-large	:default-height 220)
 		  (t
-           ;; :default-family "Iosevka"
-             :default-family "Fira Code"
+           :default-family "Iosevka"
+             ;; :default-family "Fira Code"
 		     :default-weight normal
 			 :bold-weight semibold
 			 :italic-slant italic))))

@@ -1,51 +1,27 @@
 * Emacs Configuration Notes
 
 *** TODO
-- Look /mct/ completion package
-- Use headline instead of modeline.
-- Check ~set-frame-position~ function
-- Map =C-`= and =C-~= to shell related command.
 - Map Flymake next/prev error
   - Map indent/unindent line key
-- Map kill buffer to some more convenient key(such as =M-k= or =S-k=)
-- Remap =query-replace=
-- Map go next/prev ring in buffer
-- Ispell
-- =crux-upcase/downcase= also works without selection for one character.
-- Fix wired indentations
-  - In org-mode, c mode, elisp mode
+- Setup Grammarly
   
 ** Keymap
-*** Unused keys
-- =M-u,l,i,t,j,h,m,q,a,e=
-- =C-o,q,z,=
-- =C-d,u=
-- =S-=
-- =C,M-[,],\=  
-- =C-M-=
-  - =C-M-b= : switch buffer
 
-*** Frequently used commands, but have inconvenient keymap
-- =query-replace=: =M-%=
-- =scroll-up/down=: ={C,M}-v=
-  - to =C-d,u=
-- =revert buffer=
 
-*** Consistent key between OS and emacs
-- =M-c,v,z= 
+*** TODO Move the configuration files into seperate directory.
+When the configs are stored in cloud directory, this feature allows to sync the config file.
 
-** Proposals
-*** Quarantine buffers
-Sometimes, I'm afraid of killing buffer because
+*** TODO Setup Grammarly
 
-1. The operation may have been a mistake.
-2. Maybe I need the buffer later.
+*** TODO Frame position 
+#+begin_src emacs-lisp
+(set-frame-position nil (/ (display-pixel-width) 2) 0)
+  (if (< (display-pixel-width) 1800)
+(set-frame-size nil 100 63))
+#+end_src
 
-So, quarantine buffers can be useful when I want to keep my buffer list clean but also want's to restore quarantined buffers.
-The size of the Quarantine buffer list is limited.
 
-*** Def-Alias: ~default-yes-sometimes~
-
+*** TODO Default Yes Sometimes
 #+begin_src emacs-lisp
   (setq original-y-or-n-p 'y-or-n-p)
   (defalias 'original-y-or-n-p (symbol-function 'y-or-n-p))
