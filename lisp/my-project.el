@@ -17,7 +17,7 @@ If PROJECT is not specified, assume current project root."
     (let ((command (eval compile-command)))
       (if (or compilation-read-command current-prefix-arg)
 	  (compilation-read-command command)
-	command))))
+	command))
   (let ((default-directory (project-root (project-current t)))
         (command-name command))
     (with-current-buffer (get-buffer-create (format "*%s$ %s*" (my/project-name) command-name))
