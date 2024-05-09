@@ -4,6 +4,7 @@
 - Map Flymake next/prev error
   - Map indent/unindent line key
 - Setup Grammarly
+- Setup Emacs Tree sitter
   
 ** Keymap
 

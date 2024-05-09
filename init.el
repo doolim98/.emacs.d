@@ -9,6 +9,7 @@
       use-package-always-ensure nil)
 
 (use-package emacs
+  :bind (("M-/" . #'comment-line))
   :config
   ;; Meta Key Configuration
   (when (eq system-type 'darwin)
@@ -22,11 +23,13 @@
   (repeat-mode 1)
   (setq set-mark-command-repeat-pop t)
 
+  ;; Font lock optimization
+  (setq font-lock-maximum-decoration 2)
 
   ;; Editor
   (show-paren-mode 1)
   (setq show-paren-style 'parenthesis)
-  (setq-default   tab-width 4)
+  (setq-default tab-width 4)
   (electric-pair-mode 1)
 
   ;; System
@@ -77,6 +80,7 @@
 (use-package modus-themes :ensure t :straight t
   :config
   (modus-themes-load-theme 'modus-operandi))
+
 ;; https://emacs.stackexchange.com/questions/69074/how-to-make-buffer-order-in-tab-line-persistent
 (use-package tab-line
   :bind (("M-w" . #'bury-buffer)
@@ -86,38 +90,25 @@
          ("M-]" . #'tab-line-switch-to-next-tab))
   :init
   (global-tab-line-mode 1)
-  (setq-default ;; tab-line-separator (propertize (propertize "| " 'face 'shadow) 'face 'bold)
+  (setq-default 
+   ;; tab-line-separator (propertize (propertize "| " 'face 'shadow) 'face 'bold)
    ;; tab-line-format '(:eval )
-   tab-line-separator (propertize "🬓 " 'face '(:foreground "gray40"))
+   ;; tab-line-separator (propertize "🬓 " 'face '(:foreground "gray40"))
    tab-line-new-button-show nil
-   tab-line-close-button-show t
-   tab-line-close-button " 🯀")
-  ;; (set-face-attribute 'tab-line nil :height 1.0 :background (modus-themes-get-color-value 'bg-mode-line-inactive)
-  ;; 					  :box nil
-  ;; 					  ;; :box '(:line-width (1 . 1) :color "black")
-  ;; 					  )
-  ;; (set-face-attribute 'tab-line-tab-current nil
-  ;; 					  :box '(:line-width (1 . 1) :color "black"))
-  ;; (set-face-attribute 'tab-line-tab nil
-  ;; 					  :inherit 'tab-line-tab-current)
-  ;; (set-face-attribute 'tab-line-tab-inactive nil
-  ;; 					  :background (modus-themes-get-color-value 'bg-mode-line-inactive)
-  ;; 					  :box '(:line-width (1 . 1) :color "black"))
-  ;; (set-face-attribute 'mode-line nil :height 1.0)
-  ;; (set-face-attribute 'mode-line-inactive nil :height 1.0)
-  ;; (set-face-attribute 'mode-line nil :box '(:line-width (1 . 10) :color "black"  :style nil))
-  )
+   tab-line-close-button-show nil
+   tab-line-close-button " 🯀"))
 (use-package dired
   :bind (:map dired-mode-map
               ("-" . 'dired-up-directory)
               ("." . 'my/cycle-dired-switches))
   :config
-  (when (string= system-type "darwin")
-    (setq dired-use-ls-dired t
-          insert-directory-program "gls"))
-  (setq dired-kill-when-opening-new-dired-buffer t
-        dired-dwim-target t
-        dired-listing-switches "-aBhl --group-directories-first")
+  ;; 'gls' breaks dried over tramp, when the remote doesn't have 'gls'
+  ;; (when (string= system-type "darwin")
+  ;;   (setq dired-use-ls-dired t
+  ;;         insert-directory-program "gls"))
+  ;; (setq dired-kill-when-opening-new-dired-buffer t
+  ;;       dired-dwim-target t
+  ;;       dired-listing-switches "-aBhl --group-directories-first")
   (defun my-set-dried-face-attribute ()))
 (use-package tramp
   :config
@@ -146,76 +137,35 @@
 (use-package magit)
 (use-package rg)
 
+;; (use-package ha-evil :straight nil :load-path "lisp/")
+
 ;; Basic Packages
 ;; ==============
-(use-package evil
-  :init
-  (setq evil-want-C-u-scroll t
-		evil-undo-system 'undo-redo)
-  :bind (("M-s" . #'save-buffer)
-		 :repeat-map my/tab-line--repeat
-		 ("]" . #'next-buffer)
-		 ("[" . #'previous-buffer)
-		 :map evil-motion-state-map
-		 ("SPC" . nil)
-		 ("SPC [" . #'previous-buffer)
-		 ("SPC ]" . #'next-buffer)
-		 :map evil-normal-state-map
-		 ("SPC" . nil)
-		 ("SPC [" . #'previous-buffer)
-		 ("SPC ]" . #'next-buffer)
-		 ("SPC f f" . #'find-file)
-		 ("SPC b" . #'switch-to-buffer)
-		 ("M-." . nil)
-		 :map evil-insert-state-map
-		 ("C-n" . nil)
-		 ("C-p" . nil))
-  :config
-  (defface my-evil-state-emacs-face
-	'((t (:background "Green" :foreground "Blue")))
-	"Evil Mode Emacs State Face")
-
-  (defface my-evil-state-insert-face
-	'((t (:background "DodgerBlue1" :foreground "White")))
-	"Evil Mode Insert State Face")
-
-  (defface my-evil-state-normal-face
-	'((t (:background "Red" :foreground "White")))
-	"Evil Mode Normal Stace Face")
-
-  (defface my-evil-state-visual-face
-	'((t (:background "Purple" :foreground "White")))
-	"Evil Mode Normal Stace Face")
-  (evil-mode 1)
-  (use-package key-chord
-	:init
-	(key-chord-mode 1)
-	(key-chord-define evil-insert-state-map  "jk" 'evil-normal-state)
-	))
-(use-package evil-collection
-  )
-(use-package general)
 (use-package crux
   :bind (("C-a" . 'crux-move-beginning-of-line)
 		 ("C-x x r" . 'crux-rename-buffer-and-file)))
 (use-package expand-region
   :bind (("M-h" . er/expand-region)
-         ("C-x H" . er/contract-region))
+		 ("C-x H" . er/contract-region))
   :custom (er/try-expand-list '(er/mark-inside-quotes er/mark-outside-quotes er/mark-inside-pairs er/mark-outside-pairs er/mark-comment er/mark-url er/mark-email er/mark-defun)))
 (use-package avy
   :config
   (setq avy-keys '(?a ?s ?d ?f ?g ?h ?j ?k ?l ?q ?w ?e ?r ?t ?y ?u ?i ?o ?p ?z ?x ?c ?v ?b ?n ?m ?\;)))
 (use-package ace-window
+  :bind (("M-o" . #'ace-window))
   :commands (aw-flip-window)
   :init
   (setq aw-dispatch-always nil))
 ;; Theme
 (use-package modus-themes)
 (use-package fontaine
+  :ensure nil
+  :when (not (display-graphic-p))
+  :ensure t
   :config
   (setq fontaine-presets
 		'((regular		:default-height 140)
-          (semi-small		:default-height 130)
+		  (semi-small	:default-height 130)
 		  (small		:default-height 120)
 		  (semi-large	:default-height 150)
 		  (large		:default-height 180)
@@ -225,7 +175,8 @@
              ;; :default-family "Fira Code"
 		     :default-weight normal
 			 :bold-weight semibold
-			 :italic-slant italic))))
+			 :italic-slant italic)))
+  (fontaine-set-preset 'regular))
 (use-package vterm
   :commands vterm
   :custom (vterm-max-scrollback 10000))
@@ -238,6 +189,9 @@
                 read-file-name-completion-ignore-case t
                 read-buffer-completion-ignore-case t))
 (use-package vertico
+  :bind (:map vertico-map
+			  ("DEL" . vertico-directory-delete-char)
+			  ("M-DEL" . vertico-directory-delete-word))
   :config
   (setq vertico-count 13
 	    vertico-resize 'grow-only)
@@ -265,7 +219,6 @@
   :config
   (marginalia-mode 1))
 (use-package consult
-  :bind (("M-s l" . #'consult-line))
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -278,7 +231,8 @@
   (setq tab-always-indent 'complete)
   (setq completion-cycle-threshold 3)
   (corfu-popupinfo-mode 1)
-  (setq corfu-auto t
+  (setq corfu-min-width 50
+		corfu-auto t
         corfu-cycle t
         corfu-quit-no-match 'separator)
   (defun minimal-corfu-mode()
@@ -331,7 +285,7 @@
 
 ;; Writing & Latex
 ;; ===============
-(use-package org)
+(use-package org :pin manual)
 (use-package org-download)
 (use-package biblio)
 (use-package tex :straight auctex)
@@ -422,3 +376,4 @@ Suggest me 10 names")
 		 (if (file-exists-p path-1) path-1 path-2))))
 
 (setq my/cloud-directory (expand-file-name "~/Dropbox/"))
+(put 'list-timers 'disabled nil)
