@@ -4,59 +4,57 @@
 ;; Emacs Basic Configurations
 ;; ==========================
 (require 'my-common)
-;; (require 'use-package)
 (setq straight-use-package-by-default nil
       use-package-always-ensure nil)
 
 (use-package emacs
-  :bind (("M-/" . #'comment-line))
-  :config
-  ;; Meta Key Configuration
-  (when (eq system-type 'darwin)
-    (setq mac-command-modifier 'meta
-          mac-option-modifier 'super))
-  (setq-default ring-bell-function 'ignore) ; Remove ring bell
+  :bind (("M-/" . #'comment-line)))
+(tool-bar-mode 0)
+(scroll-bar-mode 0)
+;; Meta Key Configuration
+(when (eq system-type 'darwin)
+  (setq mac-command-modifier 'meta
+        mac-option-modifier 'super))
+(setq-default ring-bell-function 'ignore) ; Remove ring bell
 
-  (savehist-mode 1)
-  (setq-default history-length 1000)
+(savehist-mode 1)
+(setq-default history-length 1000)
 
-  (repeat-mode 1)
-  (setq set-mark-command-repeat-pop t)
+(repeat-mode 1)
+(setq set-mark-command-repeat-pop t)
 
-  ;; Font lock optimization
-  (setq font-lock-maximum-decoration 2)
+;; Font lock optimization
+(setq font-lock-maximum-decoration 2)
 
-  ;; Editor
-  (show-paren-mode 1)
-  (setq show-paren-style 'parenthesis)
-  (setq-default tab-width 4)
-  (electric-pair-mode 1)
+;; Editor
+(show-paren-mode 1)
+(setq show-paren-style 'parenthesis)
+(setq-default tab-width 4)
+(electric-pair-mode 1)
 
-  ;; System
-  (setq garbage-collection-messages nil
-        gc-cons-threshold (* 10 1024 1024))
+;; System
+(setq garbage-collection-messages nil
+      gc-cons-threshold (* 10 1024 1024))
 
-  ;; File managements
-  (setq-default create-lockfiles nil
-                auto-save-default nil
-                make-backup-files nil
-                auto-save-timeout 5
-                revert-without-query t
-                auto-revert-interval 1)
-  (recentf-mode 1)
-  (setq-default recentf-auto-cleanup (* 60 60 24 7)
-                recentf-max-menu-items 150
-                recentf-max-saved-items 150)
+;; File managements
+(setq-default create-lockfiles nil
+              auto-save-default nil
+              make-backup-files nil
+              auto-save-timeout 5
+              revert-without-query t
+              auto-revert-interval 1)
+(recentf-mode 1)
+(setq-default recentf-auto-cleanup (* 60 60 24 7)
+              recentf-max-menu-items 150
+              recentf-max-saved-items 150)
 
-
-  ;; Window
-  (setq-default scroll-step 1           ; not sure :(
-                scroll-conservatively 1 ; not sure too :(
-                auto-window-vscroll t
-                recenter-redisplay nil ; Take away the annoying flashs on every C-l in terminal emacs
-                help-window-select t
-                split-window-keep-point nil)
-  )
+;; Window
+(setq-default scroll-step 1           ; not sure :(
+              scroll-conservatively 1 ; not sure too :(
+              auto-window-vscroll t
+              recenter-redisplay nil ; Take away the annoying flashs on every C-l in terminal emacs
+              help-window-select t
+              split-window-keep-point nil)
 
 (require 'my-window)
 (use-package emacs
@@ -96,7 +94,7 @@
    ;; tab-line-separator (propertize "🬓 " 'face '(:foreground "gray40"))
    tab-line-new-button-show nil
    tab-line-close-button-show nil
-   tab-line-close-button " 🯀"))
+   tab-line-close-button ""))
 (use-package dired
   :bind (:map dired-mode-map
               ("-" . 'dired-up-directory)
@@ -109,7 +107,7 @@
   ;; (setq dired-kill-when-opening-new-dired-buffer t
   ;;       dired-dwim-target t
   ;;       dired-listing-switches "-aBhl --group-directories-first")
-  (defun my-set-dried-face-attribute ()))
+  )
 (use-package tramp
   :config
   (tramp-cleanup-all-connections)
@@ -137,7 +135,9 @@
 (use-package magit)
 (use-package rg)
 
-;; (use-package ha-evil :straight nil :load-path "lisp/")
+(use-package ha-evil :straight nil :load-path "lisp/"
+  :config
+  (evil-mode 1))
 
 ;; Basic Packages
 ;; ==============
@@ -160,7 +160,7 @@
 (use-package modus-themes)
 (use-package fontaine
   :ensure nil
-  :when (not (display-graphic-p))
+  :when (display-graphic-p)
   :ensure t
   :config
   (setq fontaine-presets
@@ -177,26 +177,30 @@
 			 :bold-weight semibold
 			 :italic-slant italic)))
   (fontaine-set-preset 'regular))
+
 (use-package vterm
   :commands vterm
   :custom (vterm-max-scrollback 10000))
 
 ;; Completion
 ;; ==========
-(use-package emacs :ensure nil
-  :config
-  (setq-default completion-ignore-case  t
-                read-file-name-completion-ignore-case t
-                read-buffer-completion-ignore-case t))
+(setq-default completion-ignore-case  t
+              read-file-name-completion-ignore-case t
+              read-buffer-completion-ignore-case t)
 (use-package vertico
   :bind (:map vertico-map
 			  ("DEL" . vertico-directory-delete-char)
 			  ("M-DEL" . vertico-directory-delete-word))
+  :init
+  (vertico-mode 1)
   :config
   (setq vertico-count 13
 	    vertico-resize 'grow-only)
-  (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
-  (vertico-mode 1))
+  ;; (add-hook 'rfn-eshadow-update-overlay-hook #'vertico-directory-tidy)
+  )
+;; (require 'vertico)
+;; (vertico-mode 1)
+
 (use-package orderless
   :config
   (setq completion-styles '(orderless)
@@ -219,6 +223,7 @@
   :config
   (marginalia-mode 1))
 (use-package consult
+  :after vertico
   :init
   (setq xref-show-xrefs-function #'consult-xref
         xref-show-definitions-function #'consult-xref)
@@ -265,9 +270,7 @@
 (use-package go-mode)
 (use-package dockerfile-mode)
 (use-package yaml-mode)
-(use-package nasm-mode
-  :config
-  (add-to-list 'auto-mode-alist '("\\.asm\\'" . nasm-mode)))
+(use-package nasm-mode :mode ("\\.asm\\'" . nasm-mode))
 (use-package markdown-mode)
 (use-package gtags-mode)
 (use-package dumb-jump
