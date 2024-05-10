@@ -7,7 +7,7 @@ Somehow emacs-plus breaks my tramp, not sure why, maybe due to my miss configura
 Also eamcs-plus is more intrusive and have more mac speicifc patches compare to eamcs-mac, so I decided to use emacs-mac by default.
 
 The good reference would be follow the doom's emacs installation guide, and doom also recommands to use ~emacs-mac~.
-Doom consists of a lots of packages, therefore the recommandation probabilly proved to compatable with most packages(including ~corfu~ in my concern).
+Doom consists of a lots of packages, therefore the recommandation probabilly proved to be compatable with most packages(including ~corfu~ in my concern).
 
 Here is the sample script that I used for emacs installation in Mac OS X.
 #+BEGIN_SRC shell
@@ -17,8 +17,8 @@ Here is the sample script that I used for emacs installation in Mac OS X.
 #+END_SRC
 
 
-And additional version infromation which would be usable to reproduce my time-tested working emacs environment.
-#+BEGIN_SRC emacs-lisp :wrap example
+And here is my additional version information which would be usable to reproduce my time-tested working emacs environment.
+#+BEGIN_SRC emacs-lisp :exports both :wrap example
   (format "Version: %s\nOptions: %s" (version) system-configuration-options)
 #+END_SRC
 
