@@ -1,0 +1,34 @@
+* Install Emacs for Mac OS X
+Use ~emacs-mac~, NOT other emacs ports such as emacsformacosx.com or emacs-plus.
+The emacsformacosx.com's emacs inefficiently implemented the child-frame feature, and I experienced laggy corfu behavior which relies on child-frame to show the completion candidates.
+Some what emacs-plus breaks my tramp, not sure why, maybe due to my miss configuration that only fail on emacs-plus, or maybe I was using outdated version, however I expereinced some problem with emacs-plus.
+Also eamcs-plus is more intrusive and have more mac speicifc patches compare to eamcs-mac, so I decided to use emacs-mac by default.
+
+The good reference would be follow the doom's emacs installation guide, and doom also recommands to use ~emacs-mac~.
+Doom consists of a lots of packages, therefore the recommandation already concerned the compatability between emacs mac variant and packages.
+
+Here is the sample script that I used for emacs installation in Mac OS X.
+#+BEGIN_SRC shell
+  brew tap railwaycat/emacsmacport
+  brew install emacs-mac --with-modules
+  brew install --cask emacs-mac
+#+END_SRC
+
+
+#+BEGIN_SRC emacs-lisp
+  (format "Version: %s\nOptions: %s"
+  		(version)
+  		system-configuration-options)
+#+END_SRC
+
+#+RESULTS:
+: Version: GNU Emacs 29.1 (build 1, aarch64-apple-darwin22.5.0, Carbon Version 169 AppKit 2299.6)
+:  of 2023-08-09
+: Options: --with-mac --enable-locallisppath=/usr/local/share/emacs/site-lisp:/opt/homebrew/share/emacs/site-lisp --enable-mac-app=/Users/admin/homebrew-emacsmacport/build-scripts/build_out/tmproot --prefix=/Users/admin/homebrew-emacsmacport/build-scripts/build_out/tmproot --enable-mac-self-contained --with-modules --with-xwidgets --with-tree-sitter --without-lcms2 --without-webp
+
+* TODO Add margin(padding?) for text mode.
+Margin enhance the readability of the text.
+If the gap between a frame and texts is too small, I feel uncomfortable to read the text.
+
+* TODO Grammarly Setup
+I'm not a native english writer, so needs some confidence that my grammar is correct.
