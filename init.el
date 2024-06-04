@@ -341,11 +341,6 @@
   :init
   :config
   )
-(use-package highlight-sexp :ensure nil
-  :config
-  (require 'my-theme)
-  (setq-default hl-sexp-background-color (my-color-bg 1))
-  )
 
 ;;; Completion
 (setq-default completion-ignore-case  t
