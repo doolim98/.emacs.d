@@ -1,3 +1,19 @@
+;;; my-project.el --- My project
+;;; Requirements
+(require 'project)
+(require 'cl-macs)
+
+;;; Commentary:
+;; 
+
+
+;;; Code:
+;;; Functions
+(cl-defun my-add-project-local-variable()
+  (interactive)
+  (let ((default-directory (project-root (project-current))))
+	(call-interactively 'add-dir-local-variable)))
+
 (defun my/project-name (&optional project)
   "Return the name for PROJECT.
 If PROJECT is not specified, assume current project root."
@@ -11,32 +27,27 @@ If PROJECT is not specified, assume current project root."
   (when-let (project (project-current))
     (project-root project)))
 
-(defun my/project-compile-command(command)
-  "My project compile command"
-  (interactive (list
-    (let ((command (eval compile-command)))
-      (if (or compilation-read-command current-prefix-arg)
-	  (compilation-read-command command)
-	command))
-  (let ((default-directory (project-root (project-current t)))
-        (command-name command))
-    (with-current-buffer (get-buffer-create (format "*%s$ %s*" (my/project-name) command-name))
-      (compilation-mode 1)
-      (compilation-start command)
-      ;; (start-process-shell-command command (current-buffer) command)
-      (switch-to-buffer-other-window (current-buffer)))))
+(cl-defun my-compile (&optional (silent nil))
+  (interactive)
+  (let ((command (compilation-read-command (eval compile-command)))
+		(buffer (get-buffer-create (format "*compilation<%s>*" (my/project-name)))))
+	(with-current-buffer buffer
+	  (compilation-mode 1)
+	  (compilation-start command)
+	  (setq-local compilation-finish-functions '((lambda(buffer string)(print "hello"))))
+	  )))
 
 (defun my/project-async-command()
   "My project async command"
   (interactive)
   (let* ((default-directory (project-root (project-current t)))
          (command (read-shell-command "Project Command: "))
-         (output-buffer (get-buffer-create (format "*Async <%s> %s" (my/project-name) command)))
+         (output-buffer (get-buffer-create (format "*%s <%s>*" command (my/project-name))))
          (proc (progn
                  (shell-command command output-buffer)
                  (get-buffer-process output-buffer))))
     (if (process-live-p proc)
-        (set-process-sentinel proc #'(lambda ()(message "Good")))
+        (set-process-sentinel proc #'(lambda(buffer msg)(message "Good")))
       (message "No process running."))))
 
 (defun my/project-recentf-find-file (&optional filter)
@@ -59,6 +70,32 @@ transform recent files before completion."
     (when file
       (find-file file))))
 
+(defun my/project-compilation-buffer-name (name-of-mode)
+  (cond ((or (eq major-mode (intern-soft name-of-mode))
+             (eq major-mode (intern-soft (concat name-of-mode "-mode"))))
+	 (buffer-name))
+	(t
+	 (concat "*" (downcase name-of-mode)
+			 "<" (my/project-name) ">"
+			 "*"))))
 
+(defun my/project-compile ()
+  "Run `recompile' in the project root."
+  (declare (interactive-only compile))
+  (interactive)
+  (let ((default-directory (project-root (project-current t)))
+        (compilation-buffer-name-function
+         (or project-compilation-buffer-name-function
+             compilation-buffer-name-function)))
+    (call-interactively #'recompile)))
 
+(defun my/project-compilation-buffer()
+  "Show project's compilation buffer"
+  (interactive)
+  (let ((buf (get-buffer ()))))
+  (display-buffer ())
+  (call-interactively ))
+
+;;; my-project.el ends here
 (provide 'my-project)
+

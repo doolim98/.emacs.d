@@ -8,7 +8,6 @@ Also eamcs-plus is more intrusive and have more mac speicifc patches compare to 
 
 The good reference would be follow the doom's emacs installation guide, and doom also recommands to use ~emacs-mac~.
 Doom consists of a lots of packages, therefore the recommandation probabilly proved to be compatable with most packages(including ~corfu~ in my concern).
-
 Here is the sample script that I used for emacs installation in Mac OS X.
 #+BEGIN_SRC shell
   brew tap railwaycat/emacsmacport
