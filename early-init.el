@@ -29,7 +29,6 @@
   (setq use-package-always-ensure t))
 
 (require 'use-package)
-(setq use-package-enable-imenu-support t)
 (setq package-enable-at-startup t)
 (setq use-package-always-ensure t)
 (setq package-native-compile t

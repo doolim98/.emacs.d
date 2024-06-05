@@ -6,24 +6,17 @@
 ;;; Initialize
 (when (display-graphic-p) (select-frame-set-input-focus (selected-frame)))
 (load-file custom-file)
+
+(use-package auto-package-update)
+
+;;; Keybindings
+(use-package general)
 (setq-default mac-option-modifier 'meta
 			  mac-command-modifier 'super
 			  mac-control-modifier 'control)
 
-;;; Pacakge Config
-(require 'package)
-(add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
-(package-initialize)
-(when (not package-archive-contents) (package-refresh-contents))
-(require 'use-package)
-(setq-default use-package-enable-imenu-support t)
-(setq use-package-always-ensure t)
-
-;;; Keybindings
 (repeat-mode 1)
 (setq-default set-mark-command-repeat-pop t)
-(use-package general)
-;; (load-file (expand-file-name "keybindings.el" my-emacs-directory))
 
 (defvar-keymap my-quote-map :doc "My quote keymap")
 (defvar-keymap my-f-map :doc "My f keymap")
@@ -75,7 +68,7 @@
   "m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
   "i" #'(lambda()(interactive)(find-file (expand-file-name "init.el" my-emacs-directory)))
 
-  "," #'(lambda()(interactive)(let ((default-directory (concat my-emacs-directory "/")))
+  "," #'(lambda()(interactive)(let ((default-directory (expand-file-name "./" my-emacs-directory)))
 						   (call-interactively 'find-file)))
   "r" #'(lambda()(interactive)(load-file user-init-file))
   )
@@ -86,11 +79,12 @@
 (require 'tab-line)
 (setq-default inhibit-startup-screen t
 			  ring-bell-function 'ignore ; Remove ring bell
-			  make-pointer-invisible nil)
+			  make-pointer-invisible t)
 (setq-default garbage-collection-messages nil
 			  gc-cons-threshold (* 10 1024 1024))
 (setq-default tooltip-delay 0.2)
 (setq-default
+ use-package-enable-imenu-support t
  recentf-auto-cleanup (* 60 60 24 7)
  recentf-max-menu-items 150
  recentf-max-saved-items 150
@@ -169,10 +163,12 @@
 (require 'my-theme)
 
 (use-package modus-themes
+  :bind (("s-, t" . modus-themes-select))
   :config
   (setq modus-themes-mixed-fonts t
 		modus-themes-bold-constructs t)
-  (modus-themes-select 'modus-operandi)
+  ;; (modus-themes-select 'modus-operandi)
+   
   (defun my-modus-themes-hook()
 	;; (set-cursor-color "magenta")
 	;; (set-face-attribute 'show-paren-match nil :background nil :foreground "magenta" :weight 'bold :underline nil :box nil)
@@ -366,8 +362,9 @@
 							;; basic
 							;; partial-completion
 							;; initials
-							orderless)
-        orderless-component-separator "[. ]")
+							orderless
+							)
+        orderless-component-separator "[- ]")
   ;; Override completion style on files
   (setq completion-category-overrides
         '((file
@@ -379,12 +376,17 @@
   :config
   (marginalia-mode 1)
   (setq-default marginalia-align 'left)
-  (setq-default marginalia-field-width 150)
-  )
+  (setq-default marginalia-field-width 300))
 
 (use-package consult :after vertico
   :config
-  (general-define-key
+  ;; (general-defs minibuffer-mode-map
+  ;; 	"C-s" #'consult-history
+  ;; 	"C-s" #'consult-isearch-forward
+  ;; 	"C-s" #'isearch-forward
+  ;; 	"C-r" #'isearch-backward
+  ;; 	)
+  (general-defs
    "M-g i" #'consult-imenu
    "M-g o" #'consult-outline
    "M-g I" #'consult-imenu-multi
@@ -419,9 +421,6 @@
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
-(use-package my-vertico :ensure nil
-  :hook (vertico-mode . my-vertico-select-index-mode))
-
 (use-package corfu
   :hook ((prog-mode . corfu-mode)
 		 (tex-mode . corfu-mode)
@@ -433,13 +432,14 @@
 			  ;; Use `corfu-insert' which is compatible with yasnippet
 			  ("TAB" . corfu-insert)
 			  ("<tab>" . corfu-insert)
+			  ("C-e" . corfu-complete)
 			  ("RET" . nil))
   :config
   ;; (general-defs :keymaps 'corfu-map)
   ;; Variables
   (setq-default
    corfu-preselect 'valid
-   corfu-count 7
+   corfu-count 10
    corfu-popupinfo-max-height 20
    corfu-min-width 22
    corfu-auto t
@@ -552,7 +552,9 @@
   :config
   (setq outline-minor-mode-use-buttons nil))
 ;;; Languages
-(use-package sly)
+(use-package sly
+  :config
+  (setq inferior-lisp-program "sbcl"))
 (use-package elisp-mode :ensure nil
  :init (add-hook 'emacs-lisp-mode-hook #'my/font-lock-add-lambda)
  )
