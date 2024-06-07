@@ -554,7 +554,7 @@
 ;;; Languages
 (use-package sly
   :config
-  (setq inferior-lisp-program "sbcl"))
+(setq inferior-lisp-program "sbcl"))
 (use-package elisp-mode :ensure nil
  :init (add-hook 'emacs-lisp-mode-hook #'my/font-lock-add-lambda)
  )
