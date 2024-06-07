@@ -6,13 +6,17 @@
 ;;; Initialize
 (when (display-graphic-p) (select-frame-set-input-focus (selected-frame)))
 (load-file custom-file)
+(server-start)
 
-(use-package auto-package-update)
+(desktop-save-mode 1)
+
+;; (use-package auto-package-update)
 
 ;;; Keybindings
+(use-package region-bindings-mode :config (region-bindings-mode-enable))
 (use-package general)
-(setq-default mac-option-modifier 'meta
-			  mac-command-modifier 'super
+(setq-default mac-option-modifier 'meta ; 'super
+			  mac-command-modifier 'super ; 'meta
 			  mac-control-modifier 'control)
 
 (repeat-mode 1)
@@ -22,20 +26,39 @@
 (defvar-keymap my-f-map :doc "My f keymap")
 (defvar-keymap my-b-map :doc "My b keymap")
 (defvar-keymap my-ctl-z-map :doc "My ctl-z keymap")
+(defvar-keymap my-setting-map :doc "My settings keymap")
+(defvar-keymap my-toggle-map :doc "My toggle keymap")
 
 (general-def
+  "ESC ESC" "C-g"
+  "s-o" #'crux-open-with
+  "s-<backspace>" "M-<backspace>"
   "S-SPC" #'mark-sexp
+  "C-j" #'crux-top-join-line
   "C-4" ctl-x-4-map
   "M-o" 'other-window
   "M-[" 'previous-buffer
   "M-]" 'next-buffer
   "M-O" 'window-swap-states
   "M-'" my-quote-map
+  "C-t" my-toggle-map
+  "C-x ," my-setting-map
   "C-x c" 'restart-emacs)
+
+(general-def region-bindings-mode-map
+  "w" #'copy-region-as-kill
+  "k" #'kill-region
+  "q" #'query-replace
+  "Q" #'query-replace-regexp
+  "e" (kbd "C-c C-e")
+  "ESC" nil								; Do not bind `ESC'!
+  )
 
 ;;; Customize Built-in keymaps
 ;;;; `ctl-x-map'
 (general-def ctl-x-map
+  "f" my-f-map
+  "C-b" #'buffer-menu
   "C-k" #'kill-this-buffer)
 ;;;; `transient-map'
 (general-def transient-map
@@ -62,7 +85,12 @@
   "C-r" #'rg)
 
 ;;; My Custom Keymaps
-;;;; `my-quote-map'
+(general-def my-toggle-map
+  "f" #'flymake-mode)
+(general-def my-f-map
+  "r" #'consult-recent-file
+  "o" #'(lambda()(interactive)(find-file (expand-file-name "./" org-directory))))
+
 (general-def my-quote-map
   "s" #'scratch-buffer
   "m" #'(lambda()(interactive)(switch-to-buffer "*Messages*"))
@@ -72,6 +100,12 @@
 						   (call-interactively 'find-file)))
   "r" #'(lambda()(interactive)(load-file user-init-file))
   )
+
+(general-def my-setting-map
+  "t" #'consult-theme
+  "," #'(lambda()(interactive)(let ((default-directory (expand-file-name "./" my-emacs-directory)))
+						   (call-interactively 'find-file)))
+  "r" #'(lambda()(interactive)(load-file user-init-file)))
 
 ;;; Emacs Defaults
 (require 'tramp)
@@ -119,6 +153,7 @@
 
  ;; Editor
  tab-width 4
+ parse-sexp-ignore-comments nil
 
  ;; Compilation
  compilation-scroll-output t
@@ -160,10 +195,13 @@
 (require 'help)
 (general-def "C-`" #'window-toggle-side-windows)
 
+(require 'my-fonts)
 (require 'my-theme)
 
+(general-def my-setting-map "f" #'fontaine-set-preset)
+
+(use-package ef-themes)
 (use-package modus-themes
-  :bind (("s-, t" . modus-themes-select))
   :config
   (setq modus-themes-mixed-fonts t
 		modus-themes-bold-constructs t)
@@ -212,7 +250,8 @@
   (dolist (buf (project-buffers project))
 	(with-current-buffer buf
 	  (when (and buffer-file-name
-				 (file-exists-p buffer-file-name))
+				 (file-exists-p buffer-file-name)
+				 (not (buffer-modified-p)))
 		(revert-buffer t t t)))))
 
 (cl-defun my-add-project-local-variable()
@@ -358,25 +397,25 @@
 
 (use-package orderless
   :config
-  (setq completion-styles '(
+  (setq-default completion-styles '(
 							;; basic
 							;; partial-completion
 							;; initials
 							orderless
 							)
-        orderless-component-separator "[- ]")
+				orderless-component-separator "[. ]")
+
   ;; Override completion style on files
   (setq completion-category-overrides
-        '((file
-           (styles basic partial-completion orderless))
-          (xref-location
-           (styles substring)))))
+        '((file (styles basic partial-completion orderless))
+          (xref-location (styles substring)))))
 
 (use-package marginalia
   :config
   (marginalia-mode 1)
   (setq-default marginalia-align 'left)
   (setq-default marginalia-field-width 300))
+
 
 (use-package consult :after vertico
   :config
@@ -407,7 +446,6 @@
   (setq embark-quit-after-action t)
   (setq embark-mixed-indicator-delay 99999)
 
-  ;; (add-hook 'eldoc-documentation-functions #'embark-eldoc-first-target)
   (setq embark-verbose-indicator-display-action '(display-buffer-at-bottom))
 
   (defun embark-act-noquit ()
@@ -432,7 +470,6 @@
 			  ;; Use `corfu-insert' which is compatible with yasnippet
 			  ("TAB" . corfu-insert)
 			  ("<tab>" . corfu-insert)
-			  ("C-e" . corfu-complete)
 			  ("RET" . nil))
   :config
   ;; (general-defs :keymaps 'corfu-map)
@@ -483,7 +520,7 @@
 (use-package bicycle
   :after outline
   :bind (:map outline-minor-mode-map
-              ("C-t" . bicycle-cycle)
+              ("C-TAB" . bicycle-cycle)
               ([S-tab] . bicycle-cycle-global)))
 
 ;;; IDE
@@ -505,7 +542,10 @@
 									   ;; 	(mode-line-format . none))
 									   ))
   (setq-default eldoc-echo-area-prefer-doc-buffer t
-				eldoc-echo-area-use-multiline-p nil)
+				eldoc-documentation-strategy 'eldoc-documentation-enthusiast ; 'eldoc-doc
+				;; eldoc-documentation-strategy 'eldoc-documentation-compose-eagerly
+				;; eldoc-documentation-strategy 'eldoc-documentation-compose
+				eldoc-echo-area-use-multiline-p t)
   )
 (use-package ediff :ensure nil
   :init
@@ -523,6 +563,7 @@
          ("C-c C-r" . eglot-rename)
          ("C-x l" . eglot-reconnect))
   :config
+  (setq-default eglot-prefer-plaintext nil)
   )
 
 (use-package devdocs
@@ -665,27 +706,46 @@
 
 ;;; Writing
 ;;;; Ispell & Dictionary
+(require 'ispell)
+(general-def "s-;" #'ispell-buffer)
 (global-set-key (kbd "C-'") #'ispell-word)
 (setq-default ispell-program-name "aspell"
 			  ispell-silently-savep t
 			  ispell-extra-args '("--sug-mode=ultra" "--lang=en_US")
 			  ispell-personal-dictionary (expand-file-name "aspell.pws" my-emacs-directory))
 
+
 (use-package flyspell-mode :ensure nil
-  :bind (:map flyspell-mode-map
-			  ("C-." . nil)
-			  ("C-'" . nil))
   :hook ((text-mode . flyspell-mode))
+  :config
+  (general-unbind flyspell-mode-map
+	"C-;" "C-." "C-'")
 )
 (use-package org
+  :hook ((org-mode . org-indent-mode))
   :config
+  (setq org-directory "~/Dropbox/org")
   (defun my-org-mode-hook-function()
-	(setq-local truncate-lines t))
+	(setq-local completion-ignore-case nil)
+	(setq-local truncate-lines nil)
+	(visual-line-mode 1)
+	;; TODO: Buffer Local fringe-mode
+	;; (fringe-mode 0)
+	;; TODO: set-window-margins not works when I swtich back to the org-mode buffer
+	;; (set-window-margins nil 0 10)
+	(setq-local right-margin-width 20)
+	)
   (add-hook 'org-mode-hook #'my-org-mode-hook-function)
 
   (require 'ox-md)
   (setq org-export-with-tags nil)
   (add-to-list 'org-export-backends 'md)
+  t)
+(use-package org-ref )
+(use-package org-bullets :after org
+  :hook ((org-mode . org-bullets-mode))
+  :config
+  (setq-default org-bullets-bullet-list '("*" "*" "*" "*" "*" "*"))
   )
 
 (use-package ox-gfm)
@@ -712,15 +772,30 @@
 
 (use-package gptel
   :bind (("C-c G" . gptel)
-		 ("C-c g" . gptel-menu))
+		 ("C-c g" . gptel-menu)
+		 :map region-bindings-mode-map
+		 ("g" . gptel-menu))
   :config
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY"))
   (setq-default gptel-default-mode 'org-mode)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
 
+
 ;;; ETC
-(desktop-save-mode 1)
+
 (winner-mode 1)
 
 (setq dired-jump-map nil)
 (fset 'yes-or-no-p 'y-or-n-p)			; don't ask to spell out "yes"
+
+
+(use-package keyfreq
+  :config
+  (keyfreq-mode 1)
+  (keyfreq-autosave-mode 1)
+  (setq keyfreq-excluded-commands
+      '(self-insert-command
+        forward-char
+        backward-char
+        previous-line
+        next-line)))

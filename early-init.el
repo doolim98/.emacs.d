@@ -1,8 +1,15 @@
 ;; Keep my .emacs.d clean
 (setq-default my-emacs-directory user-emacs-directory)
 (setq-default user-emacs-directory (expand-file-name ".user-emacs/" user-emacs-directory))
-(shell-command (format "mkdir -p %s" user-emacs-directory))
+(unless (file-exists-p user-emacs-directory)
+  (shell-command (format "mkdir -p %s" user-emacs-directory)))
+;; Change package installation directory
+(require 'package)
+(setq-default package-user-dir (expand-file-name "packages" user-emacs-directory))
 
+
+;; Package Manager Configuration
+(require 'use-package)
 (setq-default my/use-straight nil)
 
 (when my/use-straight
@@ -26,9 +33,9 @@
   (add-to-list 'package-archives '("melpa" . "https://melpa.org/packages/"))
   (package-initialize)
   (when (not package-archive-contents) (package-refresh-contents))
-  (setq use-package-always-ensure t))
+  )
 
-(require 'use-package)
+
 (setq package-enable-at-startup t)
 (setq use-package-always-ensure t)
 (setq package-native-compile t

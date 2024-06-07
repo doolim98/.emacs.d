@@ -45,7 +45,6 @@
 
 			 :fixed-pitch-family "IosevkaTermSlab Nerd Font Mono"
 			 )))
-  (set-frame-parameter (selected-frame) 'line-spacing 0.05)
   )
 
 ;; Nerd Icons 󰄛  
