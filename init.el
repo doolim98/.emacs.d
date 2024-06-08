@@ -86,10 +86,20 @@
 
 ;;; My Custom Keymaps
 (general-def my-toggle-map
-  "f" #'flymake-mode)
+  "f" #'flymake-mode
+  "l" #'(lambda()(interactive)
+		  (if (bound-and-true-p eglot--managed-mode)
+			  (eglot--managed-mode-off)
+			(progn
+			  (eglot--managed-mode)
+			  ;; HACK: change buffer
+			  (insert "@")
+			  (delete-backward-char 1)
+			  ))))
 (general-def my-f-map
   "r" #'consult-recent-file
-  "o" #'(lambda()(interactive)(find-file (expand-file-name "./" org-directory))))
+  "o" #'(lambda()(interactive)(let ((default-directory (expand-file-name "./" org-directory)))
+							(call-interactively 'find-file))))
 
 (general-def my-quote-map
   "s" #'scratch-buffer
@@ -196,22 +206,19 @@
 (general-def "C-`" #'window-toggle-side-windows)
 
 (require 'my-fonts)
-(require 'my-theme)
+(setq-default line-spacing 0.0)
+(fontaine-set-preset 'font-Monaco)		; Use Monaco!
+(fontaine-set-preset 'size-12)
+;; Hangul font
+;; 가나|다라|
+;; ABCD|EFGH|
+(setq face-font-rescale-alist '(("D2Coding" . 1.2)))
+(set-fontset-font t 'hangul (font-spec :name "D2Coding"))
 
 (general-def my-setting-map "f" #'fontaine-set-preset)
 
-(use-package ef-themes)
-(use-package modus-themes
-  :config
-  (setq modus-themes-mixed-fonts t
-		modus-themes-bold-constructs t)
-  ;; (modus-themes-select 'modus-operandi)
-   
-  (defun my-modus-themes-hook()
-	;; (set-cursor-color "magenta")
-	;; (set-face-attribute 'show-paren-match nil :background nil :foreground "magenta" :weight 'bold :underline nil :box nil)
-	)
-  (add-hook 'modus-themes-after-load-theme-hook 'my-modus-themes-hook))
+(require 'my-theme)
+(modus-themes-select 'modus-operandi-tinted)
 
 ;;;; Cursor
 (setq-default blink-cursor-delay 0.2
@@ -556,12 +563,12 @@
   )
 
 (use-package eglot
-  :bind (("C-x l" . eglot)
+  :bind (("C-x x l" . eglot)
          :map eglot-mode-map
-         ("C-c ." . eglot-code-action-quickfix)
-         ("C-c TAB" . eglot-format-buffer)
-         ("C-c C-r" . eglot-rename)
-         ("C-x l" . eglot-reconnect))
+         ("C-x ." . eglot-code-action-quickfix)
+         ("C-x TAB" . eglot-format-buffer)
+         ("C-x C-r" . eglot-rename)
+         ("C-x x l" . eglot-reconnect))
   :config
   (setq-default eglot-prefer-plaintext nil)
   )
@@ -707,7 +714,7 @@
 ;;; Writing
 ;;;; Ispell & Dictionary
 (require 'ispell)
-(general-def "s-;" #'ispell-buffer)
+(general-def "s-;" #'ispell-continue)
 (global-set-key (kbd "C-'") #'ispell-word)
 (setq-default ispell-program-name "aspell"
 			  ispell-silently-savep t
@@ -715,32 +722,41 @@
 			  ispell-personal-dictionary (expand-file-name "aspell.pws" my-emacs-directory))
 
 
-(use-package flyspell-mode :ensure nil
-  :hook ((text-mode . flyspell-mode))
-  :config
-  (general-unbind flyspell-mode-map
-	"C-;" "C-." "C-'")
-)
+(require 'flyspell)
+(general-unbind flyspell-mode-map
+  "C-;" "C-." "C-'")
+
 (use-package org
   :hook ((org-mode . org-indent-mode))
   :config
-  (setq org-directory "~/Dropbox/org")
+  (general-def "s-a" #'org-agenda)
+  (general-def org-mode-map
+	"C-j" #'crux-top-join-line
+	)
+  :config
+  (setq-default org-directory "~/Dropbox/org"
+				org-agenda-files (list (expand-file-name "agenda.org" org-directory))
+				;; (list (expand-file-name "Agenda" org-directory))
+				;; org-agenda-file-regexp
+				)
+  ;; Org agenda
+  
   (defun my-org-mode-hook-function()
 	(setq-local completion-ignore-case nil)
 	(setq-local truncate-lines nil)
 	(visual-line-mode 1)
-	;; TODO: Buffer Local fringe-mode
-	;; (fringe-mode 0)
-	;; TODO: set-window-margins not works when I swtich back to the org-mode buffer
-	;; (set-window-margins nil 0 10)
-	(setq-local right-margin-width 20)
+	(setq-local right-margin-width 10
+				left-margin-width 10)
+	(eglot-ensure)
+	(flyspell-mode 0)
 	)
   (add-hook 'org-mode-hook #'my-org-mode-hook-function)
 
   (require 'ox-md)
   (setq org-export-with-tags nil)
   (add-to-list 'org-export-backends 'md)
-  t)
+  )
+
 (use-package org-ref )
 (use-package org-bullets :after org
   :hook ((org-mode . org-bullets-mode))
