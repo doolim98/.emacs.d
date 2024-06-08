@@ -9,6 +9,16 @@
 
 (defvar my-theme-init-hook '() "Hook that run after init my theme")
 
+(use-package ef-themes)
+(use-package modus-themes
+  :config
+  (setq modus-themes-mixed-fonts t
+		modus-themes-bold-constructs t)
+   
+  (defun my-modus-themes-hook()
+	(set-face-attribute 'fringe nil :background (face-background 'default)))
+  (add-hook 'modus-themes-after-load-theme-hook 'my-modus-themes-hook))
+
 (defun my-theme-init()
   ;; Mode-line
   ;; Remove Backgrounds
@@ -157,17 +167,6 @@ static unsigned char image_bits[] = {0x00};"))
 
 (defun my-use-evil-insert-state-cursor-type()
   (setq-local cursor-type evil-insert-state-cursor))
-
-;; (defun my-highlight-mode-line()
-;;   (setq-local my-mode-line-face-cookie
-;; 			  (face-remap-add-relative 'mode-line 'mode-line-highlight)))
-
-;; (defun my-un-highlight-mode-line()
-;;   (when my-mode-line-face-cookie
-;; 	(face-remap-remove-relative))
-;;   (setq-local my-mode-line-face-cookie
-;; 			  (face-remap-add-relative 'mode-line 'mode-line-highlight)))
-
 
 (provide 'my-theme)
 

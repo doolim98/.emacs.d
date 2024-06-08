@@ -11,40 +11,37 @@
   :config
   (setq fontaine-presets
 		`(
-		  (size-regular		:default-height 140)
-		  (size-semi-small	:default-height 130)
-		  (size-small		:default-height 120)
-		  (size-tiny		:default-height 110)
-		  (size-semi-large	:default-height 150)
-		  (size-large		:default-height 180)
-		  (extra-large		:default-height 220)
+		  (size-18 :default-height 180)
+		  (size-15 :default-height 150)
+		  (size-14 :default-height 140)
+		  (size-13 :default-height 130)
+		  (size-12 :default-height 120)
+		  (size-11 :default-height 110)
 
-		  ;; (font-Fira-Mono		:default-family "Fira Mono")
-		  (font-FiraCode		:default-family "FiraCode Nerd Font Mono")
-		  (font-Consolas		:default-family "Consolas")
+		  (font-Menlo
+		   :default-family "Menlo"
+		   :default-weight medium)
+
+		  (font-Monaco
+		   :default-family "Monaco"
+		   :default-weight medium
+		   :fixed-pitch-family "Monaco"
+		   )
+
+		  (font-FiraCode
+		   :default-family "FiraCode Nerd Font Mono")
+
 		  (font-Iosevka
 		   :default-family "Iosevka"
-		   :fixed-pitch-family "Iosevka Slab"
-		   )
-		  (font-Arial			:default-family "Arial")
-		  (font-IosevkaSlab			:default-family "Iosevka Slab")
-		  (font-IosevkaTermSlab	:default-family "IosevkaTermSlab Nerd Font Mono")
-		  (font-CaskaydiaMono	:default-family "CaskaydiaMono Nerd Font")
+		   :default-weight medium
+		   :fixed-pitch-family "Iosevka Slab")
 		  (t
-           ;; :default-family "Iosevka Nerd Font"
-             ;; :default-family "Fira Mono"
-             ;; :default-family "Fira Code"
-             ;; :default-family "CaskaydiaMono Nerd Font"
-		     :default-weight regular
-
-			 :variable-pitch-family "Arial"
-			 :variable-pitch-height 1.0
-
-			 :bold-weight semi-bold
-			 :italic-slant italic
-
-			 :fixed-pitch-family "IosevkaTermSlab Nerd Font Mono"
-			 )))
+		   :fixed-pitch-family "Iosevka"
+		   :fixed-pitch-height 1.0
+		   :bold-weight bold
+		   :variable-pitch-family "Arial"
+		   :variable-pitch-height 1.0
+		   )))
   )
 
 ;; Nerd Icons 󰄛  
