@@ -20,11 +20,14 @@
 
 		  (font-Menlo
 		   :default-family "Menlo"
-		   :default-weight medium)
+		   :default-weight medium
+		   :bold-weight bold)
 
+		  ;; Does Monaco unsupport bold font?
 		  (font-Monaco
 		   :default-family "Monaco"
 		   :default-weight medium
+		   :bold-weight bold
 		   :fixed-pitch-family "Monaco"
 		   )
 

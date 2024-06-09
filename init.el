@@ -46,6 +46,8 @@
   "C-x c" 'restart-emacs)
 
 (general-def region-bindings-mode-map
+  "i" #'string-rectangle
+  "n" #'rectangle-number-lines
   "w" #'copy-region-as-kill
   "k" #'kill-region
   "q" #'query-replace
@@ -218,7 +220,8 @@
 (general-def my-setting-map "f" #'fontaine-set-preset)
 
 (require 'my-theme)
-(modus-themes-select 'modus-operandi-tinted)
+(modus-themes-select 'modus-vivendi)
+(add-hook 'my-after-enable-theme-hook 'my-remove-fringe-background)
 
 ;;;; Cursor
 (setq-default blink-cursor-delay 0.2
@@ -462,7 +465,7 @@
       (embark-act))))
 
 ;; Consult users will also want the embark-consult package.
-(use-package embark-consult :after embark
+(use-package embark-consult :ensure nil
   :hook
   (embark-collect-mode . consult-preview-at-point-mode))
 
@@ -570,6 +573,14 @@
          ("C-x C-r" . eglot-rename)
          ("C-x x l" . eglot-reconnect))
   :config
+  (defvar-local my-eglot-disable-flymake nil)
+  (defun my-eglot-managed-hook-function()
+	(when (bound-and-true-p my-eglot-disable-flymake)
+	  (message "eglot-managed-hook: disable flymake")
+	  (flymake-mode 0)))
+  (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-hook-function)
+  (add-hook 'eglot--managed-mode-hook 'my-eglot-managed-hook-function)
+
   (setq-default eglot-prefer-plaintext nil)
   )
 
@@ -727,7 +738,6 @@
   "C-;" "C-." "C-'")
 
 (use-package org
-  :hook ((org-mode . org-indent-mode))
   :config
   (general-def "s-a" #'org-agenda)
   (general-def org-mode-map
@@ -736,6 +746,7 @@
   :config
   (setq-default org-directory "~/Dropbox/org"
 				org-agenda-files (list (expand-file-name "agenda.org" org-directory))
+				org-agenda-include-diary t
 				;; (list (expand-file-name "Agenda" org-directory))
 				;; org-agenda-file-regexp
 				)
@@ -744,12 +755,14 @@
   (defun my-org-mode-hook-function()
 	(setq-local completion-ignore-case nil)
 	(setq-local truncate-lines nil)
+	(setq-local my-eglot-disable-flymake t)
 	(visual-line-mode 1)
 	(setq-local right-margin-width 10
 				left-margin-width 10)
 	(eglot-ensure)
 	(flyspell-mode 0)
 	)
+
   (add-hook 'org-mode-hook #'my-org-mode-hook-function)
 
   (require 'ox-md)

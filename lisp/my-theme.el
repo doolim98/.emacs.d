@@ -9,8 +9,20 @@
 
 (defvar my-theme-init-hook '() "Hook that run after init my theme")
 
+(defvar my-after-enable-theme-hook nil
+   "Normal hook run after enabling a theme.")
+
+(defun my-run-after-enable-theme-hook (&rest _args)
+   "Run `my-after-enable-theme-hook'."
+   (run-hooks 'my-after-enable-theme-hook))
+
+(advice-add 'enable-theme :after #'my-run-after-enable-theme-hook)
+
+(defun my-remove-fringe-background()
+  (set-face-attribute 'fringe nil :background (face-background 'default)))
+
 (use-package ef-themes)
-(use-package modus-themes
+(use-package modus-themes :ensure t
   :config
   (setq modus-themes-mixed-fonts t
 		modus-themes-bold-constructs t)
