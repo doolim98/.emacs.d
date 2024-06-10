@@ -9,6 +9,8 @@
 
 
 ;; Package Manager Configuration
+;; NOTE!! Always put `use-package-enable-imenu-support' before require `use-package'
+(setq-default use-package-enable-imenu-support t)
 (require 'use-package)
 (setq-default my/use-straight nil)
 

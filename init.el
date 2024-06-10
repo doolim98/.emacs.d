@@ -8,11 +8,11 @@
 (load-file custom-file)
 (server-start)
 
-(desktop-save-mode 1)
-
 ;; (use-package auto-package-update)
 
 ;;; Keybindings
+(setq-default mac-wheel-button-is-mouse-2 nil)
+(global-unset-key (kbd "<mouse-2>"))
 (use-package region-bindings-mode :config (region-bindings-mode-enable))
 (use-package general)
 (setq-default mac-option-modifier 'meta ; 'super
@@ -56,10 +56,21 @@
   "ESC" nil								; Do not bind `ESC'!
   )
 
+(defun my-display-other-with-keymap (keymap)
+  (cond ((window-in-direction 'below) (windmove-display-down))
+		((window-in-direction 'left) (windmove-display-left))
+		((window-in-direction 'right) (windmove-display-right))
+		(t))
+  (set-transient-map keymap))
+
 ;;; Customize Built-in keymaps
 ;;;; `ctl-x-map'
 (general-def ctl-x-map
+  ;; Other window command
+  "C-o" #'(lambda()(interactive) (my-display-other-with-keymap ctl-x-map))
   "f" my-f-map
+  "b" #'consult-buffer
+  "C-r" #'crux-rename-buffer-and-file
   "C-b" #'buffer-menu
   "C-k" #'kill-this-buffer)
 ;;;; `transient-map'
@@ -130,7 +141,7 @@
 			  gc-cons-threshold (* 10 1024 1024))
 (setq-default tooltip-delay 0.2)
 (setq-default
- use-package-enable-imenu-support t
+
  recentf-auto-cleanup (* 60 60 24 7)
  recentf-max-menu-items 150
  recentf-max-saved-items 150
@@ -138,24 +149,31 @@
 
  create-lockfiles nil
  auto-save-default nil
- auto-save-timeout 60
+ auto-save-timeout 5
  make-backup-files nil
  revert-without-query t
- auto-revert-interval 60
+ auto-revert-interval 5
+ auto-save-visited-interval 1
  history-length 1000
 
  register-preview-delay 0.05
 
+ desktop-save t
+ desktop-restore-frames nil
+ desktop-dirname user-emacs-directory
+ destkop-path (list user-emacs-directory)
+
  ;; Window
  display-buffer-base-action '((
-							   ;; display-buffer--maybe-same-window
+							   display-buffer--maybe-same-window
 							   display-buffer-reuse-window
 							   display-buffer--maybe-pop-up-frame-or-window
 							   display-buffer-in-previous-window
 							   display-buffer-use-some-window
 							   display-buffer-pop-up-frame))
- split-width-threshold (* 2 100)
- split-height-threshold (* 2 80)
+ display-buffer-base-action '(nil)
+ split-width-threshold 160
+ split-height-threshold 80
 
  auto-window-vscroll t
  recenter-redisplay nil ; Take away the annoying flashs on every C-l in terminal emacs
@@ -188,6 +206,8 @@
 (add-to-list 'tramp-remote-path 'tramp-own-remote-path)
 
 ;;;; Modes
+(desktop-save-mode 1)
+(auto-save-visited-mode 1)
 (auto-revert-mode 0)
 (savehist-mode 1)
 (recentf-mode 1)
@@ -488,6 +508,7 @@
 			  ;; DO NOT USE `corfu-complete' for selection of candidates
 			  ;; Use `corfu-insert' which is compatible with yasnippet
 			  ("TAB" . corfu-insert)
+			  ("<escape>" . corfu-quit)
 			  ("<tab>" . corfu-insert)
 			  ("RET" . nil))
   :config
@@ -531,6 +552,18 @@
 				  corfu-popupinfo-delay 99999)
 	  (corfu-mode 1)))
   )
+
+(use-package cape
+  :config
+  ;; (setq cape-dict-file )
+  )
+
+(use-package citar
+  :hook
+  (LaTeX-mode . citar-capf-setup)
+  (org-mode . citar-capf-setup)
+  :config
+  (setq citar-bibliography (list (expand-file-name "refer.bib" org-directory))))
  
 (use-package corfu-terminal :after corfu
   :if (not (display-graphic-p))
@@ -577,10 +610,11 @@
 (use-package eglot
   :bind (("C-x x l" . eglot)
          :map eglot-mode-map
-         ("C-x ." . eglot-code-action-quickfix)
+         ("C-c q" . eglot-code-action-quickfix)
          ("C-x TAB" . eglot-format-buffer)
-         ("C-x C-r" . eglot-rename)
-         ("C-x x l" . eglot-reconnect))
+         ("C-c r" . nil)
+         ("C-x x l" . eglot-reconnect)
+		 )
   :config
   (defvar-local my-eglot-disable-flymake nil)
   (defun my-eglot-managed-hook-function()
@@ -590,8 +624,7 @@
   (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-hook-function)
   (add-hook 'eglot--managed-mode-hook 'my-eglot-managed-hook-function)
 
-  (setq-default eglot-prefer-plaintext nil)
-  )
+  (setq-default eglot-prefer-plaintext nil))
 
 (use-package devdocs
   :bind (:map help-map
@@ -721,9 +754,6 @@
   (eglot-ensure)
 
   ;; Disable some modes
-  (auto-save-mode 0)
-  (auto-revert-mode 0)
-  (auto-save-visited-mode 0)
   (electric-indent-local-mode -1)
 
   ;; Default compile-command
@@ -751,25 +781,43 @@
   (general-def "s-a" #'org-agenda)
   (general-def org-mode-map
 	"C-j" #'crux-top-join-line
+	"C-c @" #'org-cite-insert
 	)
   :config
+  
   (setq-default org-directory "~/Dropbox/org"
-				org-agenda-files (list (expand-file-name "agenda.org" org-directory))
+				org-enforce-todo-dependencies nil
+				org-agenda-files (list org-directory)
 				org-agenda-include-diary t
-				;; (list (expand-file-name "Agenda" org-directory))
-				;; org-agenda-file-regexp
+				org-todo-keywords '((sequence "TODO" "PROG" "DONE"))
+				org-todo-keyword-faces
+				'(("PROG" . "blue"))
 				)
-  ;; Org agenda
+  ;; Calander Window
+  (add-to-list 'display-buffer-alist `(,(rx "*Calendar*")
+									   (display-buffer-in-side-window)
+									   (side . bottom)
+									   (inhibit-same-window . t)
+									   ))
   
   (defun my-org-mode-hook-function()
-	(setq-local completion-ignore-case nil)
+	(setq-local completion-ignore-case t) ; nil-> treat +BEGIN_SRC and +begin_src differently
 	(setq-local truncate-lines nil)
 	(setq-local my-eglot-disable-flymake t)
+	(setq-local cape-dabbrev-check-other-buffers nil)
 	(visual-line-mode 1)
+
+	(setq-local completion-styles '(flex))
+	(add-hook 'completion-at-point-functions #'cape-dabbrev)
+	(add-hook 'completion-at-point-functions #'cape-file)
+	(add-hook 'completion-at-point-functions #'cape-dict)
+
 	(setq-local right-margin-width 10
 				left-margin-width 10)
-	(eglot-ensure)
+	;; (eglot-ensure)
+	(org-indent-mode 1)
 	(flyspell-mode 0)
+	(auto-revert-mode 1)
 	)
 
   (add-hook 'org-mode-hook #'my-org-mode-hook-function)
@@ -779,7 +827,9 @@
   (add-to-list 'org-export-backends 'md)
   )
 
-(use-package org-ref )
+(use-package org-ref
+  :config
+  )
 (use-package org-bullets :after org
   :hook ((org-mode . org-bullets-mode))
   :config
@@ -837,4 +887,6 @@
         backward-char
         previous-line
         next-line)))
-(put 'list-timers 'disabled nil)
+
+
+
