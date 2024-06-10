@@ -21,6 +21,9 @@
 (defun my-remove-fringe-background()
   (set-face-attribute 'fringe nil :background (face-background 'default)))
 
+(defun my-remove-fringe-symbol-background()
+  (set-face-attribute 'fringe nil :background (face-background 'default)))
+
 (use-package ef-themes)
 (use-package modus-themes :ensure t
   :config
