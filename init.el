@@ -204,6 +204,15 @@
    (ns-transparent-titlebar . t)	; No effects
    ))
 
+
+(defvar my-hourly-timer nil)
+(defun my-hourly-timer-hook '())
+(unless my-hourly-timer
+  (setq my-hourly-timer
+		(run-with-timer 0 (* 60 60)
+						#'(lambda()(run-hooks 'my-hourly-timer-hook)))))
+
+
 (require 'help)
 (general-def "C-`" #'window-toggle-side-windows)
 
@@ -828,3 +837,4 @@
         backward-char
         previous-line
         next-line)))
+(put 'list-timers 'disabled nil)

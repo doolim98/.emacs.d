@@ -25,11 +25,45 @@
 
 ;; Date : default behavior
 ;; Description : mandatory
+(cl-defstruct eplan-state)
+
 (cl-defstruct eplan-object
-  ()
   date
   title
   description)
+
+(setq *a (make-eplan-object :date 1))
+
+(defun eplan-store-latest-preset ()
+  "Write latest cursor state to `fontaine-latest-state-file'.
+Can be assigned to `kill-emacs-hook'."
+  (when-let ((hist fontaine--preset-history)
+             (latest (car hist))
+             ((not (member latest '("nil" "t")))))
+    (with-temp-file fontaine-latest-state-file
+      (insert ";; Auto-generated file; don't edit -*- mode: "
+              (if (<= 28 emacs-major-version)
+                  "lisp-data"
+                "emacs-lisp")
+              " -*-\n")
+      (pp (intern latest) (current-buffer)))))
+
+(defvar fontaine-recovered-preset nil
+  "Recovered value of latest stored font preset.")
+
+(defun fontaine-restore-latest-preset ()
+  "Restore latest preset set by `fontaine-set-preset'.
+The value is stored in `fontaine-latest-state-file'."
+  (when-let ((file fontaine-latest-state-file)
+             ((file-exists-p file)))
+    (setq fontaine-recovered-preset
+          (unless (zerop
+                   (or (file-attribute-size (file-attributes file))
+                       0))
+            (with-temp-buffer
+              (insert-file-contents file)
+              (read (current-buffer)))))))
+
 
 (defun eplan-list--refresh (&optional buffer-list old-buffer)
   (setq tabulated-list-use-header-line t)
