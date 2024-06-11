@@ -4,7 +4,13 @@
   (normal-top-level-add-subdirs-to-load-path))
 
 ;;; Initialize
-(when (display-graphic-p) (select-frame-set-input-focus (selected-frame)))
+(when window-system
+  (select-frame-set-input-focus (selected-frame))
+  (add-hook 'window-size-change-functions
+			#'frame-hide-title-bar-when-maximized)
+  (unless (eq 'maximized (frame-parameter (selected-frame) 'fullscreen))
+	(toggle-frame-maximized)
+	))
 (load-file custom-file)
 (server-start)
 
@@ -340,22 +346,20 @@
                '(file))))
   (openwith-mode t))
 
-(use-package ansi-color :ensure nil
-  :init (add-hook 'compilation-filter-hook 'ansi-color-compilation-filter))
-(use-package dabbrev :ensure nil
-  :init
-  (setq-default
-   dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")
-   dabbrev-abbrev-skip-leading-regexp
-   (rx (or "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'" "/" "`" "'" "{" "}"))))
+(require 'ansi-color)
+(add-hook 'compilation-filter-hook 'ansi-color-compilation-filter)
 
-(use-package dictionary :ensure nil
-  ;; :bind ("C-c d" . dictionary-search)
-  :config
-  (setq dictionary-server "dict.org"
-        dictionary-default-popup-strategy "lev" ; read doc string
-        dictionary-create-buttons nil
-        dictionary-use-single-buffer t))
+(require 'dabbrev)
+(setq-default
+ dabbrev-ignored-buffer-regexps '("\\.\\(?:pdf\\|jpe?g\\|png\\)\\'")
+ dabbrev-abbrev-skip-leading-regexp
+ (rx (or "!" "@" "#" "$" "%" "^" "&" "*" "_" "-" "+" "=" "'" "/" "`" "'" "{" "}")))
+
+(require 'dictionary)
+(setq dictionary-server "dict.org"
+      dictionary-default-popup-strategy "lev" ; read doc string
+      dictionary-create-buttons nil
+      dictionary-use-single-buffer t)
 
 ;; Dired
 (require 'dired)
