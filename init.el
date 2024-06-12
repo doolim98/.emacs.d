@@ -228,6 +228,7 @@
  '((inhibit-double-buffering . nil) ; Not sure
    (use-frame-synchronization . t)	; Prevent display tearing
    (ns-transparent-titlebar . t)	; No effects
+   (internal-border-width . 10)		; Add margins at to the frame borders
    ))
 
 
