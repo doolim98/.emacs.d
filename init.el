@@ -35,6 +35,10 @@
 (defvar-keymap my-setting-map :doc "My settings keymap")
 (defvar-keymap my-toggle-map :doc "My toggle keymap")
 
+;;; Super Key
+(general-def
+  "C-s-f" #'toggle-frame-maximized)
+
 (general-def
   "ESC ESC" "C-g"
   "s-o" #'crux-open-with
@@ -196,7 +200,10 @@
  compilation-ask-about-save nil
 
  ;; Font lock optimization
- font-lock-maximum-decoration 2)
+ font-lock-maximum-decoration 2
+
+ ;; Bookmark
+ bookmark-sort-flag 'last-modified)
 
 (setq-default tramp-verbose 1					; Tramp
 			  enable-remote-dir-locals t

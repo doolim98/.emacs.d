@@ -90,7 +90,7 @@ transform recent files before completion."
     (call-interactively #'recompile)))
 
 (defun my/project-compilation-buffer()
-  "Show project's compilation buffer"
+  "TODO Show project's compilation buffer"
   (interactive)
   (let ((buf (get-buffer ()))))
   (display-buffer ())
