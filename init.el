@@ -268,7 +268,7 @@
 
 (require 'my-theme)
 
-(modus-themes-select 'modus-vivendi)
+(modus-themes-select 'modus-operandi)
 (add-hook 'my-after-enable-theme-hook 'my-remove-fringe-background)
 
 ;;;; Cursor
