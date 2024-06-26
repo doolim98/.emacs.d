@@ -11,7 +11,7 @@
   (unless (eq 'maximized (frame-parameter (selected-frame) 'fullscreen))
 	(toggle-frame-maximized)
 	))
-(load-file custom-file)
+(when (file-exists-p custom-file) (load-file custom-file))
 (server-start)
 
 ;; (use-package auto-package-update)
@@ -43,8 +43,8 @@
   "C-j" #'crux-top-join-line
   "C-4" ctl-x-4-map
   "M-o" 'other-window
-  "M-[" 'previous-buffer
-  "M-]" 'next-buffer
+  ;; "M-[" 'previous-buffer
+  ;; "M-]" 'next-buffer
   "M-O" 'window-swap-states
   "M-'" my-quote-map
   "C-t" my-toggle-map
@@ -245,8 +245,9 @@
 
 (require 'my-fonts)
 (setq-default line-spacing 0.0)
-(fontaine-set-preset 'font-Monaco)		; Use Monaco!
-(fontaine-set-preset 'size-12)
+(when (display-graphic-p)
+  (fontaine-set-preset 'font-Monaco)		; Use Monaco!
+  (fontaine-set-preset 'size-12))
 ;; Hangul font
 ;; 가나|다라|
 ;; ABCD|EFGH|
@@ -256,6 +257,7 @@
 (general-def my-setting-map "f" #'fontaine-set-preset)
 
 (require 'my-theme)
+
 (modus-themes-select 'modus-vivendi)
 (add-hook 'my-after-enable-theme-hook 'my-remove-fringe-background)
 
