@@ -110,15 +110,16 @@
 ;;; My Custom Keymaps
 (general-def my-toggle-map
   "f" #'flymake-mode
-  "l" #'(lambda()(interactive)
-		  (if (bound-and-true-p eglot--managed-mode)
-			  (eglot--managed-mode-off)
-			(progn
-			  (eglot--managed-mode)
-			  ;; HACK: change buffer
-			  (insert "@")
-			  (delete-backward-char 1)
-			  ))))
+  ;; "l" #'(lambda()(interactive)
+  ;; 		  (if (bound-and-true-p eglot--managed-mode)
+  ;; 			  (eglot--managed-mode-off)
+  ;; 			(progn
+  ;; 			  (eglot--managed-mode)
+  ;; 			  ;; HACK: change buffer
+  ;; 			  (insert "@")
+  ;; 			  (delete-backward-char 1)
+  ;; 			  )))
+  )
 (general-def my-f-map
   "r" #'consult-recent-file
   "o" #'(lambda()(interactive)(let ((default-directory (expand-file-name "./" org-directory)))
@@ -165,6 +166,8 @@
  auto-revert-interval 5
  auto-save-visited-interval 1
  history-length 1000
+
+ ;; find-file-visit-truename t
 
  register-preview-delay 0.05
 
@@ -629,14 +632,15 @@
 		 )
   :config
   (defvar-local my-eglot-disable-flymake nil)
-  (defun my-eglot-managed-hook-function()
-	(when (bound-and-true-p my-eglot-disable-flymake)
-	  (message "eglot-managed-hook: disable flymake")
-	  (flymake-mode 0)))
-  (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-hook-function)
-  (add-hook 'eglot--managed-mode-hook 'my-eglot-managed-hook-function)
+  ;; (defun my-eglot-managed-hook-function()
+  ;; 	(when (bound-and-true-p my-eglot-disable-flymake)
+  ;; 	  (message "eglot-managed-hook: disable flymake")
+  ;; 	  (flymake-mode 0)))
+  ;; (add-hook 'eglot-managed-mode-hook 'my-eglot-managed-hook-function)
+  ;; (add-hook 'eglot--managed-mode-hook 'my-eglot-managed-hook-function)
 
-  (setq-default eglot-prefer-plaintext nil))
+  ;; (setq-default eglot-prefer-plaintext nil)
+  )
 
 (use-package devdocs
   :bind (:map help-map
@@ -796,7 +800,7 @@
 	"C-c @" #'org-cite-insert
 	)
   :config
-  
+
   (setq-default org-directory "~/Dropbox/org"
 				org-enforce-todo-dependencies nil
 				org-agenda-files (list org-directory)
@@ -815,7 +819,7 @@
   (defun my-org-mode-hook-function()
 	(setq-local completion-ignore-case t) ; nil-> treat +BEGIN_SRC and +begin_src differently
 	(setq-local truncate-lines nil)
-	(setq-local my-eglot-disable-flymake t)
+	;; (setq-local my-eglot-disable-flymake t)
 	(setq-local cape-dabbrev-check-other-buffers nil)
 	(visual-line-mode 1)
 
@@ -828,15 +832,24 @@
 				left-margin-width 10)
 	;; (eglot-ensure)
 	(org-indent-mode 1)
-	(flyspell-mode 0)
+	;; (flyspell-mode 0)
 	(auto-revert-mode 1)
 	)
 
   (add-hook 'org-mode-hook #'my-org-mode-hook-function)
 
+  (require 'ox-latex)
+  ;; --shell-escape is added to support minted
+  (setq org-latex-pdf-process '("latexmk -f -pdf -%latex --shell-escape -interaction=nonstopmode -output-directory=%o %f"))
+  (add-to-list 'org-latex-packages-alist '("" "minted" nil))
+  (setq org-latex-src-block-backend 'minted)
+
   (require 'ox-md)
   (setq org-export-with-tags nil)
   (add-to-list 'org-export-backends 'md)
+
+  (require 'oc-biblatex)
+  (add-to-list 'org-cite-biblatex-styles '("simple" nil "cite" nil nil))
   )
 
 (use-package org-ref
@@ -866,7 +879,7 @@
     (list :clientId "client_BaDkMgx4X19X9UxxYRCXZo"))
 
   (add-to-list 'eglot-server-programs
-               '((org-mode markdown-mode) . (eglot-grammarly-server "grammarly-languageserver" "--stdio")))
+               '((eglot-grammarly-mode org-mode markdown-mode) . (eglot-grammarly-server "grammarly-languageserver" "--stdio")))
   )
 
 
@@ -879,6 +892,17 @@
   (setq gptel-api-key (exec-path-from-shell-getenv "OPENAI_API_KEY"))
   (setq-default gptel-default-mode 'org-mode)
   (add-hook 'gptel-post-response-functions 'gptel-end-of-response))
+
+
+(require 'eww)
+;; Install chromium
+;; (unless (file-executable-p "chromium")
+;;   (when (eq window-system 'mac)
+;; 	(async-shell-command "brew install chromium --no-quarantine"))
+;;   )
+
+(setq eww-retrieve-command nil)
+      ;; '("chromium" "--headless" "--dump-dom"))
 
 
 ;;; ETC
@@ -901,4 +925,4 @@
         next-line)))
 
 
-
+(garbage-collect)
