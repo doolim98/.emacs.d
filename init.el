@@ -46,6 +46,7 @@
   "S-SPC" #'mark-sexp
   "C-j" #'crux-top-join-line
   "C-4" ctl-x-4-map
+  "C-\\" ctl-x-4-map
   "M-o" 'other-window
   ;; "M-[" 'previous-buffer
   ;; "M-]" 'next-buffer
@@ -230,8 +231,10 @@
 (show-paren-mode 1)
 (electric-pair-mode 1)
 (tool-bar-mode 0)
-(scroll-bar-mode 0)
 (menu-bar-mode 0)
+(when (display-graphic-p)
+  (scroll-bar-mode 0)
+  )
 
 ;;; Appearance
 (modify-all-frames-parameters
@@ -253,18 +256,17 @@
 (require 'help)
 (general-def "C-`" #'window-toggle-side-windows)
 
-(require 'my-fonts)
-(setq-default line-spacing 0.0)
 (when (display-graphic-p)
+  (require 'my-fonts)
+  (setq-default line-spacing 0.0)
   (fontaine-set-preset 'font-Monaco)		; Use Monaco!
-  (fontaine-set-preset 'size-12))
-;; Hangul font
-;; 가나|다라|
-;; ABCD|EFGH|
-(setq face-font-rescale-alist '(("D2Coding" . 1.2)))
-(set-fontset-font t 'hangul (font-spec :name "D2Coding"))
-
-(general-def my-setting-map "f" #'fontaine-set-preset)
+  (fontaine-set-preset 'size-12)
+  ;; Hangul font
+  ;; 가나|다라|
+  ;; ABCD|EFGH|
+  (setq face-font-rescale-alist '(("D2Coding" . 1.2)))
+  (set-fontset-font t 'hangul (font-spec :name "D2Coding"))
+  (general-def my-setting-map "f" #'fontaine-set-preset))
 
 (require 'my-theme)
 

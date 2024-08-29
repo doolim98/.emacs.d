@@ -6,8 +6,9 @@
 												  ,(make-char 'greek-iso8859-7 107))
 								  nil))))))
 
-(use-package fontaine :ensure t
-  :if (display-graphic-p)
+(when (display-graphic-p)
+  (use-package fontaine 
+  :ensure t
   :config
   (setq fontaine-presets
 		`(
@@ -45,7 +46,8 @@
 		   :variable-pitch-family "Arial"
 		   :variable-pitch-height 1.0
 		   )))
-  )
+  ))
+
 
 ;; Nerd Icons 󰄛  
 (use-package nerd-icons :ensure t
